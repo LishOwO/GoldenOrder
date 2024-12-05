@@ -19,7 +19,7 @@ Indispensable :
 - attaque automatique des ennemis (proche et à distance)
 - apparition des ennemis (avec systeme de vague)
 - apparitions de caisses
-- drops des ennemis et des caisses (xp pour améliorations et powerups)
+- drops des ennemis et des caisses (xp pour améliorations et powerups (vitesse, invincibilité, bombe))
 - chronomètre en haut
 - menu de départ
 
@@ -27,7 +27,7 @@ Optionel :
 - différents types d'ennemis
 - différents types d'armes et d'améliorations pour celles ci
 - sauvegardes qui gardent les bonus achetés avec des pièces et les personnages débloqués
-- système de high score
+- système de high score (temps)
 - différents personnages jouables (à l'aide de code)
 
 mouvement : haut, bas, gauche, droite
