@@ -21,14 +21,14 @@ Indispensable :
 - apparitions de caisses
 - drops des ennemis et des caisses (xp pour améliorations et powerups)
 - chronomètre en haut
+- menu de départ
 
 Optionel :
 - différents types d'ennemis
-- différents types d'armes et d'améliorations pour celles ci.
-- pas de sauvegardes, chaque partie reset le jeu.
+- différents types d'armes et d'améliorations pour celles ci
+- sauvegardes qui gardent les bonus achetés avec des pièces et les personnages débloqués
 - système de high score
 - différents personnages jouables (à l'aide de code)
-- menu de départ
 
 mouvement : haut, bas, gauche, droite
 vue : top to down
