@@ -5,6 +5,7 @@ ___
 Un jeu codé en python avec pygame, codé par Vincent Rigault, Martin Huppé et Felix Menegazzo.
 
 Kanban : https://github.com/users/LishOwO/projects/3/views/1
+
 Agenda : https://github.com/users/LishOwO/projects/3/views/2
 
 Le style de jeu sera un suvivor à la Vampire Survivor, style arcade.
