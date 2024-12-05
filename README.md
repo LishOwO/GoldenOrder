@@ -4,6 +4,8 @@ ___
 
 Un jeu codé en python avec pygame, codé par Vincent Rigault, Martin Huppé et Felix Menegazzo.
 
+Kanban : https://github.com/users/LishOwO/projects/3/views/1
+
 Le style de jeu sera un suvivor à la Vampire Survivor, style arcade.
 
 On implémentera :
@@ -21,5 +23,6 @@ On implémentera :
 mouvement : haut, bas, gauche, droite
 vue : top to down
 résolution textures : 16*16
+
 
 ![image](https://github.com/user-attachments/assets/a29acfc3-06bc-400c-943d-e5b4e08403f3)
