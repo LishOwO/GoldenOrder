@@ -13,7 +13,7 @@ class Game:
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.run = True
 
-    def run(self):
+    def run_game(self):
 
         while self.run:
             for event in pygame.event.get():
@@ -21,4 +21,4 @@ class Game:
                     run = False
                     pygame.quit()
 
-Game().run()
+Game().run_game()
