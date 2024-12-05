@@ -1,16 +1,24 @@
 import pygame
+import sys
+import math
 
-pygame.init()
+class Game:
+    def __init__(self):
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+        pygame.init()
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-run = True
+        self.SCREEN_WIDTH = 800
+        self.SCREEN_HEIGHT = 600
 
-while run:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
+        self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+        self.run = True
 
-pygame.quit()
+    def run(self):
+
+        while run:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                    pygame.quit()
+
+Game().run()
