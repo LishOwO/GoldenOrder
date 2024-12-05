@@ -11,16 +11,24 @@ Agenda : https://github.com/users/LishOwO/projects/3/views/2
 Le style de jeu sera un suvivor à la Vampire Survivor, style arcade.
 
 On implémentera :
+
+Indispensable :
 - système d'xp pour choisir des bonus après avoir monté de niveau (amélioration des armes ou du joueur)
 - map infinie (avec répétition de la texture de fond)
-- attaque automatique du joueur
+- attaque automatique du joueur (proche et à distance)
+- attaque automatique des ennemis (proche et à distance)
 - apparition des ennemis (avec systeme de vague)
-- différents types d'ennemis
 - apparitions de caisses
 - drops des ennemis et des caisses (xp pour améliorations et powerups)
+- chronomètre en haut
+
+Optionel :
+- différents types d'ennemis
 - différents types d'armes et d'améliorations pour celles ci.
 - pas de sauvegardes, chaque partie reset le jeu.
-- système de codes pour les niveaux
+- système de high score
+- différents personnages jouables (à l'aide de code)
+- menu de départ
 
 mouvement : haut, bas, gauche, droite
 vue : top to down
