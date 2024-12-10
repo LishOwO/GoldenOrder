@@ -21,6 +21,7 @@ Indispensable :
 - apparitions de caisses
 - drops des ennemis et des caisses (xp pour améliorations et powerups)
 - chronomètre en haut
+- différentes armes (debloquable au fur et a mesure du jeu)
 
 Optionel :
 - différents types d'ennemis
