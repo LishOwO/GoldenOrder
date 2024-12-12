@@ -1,18 +1,19 @@
 import pygame
 import sys
 import math
+import time
 
-# Variable self publique
-# Variable
 
 class Game:
     def __init__(self):
 
         pygame.init()
 
-
         self.SCREEN_WIDTH = 800
         self.SCREEN_HEIGHT = 600
+
+        self.BACKGROUND_COLOR = (14, 219, 248)
+        self.PLAYER_VELOCITY = 5
 
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
@@ -20,37 +21,66 @@ class Game:
         self.run = True
 
         # Chargement du joueur
+
+
         self.player_image = pygame.image.load('PlayerTest.bmp').convert()
         self.player = self.player_image.get_rect(topleft=(30, 30))  # Position initiale
+        self.player_movement_x = [False, False] #[Gauche, Droite]
+        self.player_movement_y = [False, False] #[Monter, Descendre]
+        self.player_position = [200, 200]
+
+         
 
     def run_game(self):
 
         while self.run:
+            
+            self.screen.fill(self.BACKGROUND_COLOR)
+             
+            self.player_position[0] += (self.player_movement_x[1] - self.player_movement_x[0]) * self.PLAYER_VELOCITY    
+            self.player_position[1] += (self.player_movement_y[1] - self.player_movement_y[0]) * self.PLAYER_VELOCITY
+            
 
-            self.screen.fill((0, 0, 0))  # Efface l'écran avec une couleur noire
+            # Dessine le joueur
+            self.screen.blit(self.player_image, self.player_position)
 
-            # Gestion de la fin de jeu (clic sur la croix)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.run = False
 
-            # Gestion des touches pour déplacer le joueur
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_w] or keys[pygame.K_UP]:
-                self.player.y -= 3
-            if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-               self.player.y += 3
-            if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-                self.player.x -= 3
-            if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-                self.player.x += 3
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.player_movement_y[0] = True
+                    if event.key == pygame.K_DOWN:
+                        self.player_movement_y[1] = True
 
-            # Dessine le joueur
-            self.screen.blit(self.player_image, self.player.topleft)
+                    if event.key == pygame.K_LEFT:
+                        self.player_movement_x[0] = True
+                    if event.key == pygame.K_RIGHT:
+                        self.player_movement_x[1] = True
+
+
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_UP:
+                        self.player_movement_y[0] = False
+                    if event.key == pygame.K_DOWN:
+                        self.player_movement_y[1] = False  
+
+                    if event.key == pygame.K_LEFT:
+                        self.player_movement_x[0] = False
+                    if event.key == pygame.K_RIGHT:
+                        self.player_movement_x[1] = False
+                        
+                          
+
+
 
             pygame.display.update()
-            self.clock.tick(60)  # Limite à 60 FPS
+            self.clock.tick(60)
 
         pygame.quit()
+        sys.exit()
+
+
 
 Game().run_game()
