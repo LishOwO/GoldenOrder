@@ -60,8 +60,9 @@ class Game:
             self.player_position[1] += (self.player_movement_y[1] - self.player_movement_y[0]) * self.PLAYER_VELOCITY
 
             # Déplace la caméra pour centrer le joueur
-            self.camera_position[0] = self.player_position[0] - self.SCREEN_WIDTH // 2
-            self.camera_position[1] = self.player_position[1] - self.SCREEN_HEIGHT // 2
+            self.camera_position[0] = self.player_position[0] +250 - self.SCREEN_WIDTH // 2 
+            self.camera_position[1] = self.player_position[1] +250 - self.SCREEN_HEIGHT // 2 
+
 
             # Dessine le joueur en fonction de la caméra
             self.screen.blit(self.player_image, (self.player_position[0] - self.camera_position[0], self.player_position[1] - self.camera_position[1]))
