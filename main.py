@@ -12,8 +12,11 @@ class Game:
         self.SCREEN_WIDTH = 800
         self.SCREEN_HEIGHT = 600
 
+        self.BACKGROUND_TILESET_SIZE = (256, 256)
         self.BACKGROUND_COLOR = (14, 219, 248)
         self.PLAYER_VELOCITY = 5
+
+
 
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
@@ -21,9 +24,12 @@ class Game:
         self.run = True
 
         # Chargement du joueur
-
+        self.background_image = pygame.image.load('texture_map.png').convert()
+        self.background_image = img = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
 
         self.player_image = pygame.image.load('PlayerTest.bmp').convert()
+        self.player_image.set_colorkey((0, 0, 0))
+
         self.player = self.player_image.get_rect(topleft=(30, 30))  # Position initiale
         self.player_movement_x = [False, False] #[Gauche, Droite]
         self.player_movement_y = [False, False] #[Monter, Descendre]
@@ -33,10 +39,14 @@ class Game:
 
     def run_game(self):
 
-        while self.run:
-            
+        while self.run:  
+
             self.screen.fill(self.BACKGROUND_COLOR)
-             
+            
+            for y in range(-2048,2048,256): 
+                for x in range(-2048,2048,256):
+                    self.screen.blit(self.background_image,(x,y)) 
+
             self.player_position[0] += (self.player_movement_x[1] - self.player_movement_x[0]) * self.PLAYER_VELOCITY    
             self.player_position[1] += (self.player_movement_y[1] - self.player_movement_y[0]) * self.PLAYER_VELOCITY
             
@@ -70,11 +80,7 @@ class Game:
                         self.player_movement_x[0] = False
                     if event.key == pygame.K_RIGHT:
                         self.player_movement_x[1] = False
-                        
-                          
-
-
-
+            
             pygame.display.update()
             self.clock.tick(60)
 
