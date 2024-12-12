@@ -2,10 +2,14 @@ import pygame
 import sys
 import math
 
+# Variable self publique
+# Variable
+
 class Game:
     def __init__(self):
 
         pygame.init()
+
 
         self.SCREEN_WIDTH = 800
         self.SCREEN_HEIGHT = 600
@@ -16,7 +20,7 @@ class Game:
         self.run = True
 
         # Chargement du joueur
-        self.player_image = pygame.image.load('New-Piskel.bmp').convert()
+        self.player_image = pygame.image.load('PlayerTest.bmp').convert()
         self.player = self.player_image.get_rect(topleft=(30, 30))  # Position initiale
 
     def run_game(self):
