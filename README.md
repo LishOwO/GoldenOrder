@@ -31,9 +31,14 @@ Optionel :
 - système de high score (temps)
 - différents personnages jouables (à l'aide de code)
 
-mouvement : haut, bas, gauche, droite
-vue : top to down
-résolution textures : 16*16
+Mouvement : haut, bas, gauche, droite
+Touches : Clavier, peut être joystick
+Scrolling : Oui
+Musique : Arcade (Chiptune)
+Barre de vie : Joueur uniquement
+Vue : top to down
+Résolution textures de base : 16*16
+Musique : 
 
 
 ![image](https://github.com/user-attachments/assets/a29acfc3-06bc-400c-943d-e5b4e08403f3)

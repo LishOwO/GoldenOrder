@@ -29,6 +29,7 @@ class Game:
 
             self.screen.fill((0, 0, 0))  # Efface l'écran avec une couleur noire
 
+            # Gestion de la fin de jeu (clic sur la croix)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.run = False
