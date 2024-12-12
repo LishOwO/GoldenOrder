@@ -27,7 +27,7 @@ class Game:
         self.background_image = pygame.image.load('texture_map.png').convert()
         self.background_image = img = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
 
-        self.player_image = pygame.image.load('PlayerTest.bmp').convert()
+        self.player_image = pygame.image.load('BiggerPlayerTest.bmp').convert()
         self.player_image.set_colorkey((0, 0, 0))
 
         self.player = self.player_image.get_rect(topleft=(30, 30))  # Position initiale
