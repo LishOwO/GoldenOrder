@@ -1,3 +1,4 @@
+from asyncio import sleep
 import pygame
 import sys
 import random
@@ -20,6 +21,7 @@ class Game:
         # Var PLAYER
         self.PLAYER_VELOCITY = 7
         self.PLAYER_SIZE_MULTIPLIER = 0.3
+        self.PLAYER_HP = 10
 
         # Var ZOMBIE 
         self.ZOMBIE_VELOCITY = 2
@@ -39,6 +41,7 @@ class Game:
         self.start_time = pygame.time.get_ticks()
         self.kill_count = 0
         self.font = pygame.font.SysFont(None, 50)
+        
 
 
         # Chargement du fond
@@ -99,6 +102,13 @@ class Game:
             zombie.x += zombie_dx * self.ZOMBIE_VELOCITY
             zombie.y += zombie_dy * self.ZOMBIE_VELOCITY
 
+            # Collision avec le joueur -> Dégats
+            if distance <= 50:
+                self.zombies.remove(zombie)  
+                self.PLAYER_HP -= 1 
+                break
+
+
     def shoot_bullet(self):
         # Trouve le zombie le plus proche
         if not self.zombies:
@@ -151,6 +161,15 @@ class Game:
         self.screen.blit(timer_text, (20, 20))
         kill_text = self.font.render(f"Kills: {self.kill_count}", True, (255, 255, 255))
         self.screen.blit(kill_text, (20, 70))
+        hp_text = self.font.render(f"HP: {self.PLAYER_HP}", True, (255, 255,255))
+        self.screen.blit(hp_text,(20,120))
+
+    def END_GAME(self): # a refaire
+        death_text = self.font.render(f"Tu es mort", True, (255, 255,255))
+        self.screen.blit(death_text,(500,500))
+        pygame.quit()
+        sys.exit()
+        
             
 
 
@@ -219,6 +238,10 @@ class Game:
 
             #Le hud
             self.display_hud()
+
+            #Mort
+            if self.PLAYER_HP == 0:
+                self.END_GAME()
 
             pygame.display.update()
             self.clock.tick(60)
