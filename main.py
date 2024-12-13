@@ -35,6 +35,12 @@ class Game:
 
         self.run = True
 
+        #Var scores etc
+        self.start_time = pygame.time.get_ticks()
+        self.kill_count = 0
+        self.font = pygame.font.SysFont(None, 50)
+
+
         # Chargement du fond
         self.background_image = pygame.image.load('texture_map.png').convert()
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
@@ -135,7 +141,16 @@ class Game:
                 if bullet['rect'].colliderect(zombie):
                     self.zombies.remove(zombie)
                     self.bullets.remove(bullet)
+                    self.kill_count += 1
                     break
+
+    # On affiche le HUD
+    def display_hud(self):
+        elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000
+        timer_text = self.font.render(f"Time: {elapsed_time}s", True, (255, 255, 255))
+        self.screen.blit(timer_text, (20, 20))
+        kill_text = self.font.render(f"Kills: {self.kill_count}", True, (255, 255, 255))
+        self.screen.blit(kill_text, (20, 70))
             
 
 
@@ -201,6 +216,9 @@ class Game:
             # Spawn de zombies à chaque itération
             if random.random() < 0.02:  # 2% de chance de spawn par frame
                 self.spawn_zombie()
+
+            #Le hud
+            self.display_hud()
 
             pygame.display.update()
             self.clock.tick(60)
