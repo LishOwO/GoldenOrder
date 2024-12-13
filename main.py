@@ -39,6 +39,9 @@ class Game:
 
         #Var XP
         self.XP_SIZE_MULTIPLIER = 4
+        self.xp_orbs = []
+        self.player_xp = 0
+
 
 
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
@@ -70,10 +73,10 @@ class Game:
         self.zombie_image.set_colorkey((0, 0, 0))
 
         #Chargement de l'orbe XP
-        self.xp_image_image = pygame.image.load('New Piskel (4).png').convert()
-        new_xp_size = (self.zombie_image.get_width() * self.ZOMBIE_SIZE_MULTIPLIER, self.zombie_image.get_height() * self.ZOMBIE_SIZE_MULTIPLIER)
+        self.xp_image = pygame.image.load('New Piskel (4).png').convert()
+        new_xp_size = (self.xp_image.get_width() * self.XP_SIZE_MULTIPLIER, self.xp_image.get_height() * self.XP_SIZE_MULTIPLIER)
         self.xp_image = pygame.transform.scale(self.xp_image, new_xp_size)
-        self.xp_image_image.set_colorkey((0, 0, 0))
+        self.xp_image.set_colorkey((0, 0, 0))
 
         # Chargement des balles
         self.bullet_image = pygame.image.load('PlayerTest.bmp').convert()
@@ -167,6 +170,10 @@ class Game:
                     self.zombies.remove(zombie)
                     self.bullets.remove(bullet)
                     self.kill_count += 1
+
+                    # Spawn une orbe d'XP à la position du zombie
+                    xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
+                    self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
                     break
 
     # On affiche le HUD
@@ -178,12 +185,26 @@ class Game:
         self.screen.blit(kill_text, (20, 70))
         hp_text = self.font.render(f"HP: {self.PLAYER_HP}", True, (255, 255,255))
         self.screen.blit(hp_text,(20,120))
+        xp_text = self.font.render(f"XP: {self.player_xp}", True, (255, 255, 255))
+        self.screen.blit(xp_text, (20, 170))
+
 
     def END_GAME(self): # a refaire
         death_text = self.font.render(f"Tu es mort", True, (255, 255,255))
         self.screen.blit(death_text,(500,500))
         pygame.quit()
         sys.exit()
+    
+    def collect_xp_orbs(self):
+        for orb in self.xp_orbs[:]:
+            distance = math.sqrt(
+                (orb['rect'].centerx - self.player_position[0]) ** 2 +
+                (orb['rect'].centery - self.player_position[1]) ** 2
+            )
+            if distance < 50:
+                self.player_xp += orb['value']
+                self.xp_orbs.remove(orb) 
+
         
             
 
@@ -208,6 +229,8 @@ class Game:
             # Déplace les zombies et les balles
             self.move_zombies()
             self.move_bullets()
+            self.collect_xp_orbs()
+
 
             # Dessine les zombies
             for zombie in self.zombies:
@@ -257,6 +280,11 @@ class Game:
             # Spawn de zombies à chaque itération
             if random.random() < 0.02:  # 2% de chance de spawn par frame
                 self.spawn_zombie()
+            
+            # Dessine les orbes d'XP
+            for orb in self.xp_orbs:
+                self.screen.blit(self.xp_image, (orb['rect'].x - self.camera_position[0], orb['rect'].y - self.camera_position[1]))
+
 
             #Le hud
             self.display_hud()
