@@ -37,6 +37,9 @@ class Game:
         self.shooting_cooldown = 1000
         self.last_shot_time = pygame.time.get_ticks()
 
+        #Var XP
+        self.XP_SIZE_MULTIPLIER = 4
+
 
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
@@ -65,6 +68,12 @@ class Game:
         new_zombie_size = (self.zombie_image.get_width() * self.ZOMBIE_SIZE_MULTIPLIER, self.zombie_image.get_height() * self.ZOMBIE_SIZE_MULTIPLIER)
         self.zombie_image = pygame.transform.scale(self.zombie_image, new_zombie_size)
         self.zombie_image.set_colorkey((0, 0, 0))
+
+        #Chargement de l'orbe XP
+        self.xp_image_image = pygame.image.load('New Piskel (4).png').convert()
+        new_xp_size = (self.zombie_image.get_width() * self.ZOMBIE_SIZE_MULTIPLIER, self.zombie_image.get_height() * self.ZOMBIE_SIZE_MULTIPLIER)
+        self.xp_image = pygame.transform.scale(self.xp_image, new_xp_size)
+        self.xp_image_image.set_colorkey((0, 0, 0))
 
         # Chargement des balles
         self.bullet_image = pygame.image.load('PlayerTest.bmp').convert()
