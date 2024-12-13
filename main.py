@@ -18,12 +18,17 @@ class Game:
         self.BACKGROUND_MAP_SIZE = self.BACKGROUND_SIZE * 10  # Taille de la map
 
         # Var PLAYER
-        self.PLAYER_VELOCITY = 30
-        self.PLAYER_SIZE_MULTIPLIER = 0.5
+        self.PLAYER_VELOCITY = 7
+        self.PLAYER_SIZE_MULTIPLIER = 0.3
 
         # Var ZOMBIE 
-        self.ZOMBIE_VELOCITY = 5
-        self.ZOMBIE_SIZE_MULTIPLIER = 3
+        self.ZOMBIE_VELOCITY = 2
+        self.ZOMBIE_SIZE_MULTIPLIER = 0.5
+
+        # Var BULLET
+        self.BULLET_VELOCITY = 10
+        self.BULLET_SIZE = 1
+        self.BULLET_MAX_DISTANCE = 600
 
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
@@ -41,10 +46,16 @@ class Game:
         self.player_image.set_colorkey((0, 0, 0))
 
         # Chargement du zombie
-        self.zombie_image = pygame.image.load('PlayerTest.bmp').convert()
+        self.zombie_image = pygame.image.load('zombieetsqueletton_01.png').convert()
         new_zombie_size = (self.zombie_image.get_width() * self.ZOMBIE_SIZE_MULTIPLIER, self.zombie_image.get_height() * self.ZOMBIE_SIZE_MULTIPLIER)
         self.zombie_image = pygame.transform.scale(self.zombie_image, new_zombie_size)
         self.zombie_image.set_colorkey((0, 0, 0))
+
+        # Chargement des balles
+        self.bullet_image = pygame.image.load('PlayerTest.bmp').convert()
+        new_bullet_size = (self.bullet_image.get_width() * self.BULLET_SIZE, self.bullet_image.get_height() * self.BULLET_SIZE)
+        self.bullet_image = pygame.transform.scale(self.bullet_image, new_bullet_size)
+        self.bullet_image.set_colorkey((0, 0, 0))
 
         # Aplication du mouvement du joueur
         self.player = self.player_image.get_rect(topleft=(30, 30))  # Position initiale
@@ -58,13 +69,15 @@ class Game:
         # Liste des zombies
         self.zombies = []
 
+        # Liste des balles
+        self.bullets = []
+
     def spawn_zombie(self):
         spawn_radius = 1000
         zombie_x = random.randint(self.player_position[0] - spawn_radius, self.player_position[0] + spawn_radius)
         zombie_y = random.randint(self.player_position[1] - spawn_radius, self.player_position[1] + spawn_radius)
         zombie_rect = self.zombie_image.get_rect(topleft=(zombie_x, zombie_y))
         self.zombies.append(zombie_rect)
-
 
     def move_zombies(self):
         # Déplace chaque zombie vers le joueur
@@ -79,6 +92,52 @@ class Game:
 
             zombie.x += zombie_dx * self.ZOMBIE_VELOCITY
             zombie.y += zombie_dy * self.ZOMBIE_VELOCITY
+
+    def shoot_bullet(self):
+        # Trouve le zombie le plus proche
+        if not self.zombies:
+            return
+
+        closest_zombie = min(self.zombies, key=lambda z: math.sqrt((z.x - self.player_position[0])**2 + (z.y - self.player_position[1])**2))
+        dx = closest_zombie.x - self.player_position[0]
+        dy = closest_zombie.y - self.player_position[1]
+        distance = math.sqrt(dx**2 + dy**2)
+
+        if distance != 0:
+            dx /= distance  # Normalisation
+            dy /= distance
+
+        # Ajoute la balle
+        bullet_rect = self.bullet_image.get_rect(center=(self.player_position[0], self.player_position[1]))
+        self.bullets.append({'rect': bullet_rect, 'direction': (dx, dy)})
+
+    def move_bullets(self):
+        for bullet in self.bullets[:]:
+            # Déplacement de la balle
+            bullet['rect'].x += bullet['direction'][0] * self.BULLET_VELOCITY
+            bullet['rect'].y += bullet['direction'][1] * self.BULLET_VELOCITY
+
+            # Supprime les balles trop loin du joueur
+            if math.sqrt((bullet['rect'].x - self.player_position[0])**2 + (bullet['rect'].y - self.player_position[1])**2) > self.BULLET_MAX_DISTANCE:
+                print("Balle supprimée car trop loin :", bullet['rect'])  # Debug optionnel
+                self.bullets.remove(bullet)
+                continue
+
+        #A REPARER
+            # Supprime les balles en dehors de l'écran
+           # if bullet['rect'].x < -100 or bullet['rect'].x > self.BACKGROUND_MAP_SIZE + 100 or \
+           # bullet['rect'].y < -100 or bullet['rect'].y > self.BACKGROUND_MAP_SIZE + 100:
+            #    self.bullets.remove(bullet)
+            #    continue
+
+            # Vérifie si une balle touche un zombie
+            for zombie in self.zombies:
+                if bullet['rect'].colliderect(zombie):
+                    self.zombies.remove(zombie)
+                    self.bullets.remove(bullet)
+                    break
+            
+
 
     def run_game(self):
         while self.run:
@@ -97,10 +156,17 @@ class Game:
             self.camera_position[0] = self.player_position[0] + 250 - self.SCREEN_WIDTH // 2
             self.camera_position[1] = self.player_position[1] + 250 - self.SCREEN_HEIGHT // 2
 
-            # Dessine les zombies
+            # Déplace les zombies et les balles
             self.move_zombies()
+            self.move_bullets()
+
+            # Dessine les zombies
             for zombie in self.zombies:
                 self.screen.blit(self.zombie_image, (zombie.x - self.camera_position[0], zombie.y - self.camera_position[1]))
+
+            # Dessine les balles
+            for bullet in self.bullets:
+                self.screen.blit(self.bullet_image, (bullet['rect'].x - self.camera_position[0], bullet['rect'].y - self.camera_position[1]))
 
             # Dessine le joueur en fonction de la caméra
             self.screen.blit(self.player_image, (self.player_position[0] - self.camera_position[0], self.player_position[1] - self.camera_position[1]))
@@ -115,18 +181,18 @@ class Game:
                         self.player_movement_y[0] = True
                     if event.key == pygame.K_DOWN:
                         self.player_movement_y[1] = True
-
                     if event.key == pygame.K_LEFT:
                         self.player_movement_x[0] = True
                     if event.key == pygame.K_RIGHT:
                         self.player_movement_x[1] = True
+                    if event.key == pygame.K_SPACE:
+                        self.shoot_bullet()
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
                         self.player_movement_y[0] = False
                     if event.key == pygame.K_DOWN:
                         self.player_movement_y[1] = False  
-
                     if event.key == pygame.K_LEFT:
                         self.player_movement_x[0] = False
                     if event.key == pygame.K_RIGHT:
