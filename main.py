@@ -26,11 +26,17 @@ class Game:
         # Var ZOMBIE 
         self.ZOMBIE_VELOCITY = 2
         self.ZOMBIE_SIZE_MULTIPLIER = 0.5
+        self.ZOMBIE_ATTACK_DISTANCE = 75
 
         # Var BULLET
         self.BULLET_VELOCITY = 10
         self.BULLET_SIZE = 1
-        self.BULLET_MAX_DISTANCE = 600
+        self.BULLET_MAX_DISTANCE = 700
+
+        #Var TIR
+        self.shooting_cooldown = 1000
+        self.last_shot_time = pygame.time.get_ticks()
+
 
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
@@ -103,7 +109,7 @@ class Game:
             zombie.y += zombie_dy * self.ZOMBIE_VELOCITY
 
             # Collision avec le joueur -> Dégats
-            if distance <= 50:
+            if distance <= self.ZOMBIE_ATTACK_DISTANCE:
                 self.zombies.remove(zombie)  
                 self.PLAYER_HP -= 1 
                 break
@@ -135,7 +141,7 @@ class Game:
 
             # Supprime les balles trop loin du joueur
             if math.sqrt((bullet['rect'].x - self.player_position[0])**2 + (bullet['rect'].y - self.player_position[1])**2) > self.BULLET_MAX_DISTANCE:
-                print("Balle supprimée car trop loin :", bullet['rect'])  # Debug optionnel
+                #print("Balle supprimée car trop loin :", bullet['rect'])  # Debug optionnel
                 self.bullets.remove(bullet)
                 continue
 
@@ -219,8 +225,8 @@ class Game:
                         self.player_movement_x[0] = True
                     if event.key == pygame.K_RIGHT:
                         self.player_movement_x[1] = True
-                    if event.key == pygame.K_SPACE:
-                        self.shoot_bullet()
+                    #if event.key == pygame.K_SPACE:
+                    #    self.shoot_bullet()             # Tir manuel
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
@@ -231,6 +237,13 @@ class Game:
                         self.player_movement_x[0] = False
                     if event.key == pygame.K_RIGHT:
                         self.player_movement_x[1] = False
+
+            # Tir automatique
+            current_time = pygame.time.get_ticks() 
+            if current_time - self.last_shot_time > self.shooting_cooldown:
+                self.shoot_bullet()  
+                self.last_shot_time = current_time  
+
 
             # Spawn de zombies à chaque itération
             if random.random() < 0.02:  # 2% de chance de spawn par frame
