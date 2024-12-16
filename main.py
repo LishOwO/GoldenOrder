@@ -5,6 +5,21 @@ import random
 import math
 
 class Game:
+
+    def load_and_resize_image(self, filepath, size_multiplier, colorkey=(0, 0, 0)):
+            """
+            Charge une image, redimensionne et applique un colorkey.
+            :param filepath: Chemin vers l'image.
+            :param size_multiplier: Multiplicateur pour redimensionner l'image.
+            :param colorkey: Couleur à rendre transparente.
+            :return: Surface pygame redimensionnée.
+            """
+            image = pygame.image.load(filepath).convert()
+            new_size = (int(image.get_width() * size_multiplier), int(image.get_height() * size_multiplier))
+            image = pygame.transform.scale(image, new_size)
+            image.set_colorkey(colorkey)
+            return image
+    
     def __init__(self):
         pygame.init()
 
@@ -34,6 +49,7 @@ class Game:
         self.BULLET_VELOCITY = 10
         self.BULLET_SIZE = 1
         self.BULLET_MAX_DISTANCE = 700
+        self.bullet_number = 1
 
         #Var TIR
         self.shooting_cooldown = 1000
@@ -43,6 +59,7 @@ class Game:
         self.XP_SIZE_MULTIPLIER = 4
         self.xp_orbs = []
         self.player_xp = 0
+        self.last_ten_lvl = 10
 
 
 
@@ -62,23 +79,16 @@ class Game:
         self.background_image = pygame.image.load('texture_map.png').convert()
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
 
+        
+        
         # Chargement du joueur
-        self.player_image = pygame.image.load('BiggerPlayerTest.png').convert()
-        new_player_size = (self.player_image.get_width() * self.PLAYER_SIZE_MULTIPLIER, self.player_image.get_height() * self.PLAYER_SIZE_MULTIPLIER)
-        self.player_image = pygame.transform.scale(self.player_image, new_player_size)
-        self.player_image.set_colorkey((0, 0, 0))
+        self.player_image = self.load_and_resize_image('BiggerPlayerTest.png', self.PLAYER_SIZE_MULTIPLIER)
 
         # Chargement du zombie
-        self.zombie_image = pygame.image.load('zombieetsqueletton_01.png').convert()
-        new_zombie_size = (self.zombie_image.get_width() * self.ZOMBIE_SIZE_MULTIPLIER, self.zombie_image.get_height() * self.ZOMBIE_SIZE_MULTIPLIER)
-        self.zombie_image = pygame.transform.scale(self.zombie_image, new_zombie_size)
-        self.zombie_image.set_colorkey((0, 0, 0))
+        self.zombie_image = self.load_and_resize_image('zombieetsqueletton_01.png', self.ZOMBIE_SIZE_MULTIPLIER)
 
-        #Chargement de XP
-        self.xp_image = pygame.image.load('New Piskel (4).png').convert()
-        new_xp_size = (self.xp_image.get_width() * self.XP_SIZE_MULTIPLIER, self.xp_image.get_height() * self.XP_SIZE_MULTIPLIER)
-        self.xp_image = pygame.transform.scale(self.xp_image, new_xp_size)
-        self.xp_image.set_colorkey((0, 0, 0))
+        # Chargement de XP
+        self.xp_image = self.load_and_resize_image('New Piskel (4).png', self.XP_SIZE_MULTIPLIER)
 
         # Chargement des balles
         self.bullet_image = pygame.image.load('PlayerTest.bmp').convert()
@@ -144,8 +154,9 @@ class Game:
             dy /= distance
 
         # Ajoute la balle
-        bullet_rect = self.bullet_image.get_rect(center=(self.player_position[0], self.player_position[1]+30))
-        self.bullets.append({'rect': bullet_rect, 'direction': (dx, dy)})
+        for i in range (0, self.bullet_number):
+            bullet_rect = self.bullet_image.get_rect(center=(self.player_position[0]+30+(10*i), self.player_position[1]+30+(10*i)))
+            self.bullets.append({'rect': bullet_rect, 'direction': (dx, dy)})
 
     def move_bullets(self):
         for bullet in self.bullets[:]:
@@ -178,7 +189,6 @@ class Game:
                     self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
                     break
 
-    # On affiche le HUD
     def display_hud(self):
         elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000
         timer_text = self.font.render(f"Time: {elapsed_time}s", True, (255, 255, 255))
@@ -214,6 +224,9 @@ class Game:
         self.PLAYER_LVL += 1
         self.shooting_cooldown = self.shooting_cooldown * 0.5 * lvl
         self.ZOMBIE_SPAWNCHANCHE = self.ZOMBIE_SPAWNCHANCHE * 1.5 * lvl
+        if self.PLAYER_LVL >= self.last_ten_lvl:
+            self.bullet_number += 1
+            self.last_ten_lvl += 10
         #print(self.shooting_cooldown)
 
         
