@@ -28,6 +28,7 @@ class Game:
         self.ZOMBIE_VELOCITY = 2
         self.ZOMBIE_SIZE_MULTIPLIER = 0.5
         self.ZOMBIE_ATTACK_DISTANCE = 75
+        self.ZOMBIE_SPAWNCHANCHE = 0.02
 
         # Var BULLET
         self.BULLET_VELOCITY = 10
@@ -195,6 +196,7 @@ class Game:
     def END_GAME(self): # a refaire
         death_text = self.font.render(f"Tu es mort", True, (255, 255,255))
         self.screen.blit(death_text,(500,500))
+        print("MORT")
         pygame.quit()
         sys.exit()
     
@@ -211,7 +213,8 @@ class Game:
     def level_up(self, lvl):  
         self.PLAYER_LVL += 1
         self.shooting_cooldown = self.shooting_cooldown * 0.5 * lvl
-        print(self.shooting_cooldown)
+        self.ZOMBIE_SPAWNCHANCHE = self.ZOMBIE_SPAWNCHANCHE * 1.5 * lvl
+        #print(self.shooting_cooldown)
 
         
             
@@ -286,7 +289,7 @@ class Game:
 
 
             # Spawn de zombies à chaque itération
-            if random.random() < 0.02:  # 2% de chance de spawn par frame
+            if random.random() < self.ZOMBIE_SPAWNCHANCHE:  # 2% de chance de spawn par frame
                 self.spawn_zombie()
             
             # Dessine les orbes d'XP
