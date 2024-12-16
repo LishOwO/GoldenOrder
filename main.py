@@ -22,6 +22,7 @@ class Game:
         self.PLAYER_VELOCITY = 7
         self.PLAYER_SIZE_MULTIPLIER = 0.3
         self.PLAYER_HP = 10
+        self.PLAYER_LVL = 0
 
         # Var ZOMBIE 
         self.ZOMBIE_VELOCITY = 2
@@ -72,7 +73,7 @@ class Game:
         self.zombie_image = pygame.transform.scale(self.zombie_image, new_zombie_size)
         self.zombie_image.set_colorkey((0, 0, 0))
 
-        #Chargement de l'orbe XP
+        #Chargement de XP
         self.xp_image = pygame.image.load('New Piskel (4).png').convert()
         new_xp_size = (self.xp_image.get_width() * self.XP_SIZE_MULTIPLIER, self.xp_image.get_height() * self.XP_SIZE_MULTIPLIER)
         self.xp_image = pygame.transform.scale(self.xp_image, new_xp_size)
@@ -85,7 +86,7 @@ class Game:
         self.bullet_image.set_colorkey((0, 0, 0))
 
         # Aplication du mouvement du joueur
-        self.player = self.player_image.get_rect(topleft=(30, 30))  # Position initiale
+        self.player = self.player_image.get_rect(center=(0, 0))  # Position initiale
         self.player_movement_x = [False, False]  # [Gauche, Droite]
         self.player_movement_y = [False, False]  # [Monter, Descendre]
         self.player_position = [0, 0]  # Position de départ
@@ -103,7 +104,7 @@ class Game:
         spawn_radius = 1000
         zombie_x = random.randint(self.player_position[0] - spawn_radius, self.player_position[0] + spawn_radius)
         zombie_y = random.randint(self.player_position[1] - spawn_radius, self.player_position[1] + spawn_radius)
-        zombie_rect = self.zombie_image.get_rect(topleft=(zombie_x, zombie_y))
+        zombie_rect = self.zombie_image.get_rect(center=(zombie_x, zombie_y))
         self.zombies.append(zombie_rect)
 
     def move_zombies(self):
@@ -142,7 +143,7 @@ class Game:
             dy /= distance
 
         # Ajoute la balle
-        bullet_rect = self.bullet_image.get_rect(center=(self.player_position[0], self.player_position[1]))
+        bullet_rect = self.bullet_image.get_rect(center=(self.player_position[0], self.player_position[1]+30))
         self.bullets.append({'rect': bullet_rect, 'direction': (dx, dy)})
 
     def move_bullets(self):
@@ -187,6 +188,8 @@ class Game:
         self.screen.blit(hp_text,(20,120))
         xp_text = self.font.render(f"XP: {self.player_xp}", True, (255, 255, 255))
         self.screen.blit(xp_text, (20, 170))
+        level_text = self.font.render(f"LVL: {self.PLAYER_LVL}", True, (255, 255, 255))
+        self.screen.blit(level_text, (20, 220))
 
 
     def END_GAME(self): # a refaire
@@ -201,9 +204,14 @@ class Game:
                 (orb['rect'].centerx - self.player_position[0]) ** 2 +
                 (orb['rect'].centery - self.player_position[1]) ** 2
             )
-            if distance < 50:
+            if distance < 100:
                 self.player_xp += orb['value']
                 self.xp_orbs.remove(orb) 
+
+    def level_up(self, lvl):  
+        self.PLAYER_LVL += 1
+        self.shooting_cooldown = self.shooting_cooldown * 0.5 * lvl
+        print(self.shooting_cooldown)
 
         
             
@@ -285,6 +293,9 @@ class Game:
             for orb in self.xp_orbs:
                 self.screen.blit(self.xp_image, (orb['rect'].x - self.camera_position[0], orb['rect'].y - self.camera_position[1]))
 
+            if self.player_xp >= 100:
+                self.level_up(1)
+                self.player_xp -= 100
 
             #Le hud
             self.display_hud()
