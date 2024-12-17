@@ -111,13 +111,19 @@ class Game:
         # Liste des balles
         self.bullets = []
 
+        self.PLAYER_VELOCITY = 200
+        self.smooth_time = 0.5
+        self.player_velocity_x = 0  
+        self.player_velocity_y = 0 
+        self.delta_time = 1 / 60 
+
     def spawn_zombie(self):
         spawn_radius = 2000
         min_distance = 1000
 
         while True:
-            zombie_x = random.randint(self.player_position[0] - spawn_radius, self.player_position[0] + spawn_radius)
-            zombie_y = random.randint(self.player_position[1] - spawn_radius, self.player_position[1] + spawn_radius)
+            zombie_x = random.randint(int(self.player_position[0] - spawn_radius), int(self.player_position[0] + spawn_radius))
+            zombie_y = random.randint(int(self.player_position[1] - spawn_radius), int(self.player_position[1] + spawn_radius))
 
             distance_squared = (zombie_x - self.player_position[0])**2 + (zombie_y - self.player_position[1])**2
 
@@ -148,7 +154,18 @@ class Game:
                 self.PLAYER_HP -= 1 
                 break
 
+    def smooth_damp(self, current, target, current_velocity, smooth_time, delta_time):
+        smooth_time = max(0.0001, smooth_time)  # Évite la division par zéro
+        omega = 2.0 / smooth_time
+        x = omega * delta_time
+        exp = 1 / (1 + x + 0.48 * x**2 + 0.235 * x**3)
 
+        change = current - target
+        temp = (current_velocity + omega * change) * delta_time
+        new_velocity = (current_velocity - omega * temp) * exp
+        new_position = target + (change + temp) * exp
+
+        return new_position, new_velocity
 
 
     def shoot_bullet(self):
@@ -173,27 +190,17 @@ class Game:
             )
             self.bullets.append({'rect': bullet_rect, 'direction': (dx, dy)})
 
-
     def move_bullets(self):
-        for bullet in self.bullets[:]:
+        for bullet in self.bullets[:]:  # Création d'une copie de la liste
             # Déplacement de la balle
             bullet['rect'].x += bullet['direction'][0] * self.BULLET_VELOCITY
             bullet['rect'].y += bullet['direction'][1] * self.BULLET_VELOCITY
 
             # Supprime les balles trop loin du joueur
-        for bullet in self.bullets[:]:  # Crée une copie temporaire pour itérer
             distance_squared = (bullet['rect'].x - self.player_position[0])**2 + (bullet['rect'].y - self.player_position[1])**2
             if distance_squared > self.BULLET_MAX_DISTANCE**2:
                 self.bullets.remove(bullet)
-
-
-        #A REPARER
-            # Supprime les balles en dehors de l'écran
-           # if bullet['rect'].x < -100 or bullet['rect'].x > self.BACKGROUND_MAP_SIZE + 100 or \
-           # bullet['rect'].y < -100 or bullet['rect'].y > self.BACKGROUND_MAP_SIZE + 100:
-            #    self.bullets.remove(bullet)
-            #    continue
-
+            
             # Vérifie si une balle touche un zombie
             for zombie in self.zombies:
                 if bullet['rect'].colliderect(zombie):
@@ -205,6 +212,7 @@ class Game:
                     xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
                     self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
                     break
+
 
     def display_hud(self):
         elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000
@@ -218,7 +226,6 @@ class Game:
         self.screen.blit(xp_text, (20, 170))
         level_text = self.font.render(f"LVL: {self.PLAYER_LVL}", True, (255, 255, 255))
         self.screen.blit(level_text, (20, 220))
-
 
     def END_GAME(self): # a refaire
         self.screen.fill((0, 0, 0))
@@ -237,11 +244,10 @@ class Game:
                     self.player_xp += orb['value']
                     self.xp_orbs.remove(orb)
 
-
     def level_up(self, lvl):  
         self.PLAYER_LVL += 1
         self.shooting_cooldown = self.shooting_cooldown * 0.9 * lvl
-        self.ZOMBIE_SPAWNCHANCHE = self.ZOMBIE_SPAWNCHANCHE * 1.5 * lvl
+        self.ZOMBIE_SPAWNCHANCHE = self.ZOMBIE_SPAWNCHANCHE * 1.2 * lvl
         if self.PLAYER_LVL >= self.last_ten_lvl:
             self.bullet_number += 1
             self.last_ten_lvl += 10
@@ -261,18 +267,48 @@ class Game:
                     self.screen.blit(self.background_image, (x - self.camera_position[0], y - self.camera_position[1]))
 
             # Mise à jour de la position du joueur
-            self.player_position[0] += (self.player_movement_x[1] - self.player_movement_x[0]) * self.PLAYER_VELOCITY
-            self.player_position[1] += (self.player_movement_y[1] - self.player_movement_y[0]) * self.PLAYER_VELOCITY
+            target_x = (self.player_movement_x[1] - self.player_movement_x[0]) * self.PLAYER_VELOCITY
+            target_y = (self.player_movement_y[1] - self.player_movement_y[0]) * self.PLAYER_VELOCITY
+
+            self.player_position[0], self.player_velocity_x = self.smooth_damp(
+            self.player_position[0],
+            self.player_position[0] + target_x,
+            self.player_velocity_x,
+            self.smooth_time,
+            self.delta_time
+            )
+
+            self.player_position[1], self.player_velocity_y = self.smooth_damp(
+                self.player_position[1],
+                self.player_position[1] + target_y,
+                self.player_velocity_y,
+                self.smooth_time,
+                self.delta_time
+            )
+
 
             # Déplace la caméra pour centrer le joueur
             self.camera_position[0] = self.player_position[0] +200 -self.SCREEN_WIDTH // 2
-            print(self.player_position[1] -self.SCREEN_WIDTH // 2)
+            #print(self.player_position[1] -self.SCREEN_WIDTH // 2)
             self.camera_position[1] = self.player_position[1] +200 -self.SCREEN_HEIGHT // 2
+
+
+            # Spawn de zombies à chaque itération
+            if random.random() < self.ZOMBIE_SPAWNCHANCHE:  # 2% de chance de spawn par frame
+                self.spawn_zombie()
 
             # Déplace les zombies et les balles
             self.move_zombies()
             self.move_bullets()
             self.collect_xp_orbs()
+
+            # Dessine les orbes d'XP
+            for orb in self.xp_orbs:
+                self.screen.blit(self.xp_image, (orb['rect'].x - self.camera_position[0], orb['rect'].y - self.camera_position[1]))
+
+            if self.player_xp >= 100:
+                self.level_up(1)
+                self.player_xp -= 100
 
 
             # Dessine les zombies
@@ -320,18 +356,9 @@ class Game:
                 self.last_shot_time = current_time  
 
 
-            # Spawn de zombies à chaque itération
-            if random.random() < self.ZOMBIE_SPAWNCHANCHE:  # 2% de chance de spawn par frame
-                self.spawn_zombie()
+
             
-            # Dessine les orbes d'XP
-            for orb in self.xp_orbs:
-                self.screen.blit(self.xp_image, (orb['rect'].x - self.camera_position[0], orb['rect'].y - self.camera_position[1]))
-
-            if self.player_xp >= 100:
-                self.level_up(1)
-                self.player_xp -= 100
-
+           
             #Le hud
             self.display_hud()
 
