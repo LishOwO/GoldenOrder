@@ -48,7 +48,7 @@ class Game:
         # Var BULLET
         self.BULLET_VELOCITY = 10
         self.BULLET_SIZE = 1
-        self.BULLET_MAX_DISTANCE = 700
+        self.BULLET_MAX_DISTANCE = 500
         self.bullet_number = 1
 
         #Var TIR
@@ -112,9 +112,18 @@ class Game:
         self.bullets = []
 
     def spawn_zombie(self):
-        spawn_radius = 1000
-        zombie_x = random.randint(self.player_position[0] - spawn_radius, self.player_position[0] + spawn_radius)
-        zombie_y = random.randint(self.player_position[1] - spawn_radius, self.player_position[1] + spawn_radius)
+        spawn_radius = 2000
+        min_distance = 1000
+
+        while True:
+            zombie_x = random.randint(self.player_position[0] - spawn_radius, self.player_position[0] + spawn_radius)
+            zombie_y = random.randint(self.player_position[1] - spawn_radius, self.player_position[1] + spawn_radius)
+
+            distance_squared = (zombie_x - self.player_position[0])**2 + (zombie_y - self.player_position[1])**2
+
+            if distance_squared >= min_distance**2:
+                break
+
         zombie_rect = self.zombie_image.get_rect(center=(zombie_x, zombie_y))
         self.zombies.append(zombie_rect)
 
@@ -140,24 +149,30 @@ class Game:
                 break
 
 
+
+
     def shoot_bullet(self):
-        # Trouve le zombie le plus proche
         if not self.zombies:
             return
 
-        closest_zombie = min(self.zombies, key=lambda z: math.sqrt((z.x - self.player_position[0])**2 + (z.y - self.player_position[1])**2))
+        closest_zombie = min(self.zombies, key=lambda z: (z.x - self.player_position[0])**2 + (z.y - self.player_position[1])**2)
+
         dx = closest_zombie.x - self.player_position[0]
         dy = closest_zombie.y - self.player_position[1]
         distance = math.sqrt(dx**2 + dy**2)
 
         if distance != 0:
-            dx /= distance  # Normalisation
+            dx /= distance
             dy /= distance
 
-        # Ajoute la balle
-        for i in range (0, self.bullet_number):
-            bullet_rect = self.bullet_image.get_rect(center=(self.player_position[0]+30+(10*i), self.player_position[1]+30+(10*i)))
+        for i in range(self.bullet_number):
+            offset_x = 30 + (10 * i)
+            offset_y = 30 + (10 * i)
+            bullet_rect = self.bullet_image.get_rect(
+                center=(self.player_position[0] + offset_x, self.player_position[1] + offset_y)
+            )
             self.bullets.append({'rect': bullet_rect, 'direction': (dx, dy)})
+
 
     def move_bullets(self):
         for bullet in self.bullets[:]:
@@ -166,10 +181,11 @@ class Game:
             bullet['rect'].y += bullet['direction'][1] * self.BULLET_VELOCITY
 
             # Supprime les balles trop loin du joueur
-            if math.sqrt((bullet['rect'].x - self.player_position[0])**2 + (bullet['rect'].y - self.player_position[1])**2) > self.BULLET_MAX_DISTANCE:
-                #print("Balle supprimée car trop loin :", bullet['rect'])  # Debug optionnel
+        for bullet in self.bullets[:]:  # Crée une copie temporaire pour itérer
+            distance_squared = (bullet['rect'].x - self.player_position[0])**2 + (bullet['rect'].y - self.player_position[1])**2
+            if distance_squared > self.BULLET_MAX_DISTANCE**2:
                 self.bullets.remove(bullet)
-                continue
+
 
         #A REPARER
             # Supprime les balles en dehors de l'écran
@@ -214,14 +230,13 @@ class Game:
         sys.exit()
     
     def collect_xp_orbs(self):
-        for orb in self.xp_orbs[:]:
-            distance = math.sqrt(
-                (orb['rect'].centerx - self.player_position[0]) ** 2 +
-                (orb['rect'].centery - self.player_position[1]) ** 2
-            )
-            if distance < 100:
-                self.player_xp += orb['value']
-                self.xp_orbs.remove(orb) 
+            for orb in self.xp_orbs[:]:
+                distance_squared = (orb['rect'].centerx - self.player_position[0])**2 + (orb['rect'].centery - self.player_position[1])**2
+                
+                if distance_squared < 100**2:  
+                    self.player_xp += orb['value']
+                    self.xp_orbs.remove(orb)
+
 
     def level_up(self, lvl):  
         self.PLAYER_LVL += 1
