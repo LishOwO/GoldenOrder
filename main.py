@@ -12,7 +12,7 @@ class Game:
             :param filepath: Chemin vers l'image.
             :param size_multiplier: Multiplicateur pour redimensionner l'image.
             :param colorkey: Couleur à rendre transparente.
-            :return: Surface pygame redimensionnée.
+            :return:Image redim
             """
             image = pygame.image.load(filepath).convert()
             new_size = (int(image.get_width() * size_multiplier), int(image.get_height() * size_multiplier))
@@ -43,7 +43,7 @@ class Game:
         self.ZOMBIE_VELOCITY = 2
         self.ZOMBIE_SIZE_MULTIPLIER = 0.5
         self.ZOMBIE_ATTACK_DISTANCE = 75
-        self.ZOMBIE_SPAWNCHANCHE = 0.02
+        self.ZOMBIE_SPAWNCHANCHE = 0.04
 
         # Var BULLET
         self.BULLET_VELOCITY = 10
@@ -135,6 +135,7 @@ class Game:
             # Collision avec le joueur -> Dégats
             if distance <= self.ZOMBIE_ATTACK_DISTANCE:
                 self.zombies.remove(zombie)  
+                self.screen.fill((255, 0, 0))
                 self.PLAYER_HP -= 1 
                 break
 
@@ -204,9 +205,11 @@ class Game:
 
 
     def END_GAME(self): # a refaire
-        death_text = self.font.render(f"Tu es mort", True, (255, 255,255))
-        self.screen.blit(death_text,(500,500))
-        print("MORT")
+        self.screen.fill((0, 0, 0))
+        text = self.font.render("Rip", True, (255, 0, 0))
+        self.screen.blit(text, (self.SCREEN_WIDTH // 2 - text.get_width(), self.SCREEN_HEIGHT // 2 - text.get_height()))
+        pygame.display.flip()
+        pygame.time.wait(3000)
         pygame.quit()
         sys.exit()
     
@@ -222,7 +225,7 @@ class Game:
 
     def level_up(self, lvl):  
         self.PLAYER_LVL += 1
-        self.shooting_cooldown = self.shooting_cooldown * 0.5 * lvl
+        self.shooting_cooldown = self.shooting_cooldown * 0.9 * lvl
         self.ZOMBIE_SPAWNCHANCHE = self.ZOMBIE_SPAWNCHANCHE * 1.5 * lvl
         if self.PLAYER_LVL >= self.last_ten_lvl:
             self.bullet_number += 1
@@ -247,8 +250,9 @@ class Game:
             self.player_position[1] += (self.player_movement_y[1] - self.player_movement_y[0]) * self.PLAYER_VELOCITY
 
             # Déplace la caméra pour centrer le joueur
-            self.camera_position[0] = self.player_position[0] + 250 - self.SCREEN_WIDTH // 2
-            self.camera_position[1] = self.player_position[1] + 250 - self.SCREEN_HEIGHT // 2
+            self.camera_position[0] = self.player_position[0] +200 -self.SCREEN_WIDTH // 2
+            print(self.player_position[1] -self.SCREEN_WIDTH // 2)
+            self.camera_position[1] = self.player_position[1] +200 -self.SCREEN_HEIGHT // 2
 
             # Déplace les zombies et les balles
             self.move_zombies()
