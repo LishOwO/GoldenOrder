@@ -1,5 +1,5 @@
 from asyncio import sleep
-import pygame
+import pygame # type: ignore
 import sys
 import random
 import math
@@ -73,14 +73,14 @@ class Game:
         self.kill_count = 0
         self.font = pygame.font.SysFont(None, 50)
         
+        #Var Gun
+        self.GUN_SIZE_MULTIPLIER = 4
 
 
         # Chargement du fond
-        self.background_image = pygame.image.load('texture_map.png').convert()
+        self.background_image = pygame.image.load('src/image/sprite/p').convert()
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
-
-        
-        
+     
         # Chargement du joueur
         self.player_image = self.load_and_resize_image('BiggerPlayerTest.png', self.PLAYER_SIZE_MULTIPLIER)
 
@@ -89,6 +89,10 @@ class Game:
 
         # Chargement de XP
         self.xp_image = self.load_and_resize_image('New Piskel (4).png', self.XP_SIZE_MULTIPLIER)
+
+        #Chargement du Gun
+        self.gun_image = self.load_and_resize_image('GunTest.png', self.GUN_SIZE_MULTIPLIER)
+
 
         # Chargement des balles
         self.bullet_image = pygame.image.load('PlayerTest.bmp').convert()
@@ -101,6 +105,7 @@ class Game:
         self.player_movement_x = [False, False]  # [Gauche, Droite]
         self.player_movement_y = [False, False]  # [Monter, Descendre]
         self.player_position = [0, 0]  # Position de départ
+        self.gun_position = [0, 0]
 
         # Variables pour la caméra
         self.camera_position = [0, 0]
@@ -134,7 +139,7 @@ class Game:
         self.zombies.append(zombie_rect)
 
     def move_zombies(self):
-        # Déplace chaque zombie vers le joueur
+        # Déplace chaque zombie vers le joueur"
         for zombie in self.zombies:
             zombie_dx = self.player_position[0] - zombie.x
             zombie_dy = self.player_position[1] - zombie.y
@@ -167,6 +172,13 @@ class Game:
 
         return new_position, new_velocity
 
+    def rot_center(self, image, angle):
+        orig_rect = image.get_rect()
+        rot_image = pygame.transform.rotate(image, angle)
+        rot_rect = orig_rect.copy()
+        rot_rect.center = rot_image.get_rect().center
+        rot_image = rot_image.subsurface(rot_rect).copy()
+        return rot_image
 
     def shoot_bullet(self):
         if not self.zombies:
@@ -177,6 +189,9 @@ class Game:
         dx = closest_zombie.x - self.player_position[0]
         dy = closest_zombie.y - self.player_position[1]
         distance = math.sqrt(dx**2 + dy**2)
+
+        #Angle du gun arcos(dy/dx)
+        self.gun_image = rot_center(self.gun_image, math.degrees(round(math.atan(dy/dx),1)))
 
         if distance != 0:
             dx /= distance
@@ -286,7 +301,9 @@ class Game:
                 self.delta_time
             )
 
-
+            self.gun_position[0] = self.player_position[0]
+            self.gun_position[1] = self.player_position[1]
+            
             # Déplace la caméra pour centrer le joueur
             self.camera_position[0] = self.player_position[0] +200 -self.SCREEN_WIDTH // 2
             #print(self.player_position[1] -self.SCREEN_WIDTH // 2)
@@ -321,6 +338,9 @@ class Game:
 
             # Dessine le joueur en fonction de la caméra
             self.screen.blit(self.player_image, (self.player_position[0] - self.camera_position[0], self.player_position[1] - self.camera_position[1]))
+            self.screen.blit(self.gun_image, (self.gun_position[0] - self.camera_position[0] -50, self.gun_position[1] - self.camera_position[1]))
+            print()
+
 
             # Gestion des événements
             for event in pygame.event.get():
