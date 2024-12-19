@@ -63,7 +63,7 @@ class Game:
 
         #Var LEVEL_UP_SCREEN
         self.LEVEL_UP = False
-        self.CHOOSE_SIZE_MULTIPLIER
+        self.CHOOSE_SIZE_MULTIPLIER = 1
 
 
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
@@ -266,11 +266,12 @@ class Game:
         if self.PLAYER_LVL >= self.last_ten_lvl:
             self.bullet_number += 1
             self.last_ten_lvl += 10
+        self.display_lvl_up_screen(self.PLAYER_LVL)
         #print(self.shooting_cooldown)
 
     def display_lvl_up_screen(self, lvl):
-        self.screen.blit(self.lvl_up_image,(50, 50)) 
-            
+            self.screen.blit(self.lvl_up_image,(50, 50)) 
+            pygame.time.wait(3000)
 
 
     def run_game(self):
