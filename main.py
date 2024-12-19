@@ -85,13 +85,25 @@ class Game:
         self.player_image = self.load_and_resize_image('BiggerPlayerTest.png', self.PLAYER_SIZE_MULTIPLIER)
 
         # Chargement du zombie
+<<<<<<< HEAD
         self.zombie_image = self.load_and_resize_image('zombieetsqueletton_01.png', self.ZOMBIE_SIZE_MULTIPLIER)
+=======
+        self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
+        
+        # Chargement xp_screen
+        self.lvl_up_image = self.load_and_resize_image('choose_background.png', self.CHOOSE_SIZE_MULTIPLIER)
+>>>>>>> e61dfe2 (images)
 
         # Chargement de XP
-        self.xp_image = self.load_and_resize_image('New Piskel (4).png', self.XP_SIZE_MULTIPLIER)
+        self.xp_image = self.load_and_resize_image('src/images/sprite/missellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
 
+<<<<<<< HEAD
         #Chargement du Gun
         self.gun_image = self.load_and_resize_image('GunTest.png', self.GUN_SIZE_MULTIPLIER)
+=======
+        # Chargement des balles
+        self.bullet_image = self.load_and_resize_image('src/images/sprite/player/player', self.BULLET_SIZE)
+>>>>>>> e61dfe2 (images)
 
 
         # Chargement des balles
