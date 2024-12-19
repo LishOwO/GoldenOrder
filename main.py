@@ -88,19 +88,17 @@ class Game:
         self.player_image = self.load_and_resize_image('src/images/sprite/player/BiggerPlayerTest.png', self.PLAYER_SIZE_MULTIPLIER)
 
         # Chargement du zombie
-        self.zombie_image = self.load_and_resize_image('zombieetsqueletton_01.png', self.ZOMBIE_SIZE_MULTIPLIER)
+        self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
         
         # Chargement xp_screen
-        self.zombie_image = self.load_and_resize_image('choose_background.png', self.CHOOSE_SIZE_MULTIPLIER)
+        self.zombie_image = self.load_and_resize_image('src/images/sprite/missellaneous/.png', self.CHOOSE_SIZE_MULTIPLIER)
 
         # Chargement de XP
         self.xp_image = self.load_and_resize_image('New Piskel (4).png', self.XP_SIZE_MULTIPLIER)
 
         # Chargement des balles
-        self.bullet_image = pygame.image.load('PlayerTest.bmp').convert()
-        new_bullet_size = (self.bullet_image.get_width() * self.BULLET_SIZE, self.bullet_image.get_height() * self.BULLET_SIZE)
-        self.bullet_image = pygame.transform.scale(self.bullet_image, new_bullet_size)
-        self.bullet_image.set_colorkey((0, 0, 0))
+        self.bullet_image = self.load_and_resize_image('bullerfdgfg', self.BULLET_SIZE)
+
 
         # Aplication du mouvement du joueur
         self.player = self.player_image.get_rect(center=(0, 0))  # Position initiale
