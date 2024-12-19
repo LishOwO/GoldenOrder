@@ -61,6 +61,8 @@ class Game:
         self.player_xp = 0
         self.last_ten_lvl = 10
 
+        #Var LEVEL_UP_SCREEN
+        self.LEVEL_UP = False
 
 
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
@@ -253,7 +255,8 @@ class Game:
             self.last_ten_lvl += 10
         #print(self.shooting_cooldown)
 
-        
+    def display_lvl_up_screen(self, lvl):
+        self.screen.blit(self.lvl_up_image,(self)) 
             
 
 
@@ -265,6 +268,10 @@ class Game:
             for y in range(-self.BACKGROUND_MAP_SIZE, self.BACKGROUND_MAP_SIZE, self.BACKGROUND_SIZE):
                 for x in range(-self.BACKGROUND_MAP_SIZE, self.BACKGROUND_MAP_SIZE, self.BACKGROUND_SIZE):
                     self.screen.blit(self.background_image, (x - self.camera_position[0], y - self.camera_position[1]))
+
+            if self.LEVEL_UP == True:
+                self.display_lvl_up_screen(self, self.player_xp)
+                pass
 
             # Mise à jour de la position du joueur
             target_x = (self.player_movement_x[1] - self.player_movement_x[0]) * self.PLAYER_VELOCITY
