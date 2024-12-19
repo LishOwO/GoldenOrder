@@ -63,6 +63,7 @@ class Game:
 
         #Var LEVEL_UP_SCREEN
         self.LEVEL_UP = False
+        self.CHOOSE_SIZE_MULTIPLIER
 
 
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
@@ -84,10 +85,13 @@ class Game:
         
         
         # Chargement du joueur
-        self.player_image = self.load_and_resize_image('BiggerPlayerTest.png', self.PLAYER_SIZE_MULTIPLIER)
+        self.player_image = self.load_and_resize_image('src/images/sprite/player/BiggerPlayerTest.png', self.PLAYER_SIZE_MULTIPLIER)
 
         # Chargement du zombie
         self.zombie_image = self.load_and_resize_image('zombieetsqueletton_01.png', self.ZOMBIE_SIZE_MULTIPLIER)
+        
+        # Chargement xp_screen
+        self.zombie_image = self.load_and_resize_image('choose_background.png', self.CHOOSE_SIZE_MULTIPLIER)
 
         # Chargement de XP
         self.xp_image = self.load_and_resize_image('New Piskel (4).png', self.XP_SIZE_MULTIPLIER)
@@ -256,7 +260,7 @@ class Game:
         #print(self.shooting_cooldown)
 
     def display_lvl_up_screen(self, lvl):
-        self.screen.blit(self.lvl_up_image,(self)) 
+        self.screen.blit(self.lvl_up_image,(50, 50)) 
             
 
 
