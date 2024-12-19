@@ -61,6 +61,9 @@ class Game:
         self.player_xp = 0
         self.last_ten_lvl = 10
 
+        #Var LEVEL_UP_SCREEN
+        self.LEVEL_UP = False
+        self.CHOOSE_SIZE_MULTIPLIER
 
 
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
@@ -82,35 +85,20 @@ class Game:
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
      
         # Chargement du joueur
-        self.player_image = self.load_and_resize_image('BiggerPlayerTest.png', self.PLAYER_SIZE_MULTIPLIER)
+        self.player_image = self.load_and_resize_image('src/images/sprite/player/BiggerPlayerTest.png', self.PLAYER_SIZE_MULTIPLIER)
 
         # Chargement du zombie
-<<<<<<< HEAD
-        self.zombie_image = self.load_and_resize_image('zombieetsqueletton_01.png', self.ZOMBIE_SIZE_MULTIPLIER)
-=======
         self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
         
         # Chargement xp_screen
         self.lvl_up_image = self.load_and_resize_image('choose_background.png', self.CHOOSE_SIZE_MULTIPLIER)
->>>>>>> e61dfe2 (images)
 
         # Chargement de XP
         self.xp_image = self.load_and_resize_image('src/images/sprite/missellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
 
-<<<<<<< HEAD
-        #Chargement du Gun
-        self.gun_image = self.load_and_resize_image('GunTest.png', self.GUN_SIZE_MULTIPLIER)
-=======
         # Chargement des balles
         self.bullet_image = self.load_and_resize_image('src/images/sprite/player/player', self.BULLET_SIZE)
->>>>>>> e61dfe2 (images)
 
-
-        # Chargement des balles
-        self.bullet_image = pygame.image.load('PlayerTest.bmp').convert()
-        new_bullet_size = (self.bullet_image.get_width() * self.BULLET_SIZE, self.bullet_image.get_height() * self.BULLET_SIZE)
-        self.bullet_image = pygame.transform.scale(self.bullet_image, new_bullet_size)
-        self.bullet_image.set_colorkey((0, 0, 0))
 
         # Aplication du mouvement du joueur
         self.player = self.player_image.get_rect(center=(0, 0))  # Position initiale
@@ -280,7 +268,8 @@ class Game:
             self.last_ten_lvl += 10
         #print(self.shooting_cooldown)
 
-        
+    def display_lvl_up_screen(self, lvl):
+        self.screen.blit(self.lvl_up_image,(50, 50)) 
             
 
 
@@ -292,6 +281,10 @@ class Game:
             for y in range(-self.BACKGROUND_MAP_SIZE, self.BACKGROUND_MAP_SIZE, self.BACKGROUND_SIZE):
                 for x in range(-self.BACKGROUND_MAP_SIZE, self.BACKGROUND_MAP_SIZE, self.BACKGROUND_SIZE):
                     self.screen.blit(self.background_image, (x - self.camera_position[0], y - self.camera_position[1]))
+
+            if self.LEVEL_UP == True:
+                self.display_lvl_up_screen(self, self.player_xp)
+                pass
 
             # Mise à jour de la position du joueur
             target_x = (self.player_movement_x[1] - self.player_movement_x[0]) * self.PLAYER_VELOCITY
