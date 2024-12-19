@@ -266,12 +266,12 @@ class Game:
         if self.PLAYER_LVL >= self.last_ten_lvl:
             self.bullet_number += 1
             self.last_ten_lvl += 10
-        self.display_lvl_up_screen(self.PLAYER_LVL)
+        self.LEVEL_UP = True    
         #print(self.shooting_cooldown)
 
     def display_lvl_up_screen(self, lvl):
-            self.screen.blit(self.lvl_up_image,(50, 50)) 
-            pygame.time.wait(3000)
+        self.screen.blit(self.lvl_up_image,(50, 50)) 
+        pygame.time.wait(3000)
 
 
     def run_game(self):
@@ -284,7 +284,8 @@ class Game:
                     self.screen.blit(self.background_image, (x - self.camera_position[0], y - self.camera_position[1]))
 
             if self.LEVEL_UP == True:
-                self.display_lvl_up_screen(self, self.player_xp)
+                self.display_lvl_up_screen(self, self.PLAYER_LVL)
+                self.LEVEL_UP = False
                 pass
 
             # Mise à jour de la position du joueur
