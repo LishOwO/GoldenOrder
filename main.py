@@ -284,7 +284,7 @@ class Game:
                     self.screen.blit(self.background_image, (x - self.camera_position[0], y - self.camera_position[1]))
 
             if self.LEVEL_UP == True:
-                self.display_lvl_up_screen(self, self.PLAYER_LVL)
+                self.display_lvl_up_screen(self.PLAYER_LVL)
                 self.LEVEL_UP = False
                 pass
 
