@@ -81,11 +81,11 @@ class Game:
 
 
         # Chargement du fond
-        self.background_image = pygame.image.load('src/image/sprite/p').convert()
+        self.background_image = pygame.image.load('src/images/sprite/texture_map.png').convert()
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
      
         # Chargement du joueur
-        self.player_image = self.load_and_resize_image('src/images/sprite/player/BiggerPlayerTest.png', self.PLAYER_SIZE_MULTIPLIER)
+        self.player_image = self.load_and_resize_image('src/images/sprite/player/MecAlakippa.png', self.PLAYER_SIZE_MULTIPLIER)
 
         # Chargement du zombie
         self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
