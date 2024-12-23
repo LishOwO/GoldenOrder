@@ -98,6 +98,7 @@ class Game:
 
         # Chargement des balles
         self.bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE)
+        self.rotated_bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE)
 
         # Chargement du gun
         self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 1)
@@ -194,6 +195,7 @@ class Game:
 
         angle = math.degrees(math.atan2(-dy, dx))
         self.rotated_gun_image = pygame.transform.rotate(self.gun_image, angle)
+        self.rotated_bullet_image = pygame.transform.rotate(self.bullet_image, angle)
 
         if distance != 0:
             dx /= distance
@@ -349,7 +351,7 @@ class Game:
 
             # Dessine les balles
             for bullet in self.bullets:
-                self.screen.blit(self.bullet_image, (bullet['rect'].x - self.camera_position[0], bullet['rect'].y - self.camera_position[1]))
+                self.screen.blit(self.rotated_bullet_image, (bullet['rect'].x - self.camera_position[0], bullet['rect'].y - self.camera_position[1]))
 
             # Dessine le joueur en fonction de la caméra
             self.screen.blit(self.player_image, (self.player_position[0] - self.camera_position[0], self.player_position[1] - self.camera_position[1]))
