@@ -97,7 +97,7 @@ class Game:
         self.xp_image = self.load_and_resize_image('src/images/sprite/missellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
 
         # Chargement des balles
-        self.bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet1.png', self.BULLET_SIZE, 10)
+        self.bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE, 10)
 
         # Chargement du gun
         self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 1)
