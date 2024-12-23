@@ -85,7 +85,7 @@ class Game:
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
      
         # Chargement du joueur
-        self.player_image = self.load_and_resize_image('src/images/sprite/player/MecAlakippa.png', self.PLAYER_SIZE_MULTIPLIER)
+        self.player_image = self.load_and_resize_image('src/images/sprite/player/MecAlakippa', self.PLAYER_SIZE_MULTIPLIER)
 
         # Chargement du zombie
         self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
@@ -97,7 +97,10 @@ class Game:
         self.xp_image = self.load_and_resize_image('src/images/sprite/missellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
 
         # Chargement des balles
-        self.bullet_image = self.load_and_resize_image('src/images/sprite/player/player', self.BULLET_SIZE)
+        self.bullet_image = self.load_and_resize_image('src/images/sprite/player/PlayerTest.bmp', self.BULLET_SIZE)
+
+        # Chargement du gun
+        self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', self.BULLET_SIZE)
 
 
         # Aplication du mouvement du joueur
@@ -172,13 +175,12 @@ class Game:
 
         return new_position, new_velocity
 
-    def rot_center(self, image, angle):
-        orig_rect = image.get_rect()
-        rot_image = pygame.transform.rotate(image, angle)
-        rot_rect = orig_rect.copy()
-        rot_rect.center = rot_image.get_rect().center
-        rot_image = rot_image.subsurface(rot_rect).copy()
-        return rot_image
+    # def rot_center(self, image, angle):
+    #     orig_rect = image.get_rect()
+    #     rot_image = pygame.transform.rotate(image, angle)
+    #     rot_rect = orig_rect.copy()
+    #     rot_rect.center = rot_image.get_rect().center
+    #     return rot_image
 
     def shoot_bullet(self):
         if not self.zombies:
@@ -191,7 +193,7 @@ class Game:
         distance = math.sqrt(dx**2 + dy**2)
 
         #Angle du gun arcos(dy/dx)
-        self.gun_image = rot_center(self.gun_image, math.degrees(round(math.atan(dy/dx),1)))
+        #self.gun_image = self.rot_center(self.gun_image, math.degrees(round(math.atan(dy/dx),1)))
 
         if distance != 0:
             dx /= distance
@@ -216,17 +218,23 @@ class Game:
             if distance_squared > self.BULLET_MAX_DISTANCE**2:
                 self.bullets.remove(bullet)
             
-            # Vérifie si une balle touche un zombie
             for zombie in self.zombies:
                 if bullet['rect'].colliderect(zombie):
                     self.zombies.remove(zombie)
-                    self.bullets.remove(bullet)
+                    
+                    if bullet not in self.bullets:
+                        print("Erreur : la balle n'est plus dans la liste !", bullet)
+                    else:
+                        self.bullets.remove(bullet)
+                    
                     self.kill_count += 1
-
+                    
                     # Spawn une orbe d'XP à la position du zombie
                     xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
                     self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
+                    
                     break
+
 
 
     def display_hud(self):
