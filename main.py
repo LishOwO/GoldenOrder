@@ -47,7 +47,7 @@ class Game:
 
         # Var BULLET
         self.BULLET_VELOCITY = 10
-        self.BULLET_SIZE = 1
+        self.BULLET_SIZE = 4
         self.BULLET_MAX_DISTANCE = 500
         self.bullet_number = 1
 
@@ -97,10 +97,10 @@ class Game:
         self.xp_image = self.load_and_resize_image('src/images/sprite/missellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
 
         # Chargement des balles
-        self.bullet_image = self.load_and_resize_image('src/images/sprite/player/PlayerTest.bmp', self.BULLET_SIZE)
+        self.bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet1.png', self.BULLET_SIZE, 10)
 
         # Chargement du gun
-        self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', self.BULLET_SIZE)
+        self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 1)
 
 
         # Aplication du mouvement du joueur
