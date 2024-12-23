@@ -97,11 +97,11 @@ class Game:
         self.xp_image = self.load_and_resize_image('src/images/sprite/missellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
 
         # Chargement des balles
-        self.bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE, 10)
+        self.bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE)
 
         # Chargement du gun
         self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 1)
-
+        self.rotated_gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 1)
 
         # Aplication du mouvement du joueur
         self.player = self.player_image.get_rect(center=(0, 0))  # Position initiale
@@ -192,8 +192,8 @@ class Game:
         dy = closest_zombie.y - self.player_position[1]
         distance = math.sqrt(dx**2 + dy**2)
 
-        #Angle du gun arcos(dy/dx)
-        #self.gun_image = self.rot_center(self.gun_image, math.degrees(round(math.atan(dy/dx),1)))
+        angle = math.degrees(math.atan2(-dy, dx))
+        self.rotated_gun_image = pygame.transform.rotate(self.gun_image, angle)
 
         if distance != 0:
             dx /= distance
@@ -353,7 +353,7 @@ class Game:
 
             # Dessine le joueur en fonction de la caméra
             self.screen.blit(self.player_image, (self.player_position[0] - self.camera_position[0], self.player_position[1] - self.camera_position[1]))
-            self.screen.blit(self.gun_image, (self.gun_position[0] - self.camera_position[0] -50, self.gun_position[1] - self.camera_position[1]))
+            self.screen.blit(self.rotated_gun_image, (self.gun_position[0] - self.camera_position[0] -50, self.gun_position[1] - self.camera_position[1]))
             print()
 
 
