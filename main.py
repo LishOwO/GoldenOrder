@@ -79,6 +79,8 @@ class Game:
         #Var Gun
         self.GUN_SIZE_MULTIPLIER = 4
 
+        # Var BOX
+        self.BOX_SPAWN_CHANCE = 0.01  # 1% de chance de spawn par frame
 
         # Chargement du fond
         self.background_image = pygame.image.load('src/images/sprite/texture_map.png').convert()
@@ -103,8 +105,10 @@ class Game:
         # Chargement du gun
         self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 0.8)
         self.rotated_gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 0.8)
-        # Chargement des box
 
+        # Chargement des box
+        self.luckyblock_image = self.load_and_resize_image('src/images/sprite/missellaneous/LuckyBlock.png', 1)
+       
 
         # Aplication du mouvement du joueur
         self.player = self.player_image.get_rect(center=(0, 0))  # Position initiale
@@ -127,6 +131,10 @@ class Game:
         self.player_velocity_x = 0  
         self.player_velocity_y = 0 
         self.delta_time = 1 / 60 
+
+        #Variables lucky blocks
+        self.lucky_blocks = []  # Liste des lucky blocks
+
 
     def spawn_zombie(self):
         spawn_radius = 2000
@@ -177,13 +185,6 @@ class Game:
         new_position = target + (change + temp) * exp
 
         return new_position, new_velocity
-
-    # def rot_center(self, image, angle):
-    #     orig_rect = image.get_rect()
-    #     rot_image = pygame.transform.rotate(image, angle)
-    #     rot_rect = orig_rect.copy()
-    #     rot_rect.center = rot_image.get_rect().center
-    #     return rot_image
 
     def shoot_bullet(self):
         if not self.zombies:
@@ -291,8 +292,23 @@ class Game:
         #print(self.shooting_cooldown)
 
     def display_lvl_up_screen(self, lvl):
+
+        
         self.screen.blit(self.lvl_up_image,(50, 50)) 
         pygame.time.wait(3000)
+
+    def tint_texture(self, surface, tint_color):      
+        tinted_surface = surface.copy()
+        width, height = tinted_surface.get_size()
+        for x in range(width):
+            for y in range(height):
+                color = tinted_surface.get_at((x, y))
+                if color.r+color.g+color.b > 0:  
+                    r = min(color.r + tint_color[0], 255)
+                    g = min(color.g + tint_color[1], 255)
+                    b = min(color.b + tint_color[2], 255)
+                    tinted_surface.set_at((x, y), (r, g, b))
+        return tinted_surface
 
 
     def run_game(self):
@@ -329,13 +345,14 @@ class Game:
                 self.delta_time
             )
 
+            #
+
             #On bouge le gun avec le joueur
             self.gun_position[0] = self.player_position[0]
             self.gun_position[1] = self.player_position[1]
             
             # Déplace la caméra pour centrer le joueur
             self.camera_position[0] = self.player_position[0] +200 -self.SCREEN_WIDTH // 2
-            #print(self.player_position[1] -self.SCREEN_WIDTH // 2)
             self.camera_position[1] = self.player_position[1] +200 -self.SCREEN_HEIGHT // 2
 
 
@@ -348,34 +365,38 @@ class Game:
             self.move_bullets()
             self.collect_xp_orbs()
 
-            # Dessine les orbes d'XP
-            for orb in self.xp_orbs:
-                self.screen.blit(self.xp_image, (orb['rect'].x - self.camera_position[0], orb['rect'].y - self.camera_position[1]))
-
+            # Levelup
             if self.player_xp >= 100:
                 self.level_up(1)
                 self.player_xp -= 100
 
+            # Dessine les orbes d'XP
+            for orb in self.xp_orbs:
+                self.screen.blit(self.xp_image, (orb['rect'].x - self.camera_position[0], orb['rect'].y - self.camera_position[1]))
 
             # Dessine les zombies
             for zombie in self.zombies:
                 self.screen.blit(self.zombie_image, (zombie.x - self.camera_position[0], zombie.y - self.camera_position[1]))
 
            
-          # Dessine les balles
+            # Dessine les balles
             for bullet in self.bullets:
                 self.screen.blit(
                     bullet['image'], 
                     (bullet['rect'].x - self.camera_position[0], bullet['rect'].y - self.camera_position[1])
                 )
 
-            # Dessine le joueur en fonction de la caméra
-            self.screen.blit(self.player_image, (self.player_position[0] - self.camera_position[0], self.player_position[1] - self.camera_position[1]))
+           # Dessine le joueur et le gunn 
+            self.screen.blit(self.player_image, (self.player_position[0] - self.camera_position[0] -50, self.player_position[1] - self.camera_position[1]))
+            print()  
             self.screen.blit(self.rotated_gun_image, (self.gun_position[0] - self.camera_position[0] -50, self.gun_position[1] - self.camera_position[1]))
             print()
+
+            #Le hud
+            self.display_hud()
     
 
-            # Gestion des événements
+            # Gestion des inputs
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.run = False
@@ -391,6 +412,9 @@ class Game:
                         self.player_movement_x[1] = True
                     #if event.key == pygame.K_SPACE:
                     #    self.shoot_bullet()             # Tir manuel
+                    if event.key == pygame.K_a:
+                        self.player_image = self.tint_texture(self.player_image, (0, 0, 200 ))
+                        
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
@@ -408,12 +432,7 @@ class Game:
                 self.shoot_bullet()  
                 self.last_shot_time = current_time  
 
-
-
             
-           
-            #Le hud
-            self.display_hud()
 
             #Mort
             if self.PLAYER_HP == 0:
