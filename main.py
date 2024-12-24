@@ -103,7 +103,7 @@ class Game:
         # Chargement du gun
         self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 0.8)
         self.rotated_gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 0.8)
-        # Chargement du gun
+        # Chargement des box
 
 
         # Aplication du mouvement du joueur
@@ -189,57 +189,66 @@ class Game:
         if not self.zombies:
             return
 
-        closest_zombie = min(self.zombies, key=lambda z: (z.x - self.player_position[0])**2 + (z.y - self.player_position[1])**2)
+        # Trouver le zombie le plus proche
+        closest_zombie = min(
+            self.zombies, key=lambda z: (z.x - self.player_position[0])**2 + (z.y - self.player_position[1])**2
+        )
 
         dx = closest_zombie.x - self.player_position[0]
         dy = closest_zombie.y - self.player_position[1]
         distance = math.sqrt(dx**2 + dy**2)
 
-        angle = math.degrees(math.atan2(-dy, dx))
-        self.rotated_gun_image = pygame.transform.rotate(self.gun_image, angle)
-        self.rotated_bullet_image = pygame.transform.rotate(self.bullet_image, angle)
-
         if distance != 0:
             dx /= distance
             dy /= distance
 
+        # Calculer angle balle (tigo toa (toi toiii))
+        angle = math.degrees(math.atan2(-dy, dx))  # Angle en degrés
+
+        # On tourne le gun
+        self.rotated_gun_image = pygame.transform.rotate(self.gun_image, angle)
+
         for i in range(self.bullet_number):
             offset_x = 30 + (10 * i)
             offset_y = 30 + (10 * i)
-            bullet_rect = self.bullet_image.get_rect(
+
+            # Créer une copie individuelle pour chaque balle avec son angle propre
+            rotated_bullet_image = pygame.transform.rotate(self.bullet_image, angle)
+            bullet_rect = rotated_bullet_image.get_rect(
                 center=(self.player_position[0] + offset_x, self.player_position[1] + offset_y)
             )
-            self.bullets.append({'rect': bullet_rect, 'direction': (dx, dy)})
+            
+            
+            self.bullets.append({
+                'rect': bullet_rect,
+                'direction': (dx, dy),
+                'image': rotated_bullet_image  # Image chaque balle
+            })
 
     def move_bullets(self):
-        for bullet in self.bullets[:]:  
+        for bullet in self.bullets[:]:
             # Déplacement de la balle
             bullet['rect'].x += bullet['direction'][0] * self.BULLET_VELOCITY
             bullet['rect'].y += bullet['direction'][1] * self.BULLET_VELOCITY
 
-            # Supprime les balles trop loin du joueur
+            # Supprimer les balles trop loin du joueur
             distance_squared = (bullet['rect'].x - self.player_position[0])**2 + (bullet['rect'].y - self.player_position[1])**2
             if distance_squared > self.BULLET_MAX_DISTANCE**2:
                 self.bullets.remove(bullet)
-            
+                continue
+
+            #  collisions balle et zombie
             for zombie in self.zombies:
                 if bullet['rect'].colliderect(zombie):
                     self.zombies.remove(zombie)
-                    
-                    if bullet not in self.bullets:
-                        print("Erreur : la balle n'est plus dans la liste !", bullet)
-                    else:
+                    if bullet in self.bullets:
                         self.bullets.remove(bullet)
-                    
                     self.kill_count += 1
-                    
+
                     # Spawn une orbe d'XP à la position du zombie
                     xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
                     self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
-                    
                     break
-
-
 
     def display_hud(self):
         elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000
@@ -320,6 +329,7 @@ class Game:
                 self.delta_time
             )
 
+            #On bouge le gun avec le joueur
             self.gun_position[0] = self.player_position[0]
             self.gun_position[1] = self.player_position[1]
             
@@ -351,15 +361,19 @@ class Game:
             for zombie in self.zombies:
                 self.screen.blit(self.zombie_image, (zombie.x - self.camera_position[0], zombie.y - self.camera_position[1]))
 
-            # Dessine les balles
+           
+          # Dessine les balles
             for bullet in self.bullets:
-                self.screen.blit(self.rotated_bullet_image, (bullet['rect'].x - self.camera_position[0], bullet['rect'].y - self.camera_position[1]))
+                self.screen.blit(
+                    bullet['image'], 
+                    (bullet['rect'].x - self.camera_position[0], bullet['rect'].y - self.camera_position[1])
+                )
 
             # Dessine le joueur en fonction de la caméra
             self.screen.blit(self.player_image, (self.player_position[0] - self.camera_position[0], self.player_position[1] - self.camera_position[1]))
             self.screen.blit(self.rotated_gun_image, (self.gun_position[0] - self.camera_position[0] -50, self.gun_position[1] - self.camera_position[1]))
             print()
-
+    
 
             # Gestion des événements
             for event in pygame.event.get():
