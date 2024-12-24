@@ -47,12 +47,12 @@ class Game:
 
         # Var BULLET
         self.BULLET_VELOCITY = 10
-        self.BULLET_SIZE = 4
+        self.BULLET_SIZE = 2
         self.BULLET_MAX_DISTANCE = 500
         self.bullet_number = 1
 
         #Var TIR
-        self.shooting_cooldown = 1000
+        self.shooting_cooldown = 700
         self.last_shot_time = pygame.time.get_ticks()
 
         #Var XP
@@ -101,8 +101,10 @@ class Game:
         self.rotated_bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE)
 
         # Chargement du gun
-        self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 1)
-        self.rotated_gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 1)
+        self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 0.8)
+        self.rotated_gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 0.8)
+        # Chargement du gun
+
 
         # Aplication du mouvement du joueur
         self.player = self.player_image.get_rect(center=(0, 0))  # Position initiale
@@ -210,7 +212,7 @@ class Game:
             self.bullets.append({'rect': bullet_rect, 'direction': (dx, dy)})
 
     def move_bullets(self):
-        for bullet in self.bullets[:]:  # Création d'une copie de la liste
+        for bullet in self.bullets[:]:  
             # Déplacement de la balle
             bullet['rect'].x += bullet['direction'][0] * self.BULLET_VELOCITY
             bullet['rect'].y += bullet['direction'][1] * self.BULLET_VELOCITY
@@ -293,10 +295,10 @@ class Game:
                 for x in range(-self.BACKGROUND_MAP_SIZE, self.BACKGROUND_MAP_SIZE, self.BACKGROUND_SIZE):
                     self.screen.blit(self.background_image, (x - self.camera_position[0], y - self.camera_position[1]))
 
-            if self.LEVEL_UP == True:
-                self.display_lvl_up_screen(self.PLAYER_LVL)
-                self.LEVEL_UP = False
-                pass
+            # if self.LEVEL_UP == True:
+            #     self.display_lvl_up_screen(self.PLAYER_LVL)
+            #     self.LEVEL_UP = False
+            #     pass
 
             # Mise à jour de la position du joueur
             target_x = (self.player_movement_x[1] - self.player_movement_x[0]) * self.PLAYER_VELOCITY
