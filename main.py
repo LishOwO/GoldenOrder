@@ -135,22 +135,18 @@ class Game:
         #Variables lucky blocks
         self.lucky_blocks = []  # Liste des lucky blocks
 
-
-    def spawn_zombie(self):
-        spawn_radius = 2000
-        min_distance = 1000
-
+    def spawn_arround_player(self, spawn_radius, min_distance, targetlist):
         while True:
-            zombie_x = random.randint(int(self.player_position[0] - spawn_radius), int(self.player_position[0] + spawn_radius))
-            zombie_y = random.randint(int(self.player_position[1] - spawn_radius), int(self.player_position[1] + spawn_radius))
+            target_x = random.randint(int(self.player_position[0] - spawn_radius), int(self.player_position[0] + spawn_radius))
+            target_y = random.randint(int(self.player_position[1] - spawn_radius), int(self.player_position[1] + spawn_radius))
 
-            distance_squared = (zombie_x - self.player_position[0])**2 + (zombie_y - self.player_position[1])**2
+            distance_squared = (target_x - self.player_position[0])**2 + (target_y - self.player_position[1])**2
 
             if distance_squared >= min_distance**2:
                 break
 
-        zombie_rect = self.zombie_image.get_rect(center=(zombie_x, zombie_y))
-        self.zombies.append(zombie_rect)
+        target_rect = self.zombie_image.get_rect(center=(target_x,target_y))
+        targetlist.append(target_rect)
 
     def move_zombies(self):
         # Déplace chaque zombie vers le joueur"
@@ -357,8 +353,8 @@ class Game:
 
 
             # Spawn de zombies à chaque itération
-            if random.random() < self.ZOMBIE_SPAWNCHANCHE:  # 2% de chance de spawn par frame
-                self.spawn_zombie()
+            if random.random() < self.ZOMBIE_SPAWNCHANCHE: 
+                self.spawn_arround_player(1200, 400, self.zombies)
 
             # Déplace les zombies et les balles
             self.move_zombies()
