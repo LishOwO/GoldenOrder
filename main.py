@@ -43,7 +43,7 @@ class Game:
         self.ZOMBIE_VELOCITY = 2
         self.ZOMBIE_SIZE_MULTIPLIER = 0.5
         self.ZOMBIE_ATTACK_DISTANCE = 75
-        self.ZOMBIE_SPAWNCHANCHE = 0.04
+        self.ZOMBIE_SPAWNCHANCHE = 0.6
 
         # Var BULLET
         self.BULLET_VELOCITY = 10
@@ -81,6 +81,7 @@ class Game:
 
         # Var BOX
         self.BOX_SPAWN_CHANCE = 0.01  # 1% de chance de spawn par frame
+        self.boxes = []
 
         # Chargement du fond
         self.background_image = pygame.image.load('src/images/sprite/texture_map.png').convert()
@@ -135,7 +136,7 @@ class Game:
         #Variables lucky blocks
         self.lucky_blocks = []  # Liste des lucky blocks
 
-    def spawn_arround_player(self, spawn_radius, min_distance, targetlist):
+    def spawn_arround_player(self, spawn_radius, min_distance, target_image, targetlist):
         while True:
             target_x = random.randint(int(self.player_position[0] - spawn_radius), int(self.player_position[0] + spawn_radius))
             target_y = random.randint(int(self.player_position[1] - spawn_radius), int(self.player_position[1] + spawn_radius))
@@ -145,7 +146,7 @@ class Game:
             if distance_squared >= min_distance**2:
                 break
 
-        target_rect = self.zombie_image.get_rect(center=(target_x,target_y))
+        target_rect = target_image.get_rect(center=(target_x,target_y))
         targetlist.append(target_rect)
 
     def move_zombies(self):
@@ -277,6 +278,49 @@ class Game:
                     self.player_xp += orb['value']
                     self.xp_orbs.remove(orb)
 
+    def collect_lucky_blocks(self):
+            for box in self.boxes:
+                box_dx = self.player_position[0] - box.x
+                box_dy = self.player_position[1] - box.y
+                distance = math.sqrt(box_dx**2 + box_dy**2)
+
+                if distance <= 100:
+                    self.open_lucky_blocks()
+                    self.screen.fill((255, 255, 255))
+
+                    self.boxes.remove(box)  
+                    break
+
+    def open_lucky_blocks(self):
+        options = ["bombe", "soin", "invincibilite"]
+        choice = random.choice(options)
+
+        if choice == "bombe":
+            print("Effet: Bombe")
+            self.player_effect_bomb()
+        elif choice == "soin":
+            print("Effet: Soin")
+            self.player_effect_heal()
+        elif choice == "invincibilite":
+            print("Effet: Invincibilité")
+            self.player_effect_invincibility()
+
+    def player_effect_bomb(self):
+        for zombie in self.zombies:
+            self.zombies.remove(zombie)
+            xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
+            self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
+            self.kill_count += 1
+
+
+    def player_effect_heal(self):
+        if self.PLAYER_HP < 10:
+            self.PLAYER_HP +=1
+
+    def player_effect_invincibility(self):
+        print("a")
+
+
     def level_up(self, lvl):  
         self.PLAYER_LVL += 1
         self.shooting_cooldown = self.shooting_cooldown * 0.9 * lvl
@@ -330,16 +374,14 @@ class Game:
             self.player_position[0] + target_x,
             self.player_velocity_x,
             self.smooth_time,
-            self.delta_time
-            )
+            self.delta_time)
 
             self.player_position[1], self.player_velocity_y = self.smooth_damp(
                 self.player_position[1],
                 self.player_position[1] + target_y,
                 self.player_velocity_y,
                 self.smooth_time,
-                self.delta_time
-            )
+                self.delta_time)
 
             #
 
@@ -354,12 +396,19 @@ class Game:
 
             # Spawn de zombies à chaque itération
             if random.random() < self.ZOMBIE_SPAWNCHANCHE: 
-                self.spawn_arround_player(1200, 400, self.zombies)
+                self.spawn_arround_player(1200, 400, self.zombie_image, self.zombies)
+            
+            # Spawn des boxs
+            if random.random() < self.BOX_SPAWN_CHANCE:
+                self.spawn_arround_player(600,100, self.luckyblock_image, self.boxes)
 
             # Déplace les zombies et les balles
             self.move_zombies()
             self.move_bullets()
+
+            # Rammase l'xp et les box
             self.collect_xp_orbs()
+            self.collect_lucky_blocks()
 
             # Levelup
             if self.player_xp >= 100:
@@ -374,7 +423,11 @@ class Game:
             for zombie in self.zombies:
                 self.screen.blit(self.zombie_image, (zombie.x - self.camera_position[0], zombie.y - self.camera_position[1]))
 
-           
+           # Dessine les boxs
+            for box in self.boxes:
+                self.screen.blit(self.luckyblock_image, (box.x - self.camera_position[0], box.y - self.camera_position[1]))
+
+
             # Dessine les balles
             for bullet in self.bullets:
                 self.screen.blit(
@@ -382,7 +435,7 @@ class Game:
                     (bullet['rect'].x - self.camera_position[0], bullet['rect'].y - self.camera_position[1])
                 )
 
-           # Dessine le joueur et le gunn 
+           # Dessine le joueur et le gun 
             self.screen.blit(self.player_image, (self.player_position[0] - self.camera_position[0] -50, self.player_position[1] - self.camera_position[1]))
             print()  
             self.screen.blit(self.rotated_gun_image, (self.gun_position[0] - self.camera_position[0] -50, self.gun_position[1] - self.camera_position[1]))
@@ -410,6 +463,9 @@ class Game:
                     #    self.shoot_bullet()             # Tir manuel
                     if event.key == pygame.K_a:
                         self.player_image = self.tint_texture(self.player_image, (0, 0, 200 ))
+                    if event.key == pygame.K_b:
+                        self.player_effect_bomb()
+                    
                         
 
                 if event.type == pygame.KEYUP:
@@ -427,8 +483,6 @@ class Game:
             if current_time - self.last_shot_time > self.shooting_cooldown:
                 self.shoot_bullet()  
                 self.last_shot_time = current_time  
-
-            
 
             #Mort
             if self.PLAYER_HP == 0:
