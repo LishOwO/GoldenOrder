@@ -43,12 +43,12 @@ class Game:
         self.ZOMBIE_VELOCITY = 2
         self.ZOMBIE_SIZE_MULTIPLIER = 0.5
         self.ZOMBIE_ATTACK_DISTANCE = 75
-        self.ZOMBIE_SPAWNCHANCHE = 0.6
+        self.ZOMBIE_SPAWNCHANCHE = 0.01
 
         # Var BULLET
         self.BULLET_VELOCITY = 10
         self.BULLET_SIZE = 2
-        self.BULLET_MAX_DISTANCE = 500
+        self.BULLET_MAX_DISTANCE = 300
         self.bullet_number = 1
 
         #Var TIR
@@ -80,8 +80,12 @@ class Game:
         self.GUN_SIZE_MULTIPLIER = 4
 
         # Var BOX
-        self.BOX_SPAWN_CHANCE = 0.01  # 1% de chance de spawn par frame
+        self.BOX_SPAWN_CHANCE = 0.005  # 1% de chance de spawn par frame
         self.boxes = []
+        self.LOCAL_BOX_DISTANCE = 50000
+        self.MAX_LOCAL_BOX = 4
+        self.local_boxes = 0
+
 
         # Chargement du fond
         self.background_image = pygame.image.load('src/images/sprite/texture_map.png').convert()
@@ -169,6 +173,13 @@ class Game:
                 self.screen.fill((255, 0, 0))
                 self.PLAYER_HP -= 1 
                 break
+
+    def check_number_of_close(self, rayon, max_number):
+        distance_squared = (close_x - self.player_position[0])**2 + (close_y - self.player_position[1])**2
+        if distance_squared >= self.LOCAL_BOX_DISTANCE**2:
+                self.local_boxes += 1
+        if self.local_boxes < self.MAX_LOCAL_BOX:
+                    
 
     def smooth_damp(self, current, target, current_velocity, smooth_time, delta_time):
         smooth_time = max(0.0001, smooth_time)  # Évite la division par zéro
@@ -307,10 +318,13 @@ class Game:
 
     def player_effect_bomb(self):
         for zombie in self.zombies:
-            self.zombies.remove(zombie)
-            xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
-            self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
-            self.kill_count += 1
+            for zombie in self.zombies:
+                self.zombies.remove(zombie)
+                xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
+                self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
+                self.kill_count += 1
+      
+      
 
 
     def player_effect_heal(self):
@@ -396,7 +410,7 @@ class Game:
 
             # Spawn de zombies à chaque itération
             if random.random() < self.ZOMBIE_SPAWNCHANCHE: 
-                self.spawn_arround_player(1200, 400, self.zombie_image, self.zombies)
+                self.spawn_arround_player(500, 400, self.zombie_image, self.zombies)
             
             # Spawn des boxs
             if random.random() < self.BOX_SPAWN_CHANCE:
@@ -461,8 +475,8 @@ class Game:
                         self.player_movement_x[1] = True
                     #if event.key == pygame.K_SPACE:
                     #    self.shoot_bullet()             # Tir manuel
-                    if event.key == pygame.K_a:
-                        self.player_image = self.tint_texture(self.player_image, (0, 0, 200 ))
+                   # if event.key == pygame.K_a:
+                   #     self.player_image = self.tint_texture(self.player_image, (0, 0, 200 ))
                     if event.key == pygame.K_b:
                         self.player_effect_bomb()
                     
