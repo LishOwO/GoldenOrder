@@ -8,6 +8,7 @@ from pygame.constants import K_ESCAPE, QUIT
 
 class Game:
 
+    #load les images et les resize
     def load_and_resize_image(self, filepath, size_multiplier, colorkey=(0, 0, 0)):
             """
             Charge une image, redimensionne et applique un colorkey.
@@ -22,6 +23,7 @@ class Game:
             image.set_colorkey(colorkey)
             return image
     
+    #initialisation
     def __init__(self):
         pygame.init()
 
@@ -142,6 +144,7 @@ class Game:
         #Variables lucky blocks
         self.lucky_blocks = []  # Liste des lucky blocks
 
+    #spawne quelque chose autour du joueur
     def spawn_arround_player(self, spawn_radius, min_distance, target_image, targetlist):
         while True:
             target_x = random.randint(int(self.player_position[0] - spawn_radius), int(self.player_position[0] + spawn_radius))
@@ -155,8 +158,9 @@ class Game:
         target_rect = target_image.get_rect(center=(target_x,target_y))
         targetlist.append(target_rect)
 
+    #deplace les zombie
     def move_zombies(self):
-        # Déplace chaque zombie vers le joueur"
+        # Déplace chaque zombie vers le joueur
         for zombie in self.zombies:
             zombie_dx = self.player_position[0] - zombie.x
             zombie_dy = self.player_position[1] - zombie.y
@@ -176,6 +180,7 @@ class Game:
                 self.PLAYER_HP -= 1 
                 break
 
+    #check une limite de chose proches
     def check_number_of_close(self, cibles, rayon, max_number):
         number = 0
         for cible in cibles:
@@ -184,6 +189,7 @@ class Game:
                 number += 1
         return number < max_number         
 
+    #adoucis le déplacement
     def smooth_damp(self, current, target, current_velocity, smooth_time, delta_time):
         smooth_time = max(0.0001, smooth_time)  # Évite la division par zéro
         omega = 2.0 / smooth_time
@@ -197,6 +203,7 @@ class Game:
 
         return new_position, new_velocity
 
+    #tir des balles
     def shoot_bullet(self):
         if not self.zombies:
             return
@@ -237,6 +244,7 @@ class Game:
                 'image': rotated_bullet_image  # Image chaque balle
             })
 
+    #deplace les balles
     def move_bullets(self):
         for bullet in self.bullets[:]:
             # Déplacement de la balle
@@ -262,6 +270,7 @@ class Game:
                     self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
                     break
 
+    #affiche le hud
     def display_hud(self):
         elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000
         timer_text = self.font.render(f"Time: {elapsed_time}s", True, (255, 255, 255))
@@ -275,6 +284,7 @@ class Game:
         level_text = self.font.render(f"LVL: {self.PLAYER_LVL}", True, (255, 255, 255))
         self.screen.blit(level_text, (20, 220))
 
+    #fin du jeu
     def END_GAME(self): # a refaire
         self.screen.fill((0, 0, 0))
         text = self.font.render("Rip", True, (255, 0, 0))
@@ -284,6 +294,7 @@ class Game:
         pygame.quit()
         sys.exit()
     
+    #collecter l'xp
     def collect_xp_orbs(self):
             for orb in self.xp_orbs[:]:
                 distance_squared = (orb['rect'].centerx - self.player_position[0])**2 + (orb['rect'].centery - self.player_position[1])**2
@@ -292,6 +303,7 @@ class Game:
                     self.player_xp += orb['value']
                     self.xp_orbs.remove(orb)
 
+    #collecter les luckys blocks
     def collect_lucky_blocks(self):
             for box in self.boxes:
                 box_dx = self.player_position[0] - box.x
@@ -305,6 +317,7 @@ class Game:
                     self.boxes.remove(box)  
                     break
 
+    #ouvre les luckys blocks
     def open_lucky_blocks(self):
         options = ["bombe", "soin", "invincibilite"]
         choice = random.choice(options)
@@ -319,6 +332,7 @@ class Game:
             print("Effet: Invincibilité")
             self.player_effect_invincibility()
 
+    #effet lucky : bombe
     def player_effect_bomb(self):
         for zombie in self.zombies:
             for zombie in self.zombies:
@@ -326,16 +340,17 @@ class Game:
                 xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
                 self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
                 self.kill_count += 1
-      
     
+    #effet lucky : soin
     def player_effect_heal(self):
         if self.PLAYER_HP < 10:
             self.PLAYER_HP +=1
 
+    #effet lucky : bouclier
     def player_effect_invincibility(self):
         print("a")
 
-
+    #augmentation du level
     def level_up(self, lvl):  
         self.PLAYER_LVL += 1
         self.shooting_cooldown = self.shooting_cooldown * 0.9 * lvl
@@ -346,10 +361,12 @@ class Game:
         self.LEVEL_UP = True    
         #print(self.shooting_cooldown)
 
+    #affichace du screen de level up
     def display_lvl_up_screen(self, lvl):
         self.screen.blit(self.lvl_up_image,(50, 50)) 
         pygame.time.wait(3000)
 
+    #tinter une texture
     def tint_texture(self, surface, tint_color):      
         tinted_surface = surface.copy()
         width, height = tinted_surface.get_size()
@@ -363,7 +380,7 @@ class Game:
                     tinted_surface.set_at((x, y), (r, g, b))
         return tinted_surface
 
-
+    #run le jeu
     def run_game(self):
         while self.run:
             self.screen.fill(self.BACKGROUND_COLOR)
