@@ -44,7 +44,7 @@ class Game:
         self.PLAYER_SIZE_MULTIPLIER = 0.3
         self.PLAYER_HP = 10
         self.PLAYER_LVL = 0
-        self.PLAYER_DAMAGE_SOUND = pygame.mixer.Sound("/src/images/son/Roblox Death Sound (Oof) - Sound Effect (HD) (mp3cut.net).mp3")
+        self.PLAYER_DAMAGE_SOUND = pygame.mixer.Sound("src/son/PlayerDammage.mp3")
 
         # Var ZOMBIE 
         self.ZOMBIE_VELOCITY = 2
@@ -85,7 +85,7 @@ class Game:
         
         #Var Gun
         self.GUN_SIZE_MULTIPLIER = 4
-        self.son_tir = pygame.mixer.Sound("src/images/son/Pistol Sound Effect.mp3")
+        self.son_tir = pygame.mixer.Sound("src/son/Pistol Sound Effect.mp3")
 
 
         # Var BOX
@@ -481,8 +481,6 @@ class Game:
             self.screen.blit(self.rotated_gun_image, (self.gun_position[0] - self.camera_position[0] -50, self.gun_position[1] - self.camera_position[1]))
 
 
-            if self.LEVEL_UP == True:
-                self.display_lvl_up_screen()
 
             #Le hud
             self.display_hud()
