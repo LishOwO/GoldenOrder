@@ -82,6 +82,8 @@ class Game:
         
         #Var Gun
         self.GUN_SIZE_MULTIPLIER = 4
+        self.son_tir = pygame.mixer.Sound("src/images/son/Pistol Sound Effect.mp3")
+
 
         # Var BOX
         self.BOX_SPAWN_CHANCE = 0.005  # 1% de chance de spawn par frame
@@ -236,6 +238,7 @@ class Game:
             bullet_rect = rotated_bullet_image.get_rect(
                 center=(self.player_position[0] + offset_x, self.player_position[1] + offset_y)
             )
+            son_tir.play()
             
             
             self.bullets.append({
