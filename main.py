@@ -44,7 +44,7 @@ class Game:
         self.PLAYER_SIZE_MULTIPLIER = 0.3
         self.PLAYER_HP = 10
         self.PLAYER_LVL = 0
-        self.PLAYER_DAMAGE_SOUND = pygame.mixer.Sound("src/son/PlayerDammage.mp3")
+        self.PLAYER_DAMAGE_SOUND = pygame.mixer.Sound("src/son/PlayerDamage.mp3")
 
         # Var ZOMBIE 
         self.ZOMBIE_VELOCITY = 2
@@ -321,7 +321,7 @@ class Game:
 
                 if distance <= 100:
                     self.open_lucky_blocks()
-                    self.screen.fill((255, 255, 255))
+
 
                     self.boxes.remove(box)  
                     break
@@ -348,6 +348,7 @@ class Game:
                 self.zombies.remove(zombie)
                 xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
                 self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
+                self.screen.fill((255, 255, 255))
                 self.kill_count += 1
     
     #effet lucky : soin
