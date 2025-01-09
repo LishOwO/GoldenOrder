@@ -51,6 +51,7 @@ class Game:
         self.ZOMBIE_SIZE_MULTIPLIER = 0.5
         self.ZOMBIE_ATTACK_DISTANCE = 75
         self.ZOMBIE_SPAWNCHANCHE = 0.03
+        self.ZOMBIE_DAMAGE = pygame.mixer.Sound("src/images/son/Zombie.sound.mp3")
 
         # Var BULLET
         self.BULLET_VELOCITY = 10
@@ -277,6 +278,7 @@ class Game:
                     if bullet in self.bullets:
                         self.bullets.remove(bullet)
                     self.kill_count += 1
+                    self.ZOMBIE_DAMAGE.play()
 
                     # Spawn une orbe d'XP à la position du zombie
                     xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
