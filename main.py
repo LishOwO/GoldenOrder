@@ -4,6 +4,8 @@ import sys
 import random
 import math
 
+from pygame.constants import K_ESCAPE, QUIT
+
 class Game:
 
     def load_and_resize_image(self, filepath, size_multiplier, colorkey=(0, 0, 0)):
@@ -177,9 +179,10 @@ class Game:
     def check_number_of_close(self, rayon, max_number):
         distance_squared = (close_x - self.player_position[0])**2 + (close_y - self.player_position[1])**2
         if distance_squared >= self.LOCAL_BOX_DISTANCE**2:
-            self.local_boxes += 1
+                self.local_boxes += 1
         if self.local_boxes < self.MAX_LOCAL_BOX:
             pass
+                    
 
     def smooth_damp(self, current, target, current_velocity, smooth_time, delta_time):
         smooth_time = max(0.0001, smooth_time)  # Évite la division par zéro
@@ -346,8 +349,6 @@ class Game:
         #print(self.shooting_cooldown)
 
     def display_lvl_up_screen(self, lvl):
-
-        
         self.screen.blit(self.lvl_up_image,(50, 50)) 
         pygame.time.wait(3000)
 
@@ -396,8 +397,6 @@ class Game:
                 self.player_velocity_y,
                 self.smooth_time,
                 self.delta_time)
-
-            #
 
             #On bouge le gun avec le joueur
             self.gun_position[0] = self.player_position[0]
@@ -479,6 +478,9 @@ class Game:
                    #     self.player_image = self.tint_texture(self.player_image, (0, 0, 200 ))
                     if event.key == pygame.K_b:
                         self.player_effect_bomb()
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.QUIT()
+                        sys.exit()
                     
                         
 
