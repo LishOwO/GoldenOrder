@@ -26,11 +26,11 @@ class Game:
         pygame.init()
 
         # Var ECRAN
-        self.SCREEN_WIDTH = 1920
-        self.SCREEN_HEIGHT = 1080
+        self.SCREEN_WIDTH = pygame.display.Info().current_w 
+        self.SCREEN_HEIGHT = pygame.display.Info().current_h
 
         # Var BACKGROUND
-        self.BACKGROUND_SIZE = 1028
+        self.BACKGROUND_SIZE = 1024
         self.BACKGROUND_TILESET_SIZE = (self.BACKGROUND_SIZE, self.BACKGROUND_SIZE)
         self.BACKGROUND_COLOR = (255, 0, 0)  # Rouge
         self.BACKGROUND_MAP_SIZE = self.BACKGROUND_SIZE * 10  # Taille de la map
@@ -68,7 +68,7 @@ class Game:
         self.CHOOSE_SIZE_MULTIPLIER = 1
 
 
-        self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.RESIZABLE)
         self.clock = pygame.time.Clock()
 
         self.run = True
@@ -450,9 +450,9 @@ class Game:
 
            # Dessine le joueur et le gun 
             self.screen.blit(self.player_image, (self.player_position[0] - self.camera_position[0] -50, self.player_position[1] - self.camera_position[1]))
-            print()  
+
             self.screen.blit(self.rotated_gun_image, (self.gun_position[0] - self.camera_position[0] -50, self.gun_position[1] - self.camera_position[1]))
-            print()
+
 
             #Le hud
             self.display_hud()
