@@ -27,6 +27,8 @@ class Game:
     def __init__(self):
         pygame.init()
 
+        pygame.mixer.set_num_channels(20)
+
         # Var ECRAN
         self.SCREEN_WIDTH = pygame.display.Info().current_w 
         self.SCREEN_HEIGHT = pygame.display.Info().current_h
@@ -238,7 +240,7 @@ class Game:
             bullet_rect = rotated_bullet_image.get_rect(
                 center=(self.player_position[0] + offset_x, self.player_position[1] + offset_y)
             )
-            son_tir.play()
+            self.son_tir.play()
             
             
             self.bullets.append({
