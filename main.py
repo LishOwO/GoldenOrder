@@ -177,9 +177,9 @@ class Game:
     def check_number_of_close(self, rayon, max_number):
         distance_squared = (close_x - self.player_position[0])**2 + (close_y - self.player_position[1])**2
         if distance_squared >= self.LOCAL_BOX_DISTANCE**2:
-                self.local_boxes += 1
+            self.local_boxes += 1
         if self.local_boxes < self.MAX_LOCAL_BOX:
-                    
+            pass
 
     def smooth_damp(self, current, target, current_velocity, smooth_time, delta_time):
         smooth_time = max(0.0001, smooth_time)  # Évite la division par zéro
