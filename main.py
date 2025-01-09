@@ -476,10 +476,6 @@ class Game:
 
             self.screen.blit(self.rotated_gun_image, (self.gun_position[0] - self.camera_position[0] -50, self.gun_position[1] - self.camera_position[1]))
 
-
-            if self.LEVEL_UP == True:
-                self.display_lvl_up_screen()
-
             #Le hud
             self.display_hud()
     
