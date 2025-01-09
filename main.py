@@ -85,7 +85,7 @@ class Game:
         
         #Var Gun
         self.GUN_SIZE_MULTIPLIER = 4
-        self.son_tir = pygame.mixer.Sound("src/son/Pistol Sound Effect.mp3")
+        self.son_tir = pygame.mixer.Sound("src/son/Pistol Sound Effect (mp3cut.net).mp3")
 
 
         # Var BOX
