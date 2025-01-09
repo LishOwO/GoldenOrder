@@ -43,7 +43,7 @@ class Game:
         self.ZOMBIE_VELOCITY = 2
         self.ZOMBIE_SIZE_MULTIPLIER = 0.5
         self.ZOMBIE_ATTACK_DISTANCE = 75
-        self.ZOMBIE_SPAWNCHANCHE = 0.01
+        self.ZOMBIE_SPAWNCHANCHE = 0.03
 
         # Var BULLET
         self.BULLET_VELOCITY = 10
@@ -174,12 +174,13 @@ class Game:
                 self.PLAYER_HP -= 1 
                 break
 
-    def check_number_of_close(self, rayon, max_number):
-        distance_squared = (close_x - self.player_position[0])**2 + (close_y - self.player_position[1])**2
-        if distance_squared >= self.LOCAL_BOX_DISTANCE**2:
-                self.local_boxes += 1
-        if self.local_boxes < self.MAX_LOCAL_BOX:
-                    
+    def check_number_of_close(self, cibles, rayon, max_number):
+        number = 0
+        for cible in cibles:
+            distance_squared = (cible.x - self.player_position[0])**2 + (cible.y - self.player_position[1])**2
+            if distance_squared < rayon**2:
+                number += 1
+        return number < max_number         
 
     def smooth_damp(self, current, target, current_velocity, smooth_time, delta_time):
         smooth_time = max(0.0001, smooth_time)  # Évite la division par zéro
@@ -324,9 +325,7 @@ class Game:
                 self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
                 self.kill_count += 1
       
-      
-
-
+    
     def player_effect_heal(self):
         if self.PLAYER_HP < 10:
             self.PLAYER_HP +=1
@@ -414,7 +413,8 @@ class Game:
             
             # Spawn des boxs
             if random.random() < self.BOX_SPAWN_CHANCE:
-                self.spawn_arround_player(600,100, self.luckyblock_image, self.boxes)
+                if self.check_number_of_close(self.boxes, rayon=2000, max_number=1):
+                    self.spawn_arround_player(600, 100, self.luckyblock_image, self.boxes)
 
             # Déplace les zombies et les balles
             self.move_zombies()
@@ -479,6 +479,9 @@ class Game:
                    #     self.player_image = self.tint_texture(self.player_image, (0, 0, 200 ))
                     if event.key == pygame.K_b:
                         self.player_effect_bomb()
+                    if event.key == pygame.K_t:
+                        print(self.check_number_of_close(self.boxes, 500, 2))
+                        print("bbb")
                     
                         
 
