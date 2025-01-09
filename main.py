@@ -44,6 +44,7 @@ class Game:
         self.PLAYER_SIZE_MULTIPLIER = 0.3
         self.PLAYER_HP = 10
         self.PLAYER_LVL = 0
+        self.PLAYER_DAMAGE_SOUND = pygame.mixer.Sound("/src/images/son/Roblox Death Sound (Oof) - Sound Effect (HD) (mp3cut.net).mp3")
 
         # Var ZOMBIE 
         self.ZOMBIE_VELOCITY = 2
@@ -182,7 +183,10 @@ class Game:
                 self.zombies.remove(zombie)  
                 self.screen.fill((255, 0, 0))
                 self.PLAYER_HP -= 1 
+                self.PLAYER_DAMAGE_SOUND.play()
                 break
+
+
 
     #check une limite de chose proches
     def check_number_of_close(self, cibles, rayon, max_number):
