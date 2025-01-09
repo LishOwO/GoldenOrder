@@ -69,7 +69,7 @@ class Game:
 
         #Var LEVEL_UP_SCREEN
         self.LEVEL_UP = False
-        self.CHOOSE_SIZE_MULTIPLIER = 1
+        self.CHOOSE_SIZE_MULTIPLIER = self.SCREEN_WIDTH/1980
 
 
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.RESIZABLE)
@@ -367,9 +367,11 @@ class Game:
         #print(self.shooting_cooldown)
 
     #affichace du screen de level up
-    def display_lvl_up_screen(self, lvl):
-        self.screen.blit(self.lvl_up_image,(50, 50)) 
-        pygame.time.wait(3000)
+    def display_lvl_up_screen(self):
+        self.screen.blit(self.lvl_up_image,(50, 50))
+
+            
+        
 
     #tinter une texture
     def tint_texture(self, surface, tint_color):      
@@ -474,6 +476,9 @@ class Game:
 
             self.screen.blit(self.rotated_gun_image, (self.gun_position[0] - self.camera_position[0] -50, self.gun_position[1] - self.camera_position[1]))
 
+
+            if self.LEVEL_UP == True:
+                self.display_lvl_up_screen()
 
             #Le hud
             self.display_hud()
