@@ -161,8 +161,8 @@ class Game:
         while True:
             target_x = random.randint(int(self.player_position[0] - spawn_radius), int(self.player_position[0] + spawn_radius))
             target_y = random.randint(int(self.player_position[1] - spawn_radius), int(self.player_position[1] + spawn_radius))
-
-            distance_squared = (target_x - self.player_position[0])**2 + (target_y - self.player_position[1])**2
+            target = [target_x, target_y]
+            distance_squared = tools.distance_squared(target, self.player_position)
 
             if distance_squared >= min_distance**2:
                 break
