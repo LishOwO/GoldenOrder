@@ -112,7 +112,7 @@ class Game:
         self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
         
         # Chargement xp_screen
-        self.lvl_up_image = self.load_and_resize_image('choose_background.png', self.CHOOSE_SIZE_MULTIPLIER)
+        self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
 
         # Chargement de XP
         self.xp_image = self.load_and_resize_image('src/images/sprite/missellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
