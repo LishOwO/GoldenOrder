@@ -3,7 +3,7 @@ import math
 import tools
 
 class Zombie:
-    def __init__ (self):
+    def __init__ (self, hp, ):
         
         pass
 
