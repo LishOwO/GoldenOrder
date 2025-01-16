@@ -9,6 +9,7 @@ sys.path.append('./bin')
 from objects import Objects
 from zombie import Zombie
 from player import Player
+from weapons import Weapons
 import tools
 
 class Game:
@@ -168,30 +169,6 @@ class Game:
 
         target_rect = target_image.get_rect(center=(target_x,target_y))
         targetlist.append(target_rect)
-
-    #deplace les zombie
-    def move_zombies(self):
-        # Déplace chaque zombie vers le joueur
-        for zombie in self.zombies:
-            zombie_dx = self.player_position[0] - zombie.x
-            zombie_dy = self.player_position[1] - zombie.y
-            distance = math.sqrt(zombie_dx**2 + zombie_dy**2)
-
-            if distance != 0:
-                zombie_dx /= distance  # Normalisation
-                zombie_dy /= distance  # Normalisation
-
-            zombie.x += zombie_dx * self.ZOMBIE_VELOCITY
-            zombie.y += zombie_dy * self.ZOMBIE_VELOCITY
-
-            # Collision avec le joueur -> Dégats
-            if distance <= self.ZOMBIE_ATTACK_DISTANCE:
-                self.zombies.remove(zombie)  
-                self.screen.fill((255, 0, 0))
-                self.PLAYER_HP -= 1 
-                self.PLAYER_DAMAGE_SOUND.play()
-                break #fix
-
 
 
     #check une limite de chose proches
@@ -451,7 +428,7 @@ class Game:
                     self.spawn_arround_player(600, 100, self.luckyblock_image, self.boxes)
 
             # Déplace les zombies et les balles
-            self.move_zombies()
+            Zombie.move_zombies(self)
             self.move_bullets()
 
             # Rammase l'xp et les box
