@@ -4,7 +4,7 @@ import sys
 import random
 import math
 
-from pygame.constants import K_ESCAPE, QUIT
+from objects.py import Objects
 
 class Game:
 
