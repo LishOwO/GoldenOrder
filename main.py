@@ -90,7 +90,7 @@ class Game:
         
         #Var Gun
         self.GUN_SIZE_MULTIPLIER = 4
-        self.son_tir = pygame.mixer.Sound("src/son/Pistol Sound Effect (mp3cut.net).mp3")
+        self.son_tir = pygame.mixer.Sound("src/son/Pistol Sound Effect.mp3")
 
 
         # Var BOX
@@ -122,8 +122,8 @@ class Game:
         self.rotated_bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE)
 
         # Chargement du gun
-        self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 0.8)
-        self.rotated_gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png.png', 0.8)
+        self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png', 0.8)
+        self.rotated_gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png', 0.8)
 
         # Chargement des box
         self.luckyblock_image = self.load_and_resize_image('src/images/sprite/missellaneous/LuckyBlock.png', 1)
