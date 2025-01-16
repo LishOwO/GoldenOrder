@@ -51,7 +51,6 @@ class Game:
         self.ZOMBIE_SIZE_MULTIPLIER = 0.5
         self.ZOMBIE_ATTACK_DISTANCE = 75
         self.ZOMBIE_SPAWNCHANCHE = 0.03
-        self.ZOMBIE_DAMAGE = pygame.mixer.Sound("src/son/ZombieSound.mp3")
 
         # Var BULLET
         self.BULLET_VELOCITY = 10
@@ -86,11 +85,11 @@ class Game:
         
         #Var Gun
         self.GUN_SIZE_MULTIPLIER = 4
-        self.son_tir = pygame.mixer.Sound("src/son/Pistol Sound Effect.mp3")
+        self.son_tir = pygame.mixer.Sound("src/son/Pistol Sound Effect (mp3cut.net).mp3")
 
 
         # Var BOX
-        self.BOX_SPAWN_CHANCE = 0.005  # 0.5% de chance de spawn par frame
+        self.BOX_SPAWN_CHANCE = 0.005  # 1% de chance de spawn par frame
         self.boxes = []
         self.LOCAL_BOX_DISTANCE = 50000
         self.MAX_LOCAL_BOX = 4
@@ -108,11 +107,7 @@ class Game:
         self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
         
         # Chargement xp_screen
-        self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/choose_background.png', self.CHOOSE_SIZE_MULTIPLIER)
-        self.lvl_up_option_1 = self.load_and_resize_image('src/images/ui/lvl_up/option_1.png', self.CHOOSE_SIZE_MULTIPLIER)
-        self.lvl_up_option_2 = self.load_and_resize_image('src/images/ui/lvl_up/option_2.png', self.CHOOSE_SIZE_MULTIPLIER)
-        self.lvl_up_option_3 = self.load_and_resize_image('src/images/ui/lvl_up/option_3.png', self.CHOOSE_SIZE_MULTIPLIER)
-        self.lvl_up_text = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
+        self.lvl_up_image = self.load_and_resize_image('choose_background.png', self.CHOOSE_SIZE_MULTIPLIER)
 
         # Chargement de XP
         self.xp_image = self.load_and_resize_image('src/images/sprite/missellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
@@ -189,7 +184,7 @@ class Game:
                 self.screen.fill((255, 0, 0))
                 self.PLAYER_HP -= 1 
                 self.PLAYER_DAMAGE_SOUND.play()
-                break
+                break #fix
 
 
 
@@ -278,11 +273,11 @@ class Game:
                     if bullet in self.bullets:
                         self.bullets.remove(bullet)
                     self.kill_count += 1
-                    self.ZOMBIE_DAMAGE.play()
 
                     # Spawn une orbe d'XP à la position du zombie
                     xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
                     self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
+                    break
 
     #affiche le hud
     def display_hud(self):
