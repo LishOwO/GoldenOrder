@@ -50,14 +50,14 @@ class Game:
         self.PLAYER_SIZE_MULTIPLIER = 0.3
         self.PLAYER_HP = 10
         self.PLAYER_LVL = 0
-        self.PLAYER_DAMAGE_SOUND = pygame.mixer.Sound("src/son/PlayerDamage.mp3")
+        self.PLAYER_DAMAGE_SOUND = pygame.mixer.Sound("src/son/PlayerDamage1.mp3")
 
         # Var ZOMBIE 
         self.ZOMBIE_VELOCITY = 2
         self.ZOMBIE_SIZE_MULTIPLIER = 0.5
         self.ZOMBIE_ATTACK_DISTANCE = 75
         self.ZOMBIE_SPAWNCHANCHE = 0.03
-        self.ZOMBIE_DAMAGE_SOUNDS = [pygame.mixer.Sound("src/son/ZombieSound.mp3"),pygame.mixer.Sound("src/son/Zombie.damage.2.mp3"),pygame.mixer.Sound("src/son/Zombie.damage.3.mp3"),pygame.mixer.Sound("src/son/Zombie.damage.4.mp3"),]
+        self.ZOMBIE_DAMAGE_SOUNDS = [pygame.mixer.Sound("src/son/ZombieDamage1.mp3"),pygame.mixer.Sound("src/son/ZombieDamage2.mp3"),pygame.mixer.Sound("src/son/ZombieDamage3.mp3"),pygame.mixer.Sound("src/son/ZombieDamage4.mp3"),]
   
         # Var BULLET
         self.BULLET_VELOCITY = 10
@@ -92,7 +92,7 @@ class Game:
         
         #Var Gun
         self.GUN_SIZE_MULTIPLIER = 4
-        self.son_tir = pygame.mixer.Sound("src/son/Pistol Sound Effect.mp3")
+        self.son_tir = pygame.mixer.Sound("src/son/PistolSound.mp3")
 
 
         # Var BOX
