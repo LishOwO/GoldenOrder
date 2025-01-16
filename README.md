@@ -21,22 +21,22 @@ Indispensable :
 - apparitions de caisses
 - drops des ennemis et des caisses (xp pour améliorations et powerups (vitesse, invincibilité, bombe))
 - chronomètre en haut
-- différentes armes (debloquable au fur et a mesure du jeu)
+- différentes armes (debloquable au fur et à mesure du jeu)
 - menu de départ
 
 Optionel :
 - différents types d'ennemis
-- différents types d'armes et d'améliorations pour celles ci
+- différents types d'armes et d'améliorations pour celles-ci
 - sauvegardes qui gardent les bonus achetés avec des pièces et les personnages débloqués
 - système de high score (temps)
 - différents personnages jouables (à l'aide de code)
 
 Mouvement : haut, bas, gauche, droite
-Touches : Clavier, peut être joystick
+Touches : Clavier, peut-être joystick
 Scrolling : Oui
 Musique : Arcade (Chiptune)
 Barre de vie : Joueur uniquement
-Vue : top to down
+Vue : top-down
 Résolution textures de base : 16*16
 Musique : 
 

@@ -1,5 +1,4 @@
-from asyncio import sleep
-import pygame # type: ignore
+import pygame  # type: ignore
 import sys
 import random
 import math
@@ -12,31 +11,32 @@ from player import Player
 from weapons import Weapons
 import tools
 
+
 class Game:
 
-    #load les images et les resize
+    # load les images et les resize
     def load_and_resize_image(self, filepath, size_multiplier, colorkey=(0, 0, 0)):
-            """
-            Charge une image, redimensionne et applique un colorkey.
-            :param filepath: Chemin vers l'image.
-            :param size_multiplier: Multiplicateur pour redimensionner l'image.
-            :param colorkey: Couleur à rendre transparente.
-            :return:Image redim
-            """
-            image = pygame.image.load(filepath).convert()
-            new_size = (int(image.get_width() * size_multiplier), int(image.get_height() * size_multiplier))
-            image = pygame.transform.scale(image, new_size)
-            image.set_colorkey(colorkey)
-            return image
-    
-    #initialisation
+        """
+        Charge une image, redimensionne et applique un colorkey.
+        :param filepath: Chemin vers l'image.
+        :param size_multiplier: Multiplicateur pour redimensionner l'image.
+        :param colorkey: Couleur à rendre transparente.
+        :return:Image redim
+        """
+        image = pygame.image.load(filepath).convert()
+        new_size = (int(image.get_width() * size_multiplier), int(image.get_height() * size_multiplier))
+        image = pygame.transform.scale(image, new_size)
+        image.set_colorkey(colorkey)
+        return image
+
+    # initialisation
     def __init__(self):
         pygame.init()
 
         pygame.mixer.set_num_channels(20)
 
         # Var ECRAN
-        self.SCREEN_WIDTH = pygame.display.Info().current_w 
+        self.SCREEN_WIDTH = pygame.display.Info().current_w
         self.SCREEN_HEIGHT = pygame.display.Info().current_h
 
         # Var BACKGROUND
@@ -52,48 +52,49 @@ class Game:
         self.PLAYER_LVL = 0
         self.PLAYER_DAMAGE_SOUND = pygame.mixer.Sound("src/son/PlayerDamage1.mp3")
 
-        # Var ZOMBIE 
+        # Var ZOMBIE
         self.ZOMBIE_VELOCITY = 2
         self.ZOMBIE_SIZE_MULTIPLIER = 0.5
         self.ZOMBIE_ATTACK_DISTANCE = 75
         self.ZOMBIE_SPAWNCHANCHE = 0.03
-        self.ZOMBIE_DAMAGE_SOUNDS = [pygame.mixer.Sound("src/son/ZombieDamage1.mp3"),pygame.mixer.Sound("src/son/ZombieDamage2.mp3"),pygame.mixer.Sound("src/son/ZombieDamage3.mp3"),pygame.mixer.Sound("src/son/ZombieDamage4.mp3"),]
-  
+        self.ZOMBIE_DAMAGE_SOUNDS = [pygame.mixer.Sound("src/son/ZombieDamage1.mp3"),
+                                     pygame.mixer.Sound("src/son/ZombieDamage2.mp3"),
+                                     pygame.mixer.Sound("src/son/ZombieDamage3.mp3"),
+                                     pygame.mixer.Sound("src/son/ZombieDamage4.mp3"), ]
+
         # Var BULLET
         self.BULLET_VELOCITY = 10
         self.BULLET_SIZE = 2
         self.BULLET_MAX_DISTANCE = 300
         self.bullet_number = 1
 
-        #Var TIR
+        # Var TIR
         self.shooting_cooldown = 700
         self.last_shot_time = pygame.time.get_ticks()
 
-        #Var XP
+        # Var XP
         self.XP_SIZE_MULTIPLIER = 4
         self.xp_orbs = []
         self.player_xp = 0
         self.last_ten_lvl = 10
 
-        #Var LEVEL_UP_SCREEN
+        # Var LEVEL_UP_SCREEN
         self.LEVEL_UP = False
-        self.CHOOSE_SIZE_MULTIPLIER = self.SCREEN_WIDTH/1980
-
+        self.CHOOSE_SIZE_MULTIPLIER = self.SCREEN_WIDTH / 1980
 
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.RESIZABLE)
         self.clock = pygame.time.Clock()
 
         self.run = True
 
-        #Var scores etc
+        # Var scores etc
         self.start_time = pygame.time.get_ticks()
         self.kill_count = 0
         self.font = pygame.font.SysFont(None, 50)
-        
-        #Var Gun
+
+        # Var Gun
         self.GUN_SIZE_MULTIPLIER = 4
         self.son_tir = pygame.mixer.Sound("src/son/PistolSound.mp3")
-
 
         # Var BOX
         self.BOX_SPAWN_CHANCE = 0.005  # 1% de chance de spawn par frame
@@ -102,17 +103,18 @@ class Game:
         self.MAX_LOCAL_BOX = 4
         self.local_boxes = 0
 
-
         # Chargement du fond
         self.background_image = pygame.image.load('src/images/sprite/texture_map.png').convert()
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
-     
+
         # Chargement du joueur
-        self.player_image = self.load_and_resize_image('src/images/sprite/player/MecAlakippa', self.PLAYER_SIZE_MULTIPLIER)
+        self.player_image = self.load_and_resize_image('src/images/sprite/player/MecAlakippa',
+                                                       self.PLAYER_SIZE_MULTIPLIER)
 
         # Chargement du zombie
-        self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
-        
+        self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png',
+                                                       self.ZOMBIE_SIZE_MULTIPLIER)
+
         # Chargement xp_screen
         self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
 
@@ -121,7 +123,8 @@ class Game:
 
         # Chargement des balles
         self.bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE)
-        self.rotated_bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE)
+        self.rotated_bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png',
+                                                               self.BULLET_SIZE)
 
         # Chargement du gun
         self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png', 0.8)
@@ -129,7 +132,6 @@ class Game:
 
         # Chargement des box
         self.luckyblock_image = self.load_and_resize_image('src/images/sprite/missellaneous/LuckyBlock.png', 1)
-       
 
         # Aplication du mouvement du joueur
         self.player = self.player_image.get_rect(center=(0, 0))  # Position initiale
@@ -149,43 +151,45 @@ class Game:
 
         self.PLAYER_VELOCITY = 200
         self.smooth_time = 0.5
-        self.player_velocity_x = 0  
-        self.player_velocity_y = 0 
-        self.delta_time = 1 / 60 
+        self.player_velocity_x = 0
+        self.player_velocity_y = 0
+        self.delta_time = 1 / 60
 
-        #Variables lucky blocks
+        # Variables lucky blocks
         self.lucky_blocks = []  # Liste des lucky blocks
 
-    #spawne quelque chose autour du joueur
+    # spawne quelque chose autour du joueur
     def spawn_arround_player(self, spawn_radius, min_distance, target_image, targetlist):
         while True:
-            target_x = random.randint(int(self.player_position[0] - spawn_radius), int(self.player_position[0] + spawn_radius))
-            target_y = random.randint(int(self.player_position[1] - spawn_radius), int(self.player_position[1] + spawn_radius))
+            target_x = random.randint(int(self.player_position[0] - spawn_radius),
+                                      int(self.player_position[0] + spawn_radius))
+            target_y = random.randint(int(self.player_position[1] - spawn_radius),
+                                      int(self.player_position[1] + spawn_radius))
             target = [target_x, target_y]
             distance_squared = tools.distance_squared(target, self.player_position)
 
-            if distance_squared >= min_distance**2:
+            if distance_squared >= min_distance ** 2:
                 break
 
-        target_rect = target_image.get_rect(center=(target_x,target_y))
+        target_rect = target_image.get_rect(center=(target_x, target_y))
         targetlist.append(target_rect)
 
-
-    #check une limite de chose proches
+    # check une limite de choses proches
     def check_number_of_close(self, cibles, rayon, max_number):
         number = 0
         for cible in cibles:
-            distance_squared = (cible.x - self.player_position[0])**2 + (cible.y - self.player_position[1])**2
-            if distance_squared < rayon**2:
+            distance_squared = (cible.x - self.player_position[0]) ** 2 + (cible.y - self.player_position[1]) ** 2
+            if distance_squared < rayon ** 2:
                 number += 1
-        return number < max_number         
+        return number < max_number
 
-    #adoucis le déplacement
+        # adoucis le déplacement
+
     def smooth_damp(self, current, target, current_velocity, smooth_time, delta_time):
         smooth_time = max(0.0001, smooth_time)  # Évite la division par zéro
         omega = 2.0 / smooth_time
         x = omega * delta_time
-        exp = 1 / (1 + x + 0.48 * x**2 + 0.235 * x**3)
+        exp = 1 / (1 + x + 0.48 * x ** 2 + 0.235 * x ** 3)
 
         change = current - target
         temp = (current_velocity + omega * change) * delta_time
@@ -194,19 +198,19 @@ class Game:
 
         return new_position, new_velocity
 
-    #tir des balles
+    # tir des balles
     def shoot_bullet(self):
         if not self.zombies:
             return
 
         # Trouver le zombie le plus proche
         closest_zombie = min(
-            self.zombies, key=lambda z: (z.x - self.player_position[0])**2 + (z.y - self.player_position[1])**2
+            self.zombies, key=lambda z: (z.x - self.player_position[0]) ** 2 + (z.y - self.player_position[1]) ** 2
         )
 
         dx = closest_zombie.x - self.player_position[0]
         dy = closest_zombie.y - self.player_position[1]
-        distance = math.sqrt(dx**2 + dy**2)
+        distance = math.sqrt(dx ** 2 + dy ** 2)
 
         if distance != 0:
             dx /= distance
@@ -228,15 +232,14 @@ class Game:
                 center=(self.player_position[0] + offset_x, self.player_position[1] + offset_y)
             )
             self.son_tir.play()
-            
-            
+
             self.bullets.append({
                 'rect': bullet_rect,
                 'direction': (dx, dy),
                 'image': rotated_bullet_image  # Image chaque balle
             })
 
-    #deplace les balles
+    # deplace les balles
     def move_bullets(self):
         for bullet in self.bullets[:]:
             # Déplacement de la balle
@@ -244,8 +247,9 @@ class Game:
             bullet['rect'].y += bullet['direction'][1] * self.BULLET_VELOCITY
 
             # Supprimer les balles trop loin du joueur
-            distance_squared = (bullet['rect'].x - self.player_position[0])**2 + (bullet['rect'].y - self.player_position[1])**2
-            if distance_squared > self.BULLET_MAX_DISTANCE**2:
+            distance_squared = (bullet['rect'].x - self.player_position[0]) ** 2 + (
+                        bullet['rect'].y - self.player_position[1]) ** 2
+            if distance_squared > self.BULLET_MAX_DISTANCE ** 2:
                 self.bullets.remove(bullet)
                 continue
 
@@ -258,27 +262,27 @@ class Game:
                     self.kill_count += 1
                     random.choice(self.ZOMBIE_DAMAGE_SOUNDS).play()
 
-                    # Spawn une orbe d'XP à la position du zombie
+                    # Spawn un orbe d'xp à la position du zombie
                     xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
                     self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
                     break
 
-    #affiche le hud
+    # affiche le hud
     def display_hud(self):
         elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000
         timer_text = self.font.render(f"Time: {elapsed_time}s", True, (255, 255, 255))
         self.screen.blit(timer_text, (20, 20))
         kill_text = self.font.render(f"Kills: {self.kill_count}", True, (255, 255, 255))
         self.screen.blit(kill_text, (20, 70))
-        hp_text = self.font.render(f"HP: {self.PLAYER_HP}", True, (255, 255,255))
-        self.screen.blit(hp_text,(20,120))
+        hp_text = self.font.render(f"HP: {self.PLAYER_HP}", True, (255, 255, 255))
+        self.screen.blit(hp_text, (20, 120))
         xp_text = self.font.render(f"XP: {self.player_xp}", True, (255, 255, 255))
         self.screen.blit(xp_text, (20, 170))
         level_text = self.font.render(f"LVL: {self.PLAYER_LVL}", True, (255, 255, 255))
         self.screen.blit(level_text, (20, 220))
 
-    #fin du jeu
-    def END_GAME(self): # a refaire
+    # fin du jeu
+    def end_game(self):  # a refaire
         self.screen.fill((0, 0, 0))
         text = self.font.render("Rip", True, (255, 0, 0))
         self.screen.blit(text, (self.SCREEN_WIDTH // 2 - text.get_width(), self.SCREEN_HEIGHT // 2 - text.get_height()))
@@ -286,31 +290,31 @@ class Game:
         pygame.time.wait(3000)
         pygame.quit()
         sys.exit()
-    
-    #collecter l'xp
+
+    # collecter l'xp
     def collect_xp_orbs(self):
-            for orb in self.xp_orbs[:]:
-                distance_squared = (orb['rect'].centerx - self.player_position[0])**2 + (orb['rect'].centery - self.player_position[1])**2
-                
-                if distance_squared < 100**2:  
-                    self.player_xp += orb['value']
-                    self.xp_orbs.remove(orb)
+        for orb in self.xp_orbs[:]:
+            distance_squared = (orb['rect'].centerx - self.player_position[0]) ** 2 + (
+                        orb['rect'].centery - self.player_position[1]) ** 2
 
-    #collecter les luckys blocks
+            if distance_squared < 100 ** 2:
+                self.player_xp += orb['value']
+                self.xp_orbs.remove(orb)
+
+    # collecter les luckys blocks
     def collect_lucky_blocks(self):
-            for box in self.boxes:
-                box_dx = self.player_position[0] - box.x
-                box_dy = self.player_position[1] - box.y
-                distance = math.sqrt(box_dx**2 + box_dy**2)
+        for box in self.boxes:
+            box_dx = self.player_position[0] - box.x
+            box_dy = self.player_position[1] - box.y
+            distance = math.sqrt(box_dx ** 2 + box_dy ** 2)
 
-                if distance <= 100:
-                    self.open_lucky_blocks()
+            if distance <= 100:
+                self.open_lucky_blocks()
 
+                self.boxes.remove(box)
+                break
 
-                    self.boxes.remove(box)  
-                    break
-
-    #ouvre les luckys blocks
+    # ouvres les luckys blocks
     def open_lucky_blocks(self):
         options = ["bombe", "soin", "invincibilite"]
         choice = random.choice(options)
@@ -325,58 +329,54 @@ class Game:
             print("Effet: Invincibilité")
             self.player_effect_invincibility()
 
-    #effet lucky : bombe
+    # effet lucky : bombe
     def player_effect_bomb(self):
         for zombie in self.zombies:
-            for zombie in self.zombies:
-                self.zombies.remove(zombie)
-                xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
-                self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
-                self.screen.fill((255, 255, 255))
-                self.kill_count += 1
-    
-    #effet lucky : soin
+            self.zombies.remove(zombie)
+            xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
+            self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
+            self.screen.fill((255, 255, 255))
+            self.kill_count += 1
+
+    # effet lucky : soin
     def player_effect_heal(self):
         if self.PLAYER_HP < 10:
-            self.PLAYER_HP +=1
+            self.PLAYER_HP += 1
 
-    #effet lucky : bouclier
+    # effet lucky : bouclier
     def player_effect_invincibility(self):
         print("a")
 
-    #augmentation du level
-    def level_up(self, lvl):  
+    # augmentation du level
+    def level_up(self, lvl):
         self.PLAYER_LVL += 1
         self.shooting_cooldown = self.shooting_cooldown * 0.9 * lvl
         self.ZOMBIE_SPAWNCHANCHE = self.ZOMBIE_SPAWNCHANCHE * 1.2 * lvl
         if self.PLAYER_LVL >= self.last_ten_lvl:
             self.bullet_number += 1
             self.last_ten_lvl += 10
-        self.LEVEL_UP = True    
-        #print(self.shooting_cooldown)
+        self.LEVEL_UP = True
+        # print(self.shooting_cooldown)
 
-    #affichace du screen de level up
+    # affichace du screen de level up
     def display_lvl_up_screen(self):
-        self.screen.blit(self.lvl_up_image,(50, 50))
+        self.screen.blit(self.lvl_up_image, (50, 50))
 
-            
-        
-
-    #tinter une texture
-    def tint_texture(self, surface, tint_color):      
+    # tinter une texture
+    def tint_texture(self, surface, tint_color):
         tinted_surface = surface.copy()
         width, height = tinted_surface.get_size()
         for x in range(width):
             for y in range(height):
                 color = tinted_surface.get_at((x, y))
-                if color.r+color.g+color.b > 0:  
+                if color.r + color.g + color.b > 0:
                     r = min(color.r + tint_color[0], 255)
                     g = min(color.g + tint_color[1], 255)
                     b = min(color.b + tint_color[2], 255)
                     tinted_surface.set_at((x, y), (r, g, b))
         return tinted_surface
 
-    #run le jeu
+    # run le jeu
     def run_game(self):
         while self.run:
             self.screen.fill(self.BACKGROUND_COLOR)
@@ -396,11 +396,11 @@ class Game:
             target_y = (self.player_movement_y[1] - self.player_movement_y[0]) * self.PLAYER_VELOCITY
 
             self.player_position[0], self.player_velocity_x = self.smooth_damp(
-            self.player_position[0],
-            self.player_position[0] + target_x,
-            self.player_velocity_x,
-            self.smooth_time,
-            self.delta_time)
+                self.player_position[0],
+                self.player_position[0] + target_x,
+                self.player_velocity_x,
+                self.smooth_time,
+                self.delta_time)
 
             self.player_position[1], self.player_velocity_y = self.smooth_damp(
                 self.player_position[1],
@@ -409,19 +409,18 @@ class Game:
                 self.smooth_time,
                 self.delta_time)
 
-            #On bouge le gun avec le joueur
+            # On bouge le gun avec le joueur
             self.gun_position[0] = self.player_position[0]
             self.gun_position[1] = self.player_position[1]
-            
-            # Déplace la caméra pour centrer le joueur
-            self.camera_position[0] = self.player_position[0] +200 -self.SCREEN_WIDTH // 2
-            self.camera_position[1] = self.player_position[1] +200 -self.SCREEN_HEIGHT // 2
 
+            # Déplace la caméra pour centrer le joueur
+            self.camera_position[0] = self.player_position[0] + 200 - self.SCREEN_WIDTH // 2
+            self.camera_position[1] = self.player_position[1] + 200 - self.SCREEN_HEIGHT // 2
 
             # Spawn de zombies à chaque itération
-            if random.random() < self.ZOMBIE_SPAWNCHANCHE: 
+            if random.random() < self.ZOMBIE_SPAWNCHANCHE:
                 self.spawn_arround_player(500, 400, self.zombie_image, self.zombies)
-            
+
             # Spawn des boxs
             if random.random() < self.BOX_SPAWN_CHANCE:
                 if self.check_number_of_close(self.boxes, rayon=2000, max_number=1):
@@ -440,36 +439,37 @@ class Game:
                 self.level_up(1)
                 self.player_xp -= 100
 
-            # Dessine les orbes d'XP
+            # Dessines les orbes d'xp
             for orb in self.xp_orbs:
-                self.screen.blit(self.xp_image, (orb['rect'].x - self.camera_position[0], orb['rect'].y - self.camera_position[1]))
+                self.screen.blit(self.xp_image,
+                                 (orb['rect'].x - self.camera_position[0], orb['rect'].y - self.camera_position[1]))
 
-            # Dessine les zombies
+            # Dessines les zombies
             for zombie in self.zombies:
-                self.screen.blit(self.zombie_image, (zombie.x - self.camera_position[0], zombie.y - self.camera_position[1]))
+                self.screen.blit(self.zombie_image,
+                                 (zombie.x - self.camera_position[0], zombie.y - self.camera_position[1]))
 
-           # Dessine les boxs
+            # Dessines les boxs
             for box in self.boxes:
-                self.screen.blit(self.luckyblock_image, (box.x - self.camera_position[0], box.y - self.camera_position[1]))
+                self.screen.blit(self.luckyblock_image,
+                                 (box.x - self.camera_position[0], box.y - self.camera_position[1]))
 
-
-            # Dessine les balles
+            # Dessine sles balles
             for bullet in self.bullets:
                 self.screen.blit(
-                    bullet['image'], 
+                    bullet['image'],
                     (bullet['rect'].x - self.camera_position[0], bullet['rect'].y - self.camera_position[1])
                 )
 
-           # Dessine le joueur et le gun 
-            self.screen.blit(self.player_image, (self.player_position[0] - self.camera_position[0] -50, self.player_position[1] - self.camera_position[1]))
+            # Dessines le joueur et le gun
+            self.screen.blit(self.player_image, (
+            self.player_position[0] - self.camera_position[0] - 50, self.player_position[1] - self.camera_position[1]))
 
-            self.screen.blit(self.rotated_gun_image, (self.gun_position[0] - self.camera_position[0] -50, self.gun_position[1] - self.camera_position[1]))
+            self.screen.blit(self.rotated_gun_image, (
+            self.gun_position[0] - self.camera_position[0] - 50, self.gun_position[1] - self.camera_position[1]))
 
-
-
-            #Le hud
+            # Le hud
             self.display_hud()
-    
 
             # Gestion des inputs
             for event in pygame.event.get():
@@ -485,10 +485,10 @@ class Game:
                         self.player_movement_x[0] = True
                     if event.key == pygame.K_RIGHT:
                         self.player_movement_x[1] = True
-                    #if event.key == pygame.K_SPACE:
+                    # if event.key == pygame.K_SPACE:
                     #    self.shoot_bullet()             # Tir manuel
-                   # if event.key == pygame.K_a:
-                   #     self.player_image = self.tint_texture(self.player_image, (0, 0, 200 ))
+                    # if event.key == pygame.K_a:
+                    #     self.player_image = self.tint_texture(self.player_image, (0, 0, 200 ))
                     if event.key == pygame.K_b:
                         self.player_effect_bomb()
                     if event.key == pygame.K_t:
@@ -497,33 +497,32 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         pygame.QUIT()
                         sys.exit()
-                    
-                        
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
                         self.player_movement_y[0] = False
                     if event.key == pygame.K_DOWN:
-                        self.player_movement_y[1] = False  
+                        self.player_movement_y[1] = False
                     if event.key == pygame.K_LEFT:
                         self.player_movement_x[0] = False
                     if event.key == pygame.K_RIGHT:
                         self.player_movement_x[1] = False
 
             # Tir automatique
-            current_time = pygame.time.get_ticks() 
+            current_time = pygame.time.get_ticks()
             if current_time - self.last_shot_time > self.shooting_cooldown:
-                self.shoot_bullet()  
-                self.last_shot_time = current_time  
+                self.shoot_bullet()
+                self.last_shot_time = current_time
 
-            #Mort
+                # Mort
             if self.PLAYER_HP == 0:
-                self.END_GAME()
+                self.end_game()
 
             pygame.display.update()
             self.clock.tick(60)
 
         pygame.quit()
         sys.exit()
+
 
 Game().run_game()
