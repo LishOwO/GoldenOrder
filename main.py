@@ -283,7 +283,6 @@ class Game:
                     # Spawn une orbe d'XP à la position du zombie
                     xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
                     self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
-                    break
 
     #affiche le hud
     def display_hud(self):
