@@ -1,4 +1,5 @@
-class Tools:
-    def __init__ (self):
+import sys
+from math import sqrt
 
-        pass
+def distance_squared(x, y):
+    pass

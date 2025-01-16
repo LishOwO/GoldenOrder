@@ -9,7 +9,7 @@ sys.path.append('./bin')
 from objects import Objects
 from zombie import Zombie
 from player import Player
-from tools import Tools
+import tools
 
 class Game:
 
