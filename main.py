@@ -56,7 +56,7 @@ class Game:
         self.ZOMBIE_SIZE_MULTIPLIER = 0.5
         self.ZOMBIE_ATTACK_DISTANCE = 75
         self.ZOMBIE_SPAWNCHANCHE = 0.03
-        self.ZOMBIE_DAMAGE_SOUNDS = [pygame.mixer.Sound("src/son/ZombieSound.mp3"),pygame.mixer.Sound("src/son/Zombie.damage.2.mp3"),]
+        self.ZOMBIE_DAMAGE_SOUNDS = [pygame.mixer.Sound("src/son/ZombieSound.mp3"),pygame.mixer.Sound("src/son/Zombie.damage.2.mp3"),pygame.mixer.Sound("src/son/Zombie.damage.3.mp3"),]
   
         # Var BULLET
         self.BULLET_VELOCITY = 10
