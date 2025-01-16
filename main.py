@@ -90,7 +90,7 @@ class Game:
 
 
         # Var BOX
-        self.BOX_SPAWN_CHANCE = 0.005  # 1% de chance de spawn par frame
+        self.BOX_SPAWN_CHANCE = 0.005  # 0.5% de chance de spawn par frame
         self.boxes = []
         self.LOCAL_BOX_DISTANCE = 50000
         self.MAX_LOCAL_BOX = 4
