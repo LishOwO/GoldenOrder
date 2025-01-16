@@ -183,7 +183,7 @@ class Game:
                 number += 1
         return number < max_number
 
-        # adoucis le déplacement (quand on s'arrête c'est pas direct)
+    # inertie
     def smooth_damp(self, current, target, current_velocity, smooth_time, delta_time):
         smooth_time = max(0.0001, smooth_time)  # Évite la division par zéro
         omega = 2.0 / smooth_time
