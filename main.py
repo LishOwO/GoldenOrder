@@ -279,6 +279,7 @@ class Game:
                     if bullet in self.bullets:
                         self.bullets.remove(bullet)
                     self.kill_count += 1
+                    random.choice(self.ZOMBIE_DAMAGE_SOUNDS).play()
 
                     # Spawn une orbe d'XP à la position du zombie
                     xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
