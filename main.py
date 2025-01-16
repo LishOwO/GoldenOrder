@@ -4,7 +4,7 @@ import sys
 import random
 import math
 
-from objects.py import Objects
+from objects import Objects
 
 class Game:
 
