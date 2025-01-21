@@ -159,14 +159,14 @@ class Game:
         self.lucky_blocks = []  # Liste des lucky blocks
 
     # spawne quelque chose autour du joueur
-    def spawn_arround_player(self, spawn_radius, min_distance, target_image, targetlist):
+    def spawn_around_player(self, spawn_radius, min_distance, target_image, targetlist):
         while True:
             target_x = random.randint(int(self.player_position[0] - spawn_radius),
                                       int(self.player_position[0] + spawn_radius))
             target_y = random.randint(int(self.player_position[1] - spawn_radius),
                                       int(self.player_position[1] + spawn_radius))
-            target = [target_x, target_y]
-            distance_squared = tools.distance_squared(target, self.player_position)
+            target_pos = [target_x, target_y]
+            distance_squared = tools.distance_squared(target_pos, self.player_position)
 
             if distance_squared >= min_distance ** 2:
                 break
@@ -175,10 +175,11 @@ class Game:
         targetlist.append(target_rect)
 
     # check une limite de choses proches
-    def check_number_of_close(self, cibles, rayon, max_number):
+    def check_number_of_close(self, targets, rayon, max_number):
         number = 0
-        for cible in cibles:
-            distance_squared = (cible.x - self.player_position[0]) ** 2 + (cible.y - self.player_position[1]) ** 2
+        for target in targets:
+            target_pos = [target.x, target.y]
+            distance_squared = tools.distance_squared(target_pos, self.player_position)
             if distance_squared < rayon ** 2:
                 number += 1
         return number < max_number
@@ -245,9 +246,10 @@ class Game:
             bullet['rect'].x += bullet['direction'][0] * self.BULLET_VELOCITY
             bullet['rect'].y += bullet['direction'][1] * self.BULLET_VELOCITY
 
+            target_pos = [bullet['rect'].x, bullet['rect'].y]
+
             # Supprimer les balles trop loin du joueur
-            distance_squared = (bullet['rect'].x - self.player_position[0]) ** 2 + (
-                        bullet['rect'].y - self.player_position[1]) ** 2
+            distance_squared = tools.distance_squared(target_pos, self.player_position)
             if distance_squared > self.BULLET_MAX_DISTANCE ** 2:
                 self.bullets.remove(bullet)
                 continue
@@ -293,8 +295,10 @@ class Game:
     # collecter l'xp
     def collect_xp_orbs(self):
         for orb in self.xp_orbs[:]:
-            distance_squared = (orb['rect'].centerx - self.player_position[0]) ** 2 + (
-                        orb['rect'].centery - self.player_position[1]) ** 2
+
+            target_pos = [orb['rect'].centerx, orb['rect'].centery]
+
+            distance_squared = tools.distance_squared(target_pos, self.player_position)
 
             if distance_squared < 100 ** 2:
                 self.player_xp += orb['value']
@@ -418,12 +422,12 @@ class Game:
 
             # Spawn de zombies à chaque itération
             if random.random() < self.ZOMBIE_SPAWNCHANCHE:
-                self.spawn_arround_player(500, 400, self.zombie_image, self.zombies)
+                self.spawn_around_player(500, 400, self.zombie_image, self.zombies)
 
             # Spawn des boxs
             if random.random() < self.BOX_SPAWN_CHANCE:
                 if self.check_number_of_close(self.boxes, rayon=2000, max_number=1):
-                    self.spawn_arround_player(600, 100, self.luckyblock_image, self.boxes)
+                    self.spawn_around_player(600, 100, self.luckyblock_image, self.boxes)
 
             # Déplace les zombies et les balles
             Zombie.move_zombies(self)
