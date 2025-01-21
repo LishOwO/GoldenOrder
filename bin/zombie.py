@@ -1,11 +1,12 @@
 import sys
 import math
-import tools
+import tools as tools
 
 class Zombie:
-    def __init__ (self, hp, ):
+    def __init__ (self, pos, type):
         
-        pass
+        self.zombie_pos = pos
+        self.zombie_type = type
 
         #deplace les zombie
     def move_zombies(self):

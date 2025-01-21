@@ -14,21 +14,6 @@ import tools
 
 class Game:
 
-    # load les images et les resize
-    def load_and_resize_image(self, filepath, size_multiplier, colorkey=(0, 0, 0)):
-        """
-        Charge une image, redimensionne et applique un colorkey.
-        :param filepath: Chemin vers l'image.
-        :param size_multiplier: Multiplicateur pour redimensionner l'image.
-        :param colorkey: Couleur à rendre transparente.
-        :return:Image redim
-        """
-        image = pygame.image.load(filepath).convert()
-        new_size = (int(image.get_width() * size_multiplier), int(image.get_height() * size_multiplier))
-        image = pygame.transform.scale(image, new_size)
-        image.set_colorkey(colorkey)
-        return image
-
     # initialisation
     def __init__(self):
         pygame.init()
@@ -158,7 +143,38 @@ class Game:
         # Variables lucky blocks
         self.lucky_blocks = []  # Liste des lucky blocks
 
+
+    # load les images et les resize
+    def load_and_resize_image(self, filepath, size_multiplier, colorkey=(0, 0, 0)):
+        """
+        Charge une image, redimensionne et applique un colorkey.
+        :param filepath: Chemin vers l'image.
+        :param size_multiplier: Multiplicateur pour redimensionner l'image.
+        :param colorkey: Couleur à rendre transparente.
+        :return:Image redim
+        """
+        image = pygame.image.load(filepath).convert()
+        new_size = (int(image.get_width() * size_multiplier), int(image.get_height() * size_multiplier))
+        image = pygame.transform.scale(image, new_size)
+        image.set_colorkey(colorkey)
+        return image
+
     # spawne quelque chose autour du joueur
+    def zombie_spawn(self, spawn_radius, min_distance, target_image, target_list):
+        while True:
+            target_x = random.randint(int(self.player_position[0] - spawn_radius),
+                                      int(self.player_position[0] + spawn_radius))
+            target_y = random.randint(int(self.player_position[1] - spawn_radius),
+                                      int(self.player_position[1] + spawn_radius))
+            target_pos = [target_x, target_y]
+            distance_squared = tools.distance_squared(target_pos, self.player_position)
+
+            if distance_squared >= min_distance ** 2:
+                break
+
+        z = Zombie(self, target_pos, 1)
+
+
     def spawn_around_player(self, spawn_radius, min_distance, target_image, targetlist):
         while True:
             target_x = random.randint(int(self.player_position[0] - spawn_radius),
