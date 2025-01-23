@@ -443,8 +443,8 @@ class Game:
             self.gun_position[1] = self.player_position[1]
 
             # Déplace la caméra pour centrer le joueur
-            self.camera_position[0] = self.player_position[0] + 200 - self.SCREEN_WIDTH // 2
-            self.camera_position[1] = self.player_position[1] + 200 - self.SCREEN_HEIGHT // 2
+            self.camera_position[0] = self.player_position[0] - self.SCREEN_WIDTH // 2
+            self.camera_position[1] = self.player_position[1] - self.SCREEN_HEIGHT // 2
 
             # Spawn de zombies à chaque itération
             if random.random() < self.ZOMBIE_SPAWNCHANCHE:
@@ -569,7 +569,7 @@ class Game:
                         pygame.QUIT()
                         sys.exit()
             pygame.transform.scale_by(img, 5)
-            self.screen.blit(img, (self.SCREEN_WIDTH/2 - image_size[0]/2, self.SCREEN_HEIGHT/2 - image_size[1]/2))
+            self.screen.blit(img, (self.SCREEN_WIDTH//2 - image_size[0]//2, self.SCREEN_HEIGHT//2 - image_size[1]//2))
 
             self.run_game()
 
