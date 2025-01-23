@@ -345,9 +345,11 @@ class Game:
         if choice == "bombe":
             print("Effet: Bombe")
             self.player_effect_bomb()
+            self.son_bombe = pygame.mixer.Sound("src/son/BombSound.mp3")
         elif choice == "soin":
             print("Effet: Soin")
             self.player_effect_heal()
+            self.son_soin = pygame.mixer.Sound("src/son/HealthBoost.mp3")
         elif choice == "invincibilite":
             print("Effet: Invincibilité")
             self.player_effect_invincibility()
