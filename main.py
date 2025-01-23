@@ -94,9 +94,6 @@ class Game:
         self.MAX_LOCAL_BOX = 4
         self.local_boxes = 0
 
-        #Son du jeu 
-        self.son_du_jeu = pygame.mixer.Sound('src/son/SoundGame.mp3')
-
         # Chargement du fond
         self.background_image = pygame.image.load('src/images/sprite/texture_map.png').convert()
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
