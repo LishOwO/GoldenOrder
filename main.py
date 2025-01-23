@@ -562,12 +562,24 @@ class Game:
         while self.run and self.menu:
             self.screen.fill(self.BACKGROUND_COLOR)
             
+            font = pygame.font.SysFont(None, 24)
+
+            img = font.render('hello', True, (20, 20, 20))
+
             for event in pygame.event.get():
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
+                    if event.key == pygame.K_SPACE:
                         self.menu = False
-            self.run()
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.QUIT()
+                        sys.exit()
+            self.screen.blit(img, (20, 20))
+
+            self.run_game()
+
+            pygame.display.update()
+            self.clock.tick(60)
 
 
 Game().run_game()
