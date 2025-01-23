@@ -551,12 +551,14 @@ class Game:
             self.clock.tick(60)
 
     def main_menu(self):
-        while self.run and self.menu:
-            self.screen.fill(self.BACKGROUND_COLOR)
-            
-            font = pygame.font.SysFont(None, 24)
+                    
+        font = pygame.font.SysFont(None, 24)
+        img = font.render('Press space to start', True, (20, 20, 20))
+        img = pygame.transform.scale_by(img, 3)
+        image_size = img.get_size()
 
-            img = font.render('hello', True, (20, 20, 20))
+        while self.run and self.menu:
+            self.screen.fill((100, 100, 255))
 
             for event in pygame.event.get():
 
@@ -566,7 +568,8 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         pygame.QUIT()
                         sys.exit()
-            self.screen.blit(img, (20, 20))
+            pygame.transform.scale_by(img, 5)
+            self.screen.blit(img, (self.SCREEN_WIDTH/2 - image_size[0]/2, self.SCREEN_HEIGHT/2 - image_size[1]/2))
 
             self.run_game()
 
