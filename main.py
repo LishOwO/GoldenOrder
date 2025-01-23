@@ -14,9 +14,6 @@ import tools
 
 class Game:
 
-    #son du jeu 
-    self.son_du_jeux = pygame.mixer.Sound('src/son/soundGame.mp3')
-    sound.play(loops=-1, maxtime=0, fade_ms=0)
 
     # initialisation
     def __init__(self):
@@ -79,6 +76,7 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.run = True
+        self.menu = True
 
         # Var scores etc
         self.start_time = pygame.time.get_ticks()
@@ -95,6 +93,11 @@ class Game:
         self.LOCAL_BOX_DISTANCE = 50000
         self.MAX_LOCAL_BOX = 4
         self.local_boxes = 0
+
+        #Son du jeu 
+        self.son_du_jeu = pygame.mixer.Sound('src/son/soundGame.mp3')
+        sound.play(loops=-1, maxtime=0, fade_ms=0)
+
 
         # Chargement du fond
         self.background_image = pygame.image.load('src/images/sprite/texture_map.png').convert()
@@ -407,7 +410,7 @@ class Game:
 
     # run le jeu
     def run_game(self):
-        while self.run:
+        while self.run and not(self.menu):
             self.screen.fill(self.BACKGROUND_COLOR)
 
             # Déplace le fond pour que le joueur soit toujours centré
@@ -552,6 +555,17 @@ class Game:
 
         pygame.quit()
         sys.exit()
+
+    def main_menu(self):
+        while self.run and self.menu:
+            self.screen.fill(self.BACKGROUND_COLOR)
+            
+            for event in pygame.event.get():
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.menu = False
+            self.run()
 
 
 Game().run_game()
