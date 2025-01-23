@@ -95,8 +95,8 @@ class Game:
         self.local_boxes = 0
 
         #Son du jeu 
-        self.son_du_jeu = pygame.mixer.Sound('src/son/SoundGame.mp3')
-        sound.play(loops=-1, maxtime=0, fade_ms=0)
+       self.pygame.mixer.music.load('src/son/SoundGame.mp3')
+       self.pygame.mixer.music.play(loops=-1, start=0.0)
 
 
         # Chargement du fond
