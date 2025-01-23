@@ -95,7 +95,7 @@ class Game:
         self.local_boxes = 0
 
         #Son du jeu 
-        self.son_du_jeu = pygame.mixer.Sound('src/son/soundGame.mp3')
+        self.son_du_jeu = pygame.mixer.Sound('src/son/SoundGame.mp3')
         sound.play(loops=-1, maxtime=0, fade_ms=0)
 
 
@@ -108,8 +108,10 @@ class Game:
                                                        self.PLAYER_SIZE_MULTIPLIER)
 
         # Chargement du zombie
-        self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png',
-                                                       self.ZOMBIE_SIZE_MULTIPLIER)
+        self.zombie_images = [ ('src/images/sprite/zombie/zombie1/zombie1.png'),
+                               ('src/images/sprite/zombie/zombie2/zombie2.png'),]
+ 
+        self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
 
         # Chargement xp_screen
         self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
