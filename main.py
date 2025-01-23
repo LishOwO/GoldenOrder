@@ -38,7 +38,7 @@ class Game:
         self.PLAYER_DAMAGE_SOUND = [pygame.mixer.Sound("src/son/PlayerDamage1.mp3"),
                                     pygame.mixer.Sound("src/son/PlayerDamage2.mp3"),
                                     pygame.mixer.Sound("src/son/PlayerDamage3.mp3"),
-                                    pygame.mixer.Sound("src/son/PlayerDamage4.mp3"),
+                                    pygame.mixer.Sound("src/son/PlayerDamage4.mp3"), ]
 
 
         # Var ZOMBIE
