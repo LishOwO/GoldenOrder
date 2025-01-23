@@ -35,7 +35,11 @@ class Game:
         self.PLAYER_SIZE_MULTIPLIER = 0.3
         self.PLAYER_HP = 10
         self.PLAYER_LVL = 0
-        self.PLAYER_DAMAGE_SOUND = pygame.mixer.Sound("src/son/PlayerDamage1.mp3")
+        self.PLAYER_DAMAGE_SOUND = [pygame.mixer.Sound("src/son/PlayerDamage1.mp3"),
+                                    pygame.mixer.Sound("src/son/PlayerDamage2.mp3"),
+                                    pygame.mixer.Sound("src/son/PlayerDamage3.mp3"),
+                                    pygame.mixer.Sound("src/son/PlayerDamage4.mp3"),
+
 
         # Var ZOMBIE
         self.ZOMBIE_VELOCITY = 2
