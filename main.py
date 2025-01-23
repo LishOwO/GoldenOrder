@@ -94,10 +94,6 @@ class Game:
         self.MAX_LOCAL_BOX = 4
         self.local_boxes = 0
 
-        #Son du jeu 
-       self.pygame.mixer.music.load('src/son/SoundGame.mp3')
-       self.pygame.mixer.music.play(loops=-1, start=0.0)
-
 
         # Chargement du fond
         self.background_image = pygame.image.load('src/images/sprite/texture_map.png').convert()
@@ -555,9 +551,6 @@ class Game:
             pygame.display.update()
             self.clock.tick(60)
 
-        pygame.quit()
-        sys.exit()
-
     def main_menu(self):
         while self.run and self.menu:
             self.screen.fill(self.BACKGROUND_COLOR)
@@ -582,4 +575,4 @@ class Game:
             self.clock.tick(60)
 
 
-Game().run_game()
+Game().main_menu()
