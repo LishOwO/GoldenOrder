@@ -14,6 +14,10 @@ import tools
 
 class Game:
 
+    #son du jeu 
+    self.son_du_jeux = pygame.mixer.Sound('src/son/soundGame.mp3')
+    sound.play(loops=-1, maxtime=0, fade_ms=0)
+
     # initialisation
     def __init__(self):
         pygame.init()
