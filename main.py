@@ -36,7 +36,7 @@ class Game:
         self.PLAYER_SIZE_MULTIPLIER = 0.3
         self.PLAYER_HP = 10
         self.PLAYER_LVL = 0
-        self.PLAYER_DAMAGE_SOUND = [pygame.mixer.Sound("src/son/PlayerDamage1.mp3"),
+        self.PLAYER_DAMAGE_SOUNDS = [pygame.mixer.Sound("src/son/PlayerDamage1.mp3"),
                                     pygame.mixer.Sound("src/son/PlayerDamage2.mp3"),
                                     pygame.mixer.Sound("src/son/PlayerDamage3.mp3"),
                                     pygame.mixer.Sound("src/son/PlayerDamage4.mp3"), ]
@@ -94,6 +94,8 @@ class Game:
         self.MAX_LOCAL_BOX = 4
         self.local_boxes = 0
 
+        #Son du jeu 
+        self.son_du_jeu = pygame.mixer.Sound('src/son/SoundGame.mp3')
 
         # Chargement du fond
         self.background_image = pygame.image.load('src/images/sprite/texture_map.png').convert()

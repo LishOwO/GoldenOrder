@@ -1,6 +1,7 @@
 import sys
 import math
 import tools as tools
+import random
 
 class Zombie:
     def __init__ (self, pos, type):
@@ -28,6 +29,6 @@ class Zombie:
                 self.zombies.remove(zombie)  
                 self.screen.fill((255, 0, 0))
                 self.PLAYER_HP -= 1 
-                self.PLAYER_DAMAGE_SOUND.play()
+                random.choice(self.PLAYER_DAMAGE_SOUNDS).play()
                 break #fix
 
