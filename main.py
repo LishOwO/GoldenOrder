@@ -310,7 +310,7 @@ class Game:
     def end_game(self):  # a refaire
         self.screen.fill((0, 0, 0))
         text = self.font.render("Rip", True, (255, 0, 0))
-        self.screen.blit(text, (self.SCREEN_WIDTH // 2 - text.get_width(), self.SCREEN_HEIGHT // 2 - text.get_height()))
+        self.screen.blit(text, (self.SCREEN_WIDTH // 2 - text.get_width()//2, self.SCREEN_HEIGHT // 2 - text.get_height()//2))
         pygame.display.flip()
         pygame.time.wait(3000)
         pygame.quit()
