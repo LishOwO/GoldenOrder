@@ -33,7 +33,7 @@ class Game:
 
         # Var PLAYER
         self.PLAYER_VELOCITY = 7
-        self.PLAYER_SIZE_MULTIPLIER = 4
+        self.PLAYER_SIZE_MULTIPLIER = 0.3
         self.PLAYER_HP = 10
         self.PLAYER_LVL = 0
         self.PLAYER_DAMAGE_SOUNDS = [pygame.mixer.Sound("src/son/PlayerDamage1.mp3"),
@@ -99,7 +99,7 @@ class Game:
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
 
         # Chargement du joueur
-        self.player_image = self.load_and_resize_image('src/images/sprite/player/LebronJames.png',
+        self.player_image = self.load_and_resize_image('src/images/sprite/player/MecAlakippa.png',
                                                        self.PLAYER_SIZE_MULTIPLIER)
 
         # Chargement du zombie
@@ -180,7 +180,10 @@ class Game:
             if distance_squared >= min_distance ** 2:
                 break
 
-        z = Zombie(self, target_pos, 1)
+        target_rect = target_image.get_rect(center=(target_x, target_y))
+
+        newZ = Zombie(target_pos, 1, target_rect)
+        target_list.append(newZ)
 
 
     def spawn_around_player(self, spawn_radius, min_distance, target_image, targetlist):
@@ -229,11 +232,11 @@ class Game:
 
         # Trouver le zombie le plus proche
         closest_zombie = min(
-            self.zombies, key=lambda z: (z.x - self.player_position[0]) ** 2 + (z.y - self.player_position[1]) ** 2
+            self.zombies, key=lambda zombie: (zombie.zombie_pos[0] - self.player_position[0]) ** 2 + (zombie.zombie_pos[1] - self.player_position[1]) ** 2
         )
 
-        dx = closest_zombie.x - self.player_position[0]
-        dy = closest_zombie.y - self.player_position[1]
+        dx = closest_zombie.zombie_pos[0] - self.player_position[0]
+        dy = closest_zombie.zombie_pos[1] - self.player_position[1]
         distance = math.sqrt(dx ** 2 + dy ** 2)
 
         if distance != 0:
@@ -280,15 +283,17 @@ class Game:
 
             #  collisions balle et zombie
             for zombie in self.zombies:
-                if bullet['rect'].colliderect(zombie):
-                    self.zombies.remove(zombie)
-                    if bullet in self.bullets:
-                        self.bullets.remove(bullet)
+
+                if bullet['rect'].colliderect(zombie.zombie_hitbox):
+
+                    self.bullets.remove(bullet)
+
                     self.kill_count += 1
                     random.choice(self.ZOMBIE_DAMAGE_SOUNDS).play()
 
                     # Spawn un orbe d'xp à la position du zombie
-                    xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
+                    xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
+                    self.zombies.remove(zombie)
                     self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
                     break
 
@@ -362,7 +367,7 @@ class Game:
     def player_effect_bomb(self):
         for zombie in self.zombies:
             self.zombies.remove(zombie)
-            xp_orb_rect = self.xp_image.get_rect(center=zombie.center)
+            xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
             self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
             self.screen.fill((255, 255, 255))
             self.kill_count += 1
@@ -448,7 +453,7 @@ class Game:
 
             # Spawn de zombies à chaque itération
             if random.random() < self.ZOMBIE_SPAWNCHANCHE:
-                self.spawn_around_player(500, 400, self.zombie_image, self.zombies)
+                self.zombie_spawn(500, 400, self.zombie_image, self.zombies)
 
             # Spawn des boxs
             if random.random() < self.BOX_SPAWN_CHANCE:
@@ -456,8 +461,23 @@ class Game:
                     self.spawn_around_player(600, 100, self.luckyblock_image, self.boxes)
 
             # Déplace les zombies et les balles
-            Zombie.move_zombies(self)
+            
+
+            for zombie in self.zombies:
+                Zombie.update_hitbox(zombie)
+                           
+                if Zombie.move_zombies(zombie):
+                    self.zombies.remove(zombie)  
+                    self.screen.fill((255, 0, 0))
+                    self.PLAYER_HP -= 1 
+                    random.choice(self.PLAYER_DAMAGE_SOUNDS).play()
+                
+                self.screen.blit(self.zombie_image, (zombie.zombie_pos[0] - self.camera_position[0], zombie.zombie_pos[1] - self.camera_position[1]))
+
+
+
             self.move_bullets()
+
 
             # Rammase l'xp et les box
             self.collect_xp_orbs()
@@ -472,11 +492,6 @@ class Game:
             for orb in self.xp_orbs:
                 self.screen.blit(self.xp_image,
                                  (orb['rect'].x - self.camera_position[0], orb['rect'].y - self.camera_position[1]))
-
-            # Dessines les zombies
-            for zombie in self.zombies:
-                self.screen.blit(self.zombie_image,
-                                 (zombie.x - self.camera_position[0], zombie.y - self.camera_position[1]))
 
             # Dessines les boxs
             for box in self.boxes:
@@ -524,7 +539,7 @@ class Game:
                         print(self.check_number_of_close(self.boxes, 500, 2))
                         print("bbb")
                     if event.key == pygame.K_ESCAPE:
-                        pygame.QUIT()
+                        pygame.quit()
                         sys.exit()
 
                 if event.type == pygame.KEYUP:
@@ -566,7 +581,7 @@ class Game:
                     if event.key == pygame.K_SPACE:
                         self.menu = False
                     if event.key == pygame.K_ESCAPE:
-                        pygame.QUIT()
+                        pygame.quit()
                         sys.exit()
             pygame.transform.scale_by(img, 5)
             self.screen.blit(img, (self.SCREEN_WIDTH//2 - image_size[0]//2, self.SCREEN_HEIGHT//2 - image_size[1]//2))

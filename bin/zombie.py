@@ -2,33 +2,50 @@ import sys
 import math
 import tools as tools
 import random
+import pygame
+import os
+
 
 class Zombie:
-    def __init__ (self, pos, type):
+    def __init__ (self, pos, type, rect):
         
         self.zombie_pos = pos
         self.zombie_type = type
+        self.zombie_hitbox = rect
+
+        #Zombies type :
+
+        #Zombie normal
+        if self.zombie_type == 1:
+            self.zombie_vel = 1
+            self.zombie_atk_dist = 32
+            self.zombie_image = pygame.image.load("/src/images/zombie/zombie1/zombie1.png") # to fix
+
+
+    def update_hitbox(self):
+        self.zombie_hitbox = pygame.Rect(self.zombie_pos[0]+16, self.zombie_pos[1]+16, 32, 32)
+
+    def draw(self, screen):
+        screen.blit(self.zombie_type, self.zombie_pos)
+
 
         #deplace les zombie
     def move_zombies(self):
         # Déplace chaque zombie vers le joueur
-        for zombie in self.zombies:
-            zombie_dx = self.player_position[0] - zombie.x
-            zombie_dy = self.player_position[1] - zombie.y
-            distance = math.sqrt(zombie_dx**2 + zombie_dy**2)
+        zombie_dx = self.player_position[0] - self.zombie_pos[0]
+        zombie_dy = self.player_position[1] - self.zombie_pos[1]
+        distance = math.sqrt(zombie_dx**2 + zombie_dy**2)
 
-            if distance != 0:
-                zombie_dx /= distance  # Normalisation
-                zombie_dy /= distance  # Normalisation
+        if distance != 0:
+            zombie_dx /= distance  # Normalisation
+            zombie_dy /= distance  # Normalisation
 
-            zombie.x += zombie_dx * self.ZOMBIE_VELOCITY
-            zombie.y += zombie_dy * self.ZOMBIE_VELOCITY
+        self.zombie_pos[0] += zombie_dx * self.ZOMBIE_VELOCITY
+        self.zombie_pos[1] += zombie_dy * self.ZOMBIE_VELOCITY
 
-            # Collision avec le joueur -> Dégats
-            if distance <= self.ZOMBIE_ATTACK_DISTANCE:
-                self.zombies.remove(zombie)  
-                self.screen.fill((255, 0, 0))
-                self.PLAYER_HP -= 1 
-                random.choice(self.PLAYER_DAMAGE_SOUNDS).play()
-                break #fix
+        # Collision avec le joueur -> Dégats
+        if distance <= self.zombie_atk_dist:
+            return True
+        return False
+            
 
