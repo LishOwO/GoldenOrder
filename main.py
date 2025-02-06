@@ -84,7 +84,7 @@ class Game:
 
         self.run = True
         self.menu = True
-        self.menu_skin = False
+        self.menu_skin = True
 
 
         # Var scores etc
