@@ -19,7 +19,7 @@ class Zombie:
         if self.zombie_type == 1:
             self.zombie_vel = 1
             self.zombie_atk_dist = 32
-            self.zombie_image = pygame.image.load("/src/images/zombie/zombie1/zombie1.png") # to fix
+            self.zombie_image = pygame.image.load("src/images/sprite/zombie/zombie1/zombie1.png") # to fix
 
 
     def update_hitbox(self):
