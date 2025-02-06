@@ -484,7 +484,7 @@ class Game:
             # Spawn des boxs
             if random.random() < self.BOX_SPAWN_CHANCE:
                 if self.check_number_of_close(self.boxes, rayon=2000, max_number=1):
-                    self.spawn_around_player(600, 100, self.luckyblock_image, self.lucky_block)
+                    self.spawn_around_player(600, 100, self.luckyblock_image, self.lucky_blocks)
 
             # Déplace les zombies et les balles
             
