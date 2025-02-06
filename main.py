@@ -52,6 +52,11 @@ class Game:
                                      pygame.mixer.Sound("src/son/ZombieDamage3.mp3"),
                                      pygame.mixer.Sound("src/son/ZombieDamage4.mp3"), ]
 
+        # Son Powerups
+        self.son_bombe = pygame.mixer.Sound("src/son/BombSound.mp3")
+        self.son_soin = pygame.mixer.Sound("src/son/HealthBoost.mp3")
+
+
         # Var BULLET
         self.BULLET_VELOCITY = 10
         self.BULLET_SIZE = 2
