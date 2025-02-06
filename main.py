@@ -55,6 +55,7 @@ class Game:
 
         # Son Powerups
         self.son_bombe = pygame.mixer.Sound("src/son/BombSound.mp3")
+        
         self.son_soin = pygame.mixer.Sound("src/son/HealthBoost.mp3")
 
 
@@ -194,6 +195,22 @@ class Game:
         newZ = Zombie(target_pos, 1, target_rect)
         target_list.append(newZ)
 
+    def spawn_objects(self, spawn_radius, min_distance, target_image, target_list, type):
+        while True:
+            target_x = random.randint(int(self.player_position[0] - spawn_radius),
+                                      int(self.player_position[0] + spawn_radius))
+            target_y = random.randint(int(self.player_position[1] - spawn_radius),
+                                      int(self.player_position[1] + spawn_radius))
+            target_pos = [target_x, target_y]
+            distance_squared = tools.distance_squared(target_pos, self.player_position)
+
+            if distance_squared >= min_distance ** 2:
+                break
+        if type == "lucky_block":
+            target_rect = target_image.get_rect(center=(target_x, target_y))
+            target_list.append(target_rect)
+
+        
 
     def spawn_around_player(self, spawn_radius, min_distance, target_image, targetlist):
         while True:
@@ -467,7 +484,7 @@ class Game:
             # Spawn des boxs
             if random.random() < self.BOX_SPAWN_CHANCE:
                 if self.check_number_of_close(self.boxes, rayon=2000, max_number=1):
-                    self.spawn_around_player(600, 100, self.luckyblock_image, self.boxes)
+                    self.spawn_around_player(600, 100, self.luckyblock_image, self.lucky_block)
 
             # Déplace les zombies et les balles
             
@@ -617,6 +634,8 @@ class Game:
 
             pygame.display.update()
             self.clock.tick(60)
-
+            
+    def pause_menu(self):
+        pass
 
 Game().main_menu()
