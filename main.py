@@ -612,14 +612,15 @@ class Game:
                         sys.exit()
                     if event.key == pygame.K_m:
                         self.menu_skin == True
-                        while self.run and self.menu_skin:
-                            self.son_bombe.play()
-                            self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH//2 -600, self.SCREEN_HEIGHT//2))  
-                            if event.key == pygame.K_ESCAPE:
-                                self.menu_skin == False
-                                break
-                            pygame.display.update()
-                            self.clock.tick(15)
+                        
+            while self.run and self.menu_skin:
+                self.son_bombe.play()
+                self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH//2 -600, self.SCREEN_HEIGHT//2))  
+                if event.key == pygame.K_ESCAPE:
+                    self.menu_skin == False
+                    break
+                pygame.display.update()
+                self.clock.tick(60)
 
 
 
