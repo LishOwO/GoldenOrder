@@ -12,6 +12,7 @@ from weapons import Weapons
 import tools
 
 
+
 class Game:
 
 
@@ -106,7 +107,7 @@ class Game:
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
 
         # Chargement du joueur
-        self.player_image = self.load_and_resize_image('src/images/sprite/player/MecAlakippa.png',
+        self.player_image = self.load_and_resize_image('src/images/sprite/player/LebronJames.png',
                                                        self.PLAYER_SIZE_MULTIPLIER)
 
         # Chargement du zombie
