@@ -30,18 +30,18 @@ class Zombie:
 
 
         #deplace les zombie
-    def move_zombies(self):
+    def move_zombies(self, playserpos):
         # Déplace chaque zombie vers le joueur
-        zombie_dx = self.player_position[0] - self.zombie_pos[0]
-        zombie_dy = self.player_position[1] - self.zombie_pos[1]
+        zombie_dx = playserpos[0] - self.zombie_pos[0]
+        zombie_dy = playserpos[1] - self.zombie_pos[1]
         distance = math.sqrt(zombie_dx**2 + zombie_dy**2)
 
         if distance != 0:
             zombie_dx /= distance  # Normalisation
             zombie_dy /= distance  # Normalisation
 
-        self.zombie_pos[0] += zombie_dx * self.ZOMBIE_VELOCITY
-        self.zombie_pos[1] += zombie_dy * self.ZOMBIE_VELOCITY
+        self.zombie_pos[0] += zombie_dx * self.zombie_vel
+        self.zombie_pos[1] += zombie_dy * self.zombie_vel
 
         # Collision avec le joueur -> Dégats
         if distance <= self.zombie_atk_dist:

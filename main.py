@@ -108,7 +108,7 @@ class Game:
  
         self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
 
-        
+
         # Chargement xp_screen
         self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
 
@@ -467,7 +467,7 @@ class Game:
             for zombie in self.zombies:
                 Zombie.update_hitbox(zombie)
                            
-                if Zombie.move_zombies(zombie):
+                if Zombie.move_zombies(zombie, self.player_position):
                     self.zombies.remove(zombie)  
                     self.screen.fill((255, 0, 0))
                     self.PLAYER_HP -= 1 
