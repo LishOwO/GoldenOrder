@@ -84,7 +84,7 @@ class Game:
 
         self.run = True
         self.menu = True
-        self.menu_skin = True
+        self.menu_skin = False
 
 
         # Var scores etc
@@ -611,7 +611,7 @@ class Game:
                         pygame.quit()
                         sys.exit()
                     if event.key == pygame.K_m:
-                        self.menu_skin == True
+                        self.menu_skin = True
                         
             while self.run and self.menu_skin:
                 self.son_bombe.play()
@@ -619,7 +619,7 @@ class Game:
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:    
                         if event.key == pygame.K_ESCAPE:
-                            self.menu_skin == False
+                            self.menu_skin = False
                 pygame.display.update()
                 self.clock.tick(60)
 
