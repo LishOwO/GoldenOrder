@@ -34,7 +34,7 @@ class Game:
 
         # Var PLAYER
         self.PLAYER_VELOCITY = 7
-        self.PLAYER_SIZE_MULTIPLIER = 0.3
+        self.PLAYER_SIZE_MULTIPLIER = 4
         self.PLAYER_HP = 10
         self.PLAYER_LVL = 0
         self.PLAYER_DAMAGE_SOUNDS = [pygame.mixer.Sound("src/son/PlayerDamage1.mp3"),
