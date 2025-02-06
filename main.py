@@ -82,6 +82,8 @@ class Game:
 
         self.run = True
         self.menu = True
+        self.menu_skin = False
+
 
         # Var scores etc
         self.start_time = pygame.time.get_ticks()
@@ -361,6 +363,7 @@ class Game:
         if choice == "bombe":
             print("Effet: Bombe")
             self.player_effect_bomb()
+
        # elif choice == "soin":
             print("Effet: Soin")
             self.player_effect_heal()
@@ -371,12 +374,16 @@ class Game:
 
     # effet lucky : bombe
     def player_effect_bomb(self):
+        self.son_bombe.play()
         for zombie in self.zombies:
-            self.zombies.remove(zombie)
-            xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
-            self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
-            self.screen.fill((255, 255, 255))
-            self.kill_count += 1
+            for zombie in self.zombies:
+                for zombie in self.zombies:
+                    self.zombies.remove(zombie)
+                    xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
+                    self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
+                    self.screen.fill((255, 255, 255))
+                    self.kill_count += 1
+                
 
     # effet lucky : soin
     def player_effect_heal(self):
@@ -425,11 +432,6 @@ class Game:
             for y in range(-self.BACKGROUND_MAP_SIZE, self.BACKGROUND_MAP_SIZE, self.BACKGROUND_SIZE):
                 for x in range(-self.BACKGROUND_MAP_SIZE, self.BACKGROUND_MAP_SIZE, self.BACKGROUND_SIZE):
                     self.screen.blit(self.background_image, (x - self.camera_position[0], y - self.camera_position[1]))
-
-            # if self.LEVEL_UP == True:
-            #     self.display_lvl_up_screen(self.PLAYER_LVL)
-            #     self.LEVEL_UP = False
-            #     pass
 
             # Mise à jour de la position du joueur
             target_x = (self.player_movement_x[1] - self.player_movement_x[0]) * self.PLAYER_VELOCITY
@@ -572,11 +574,12 @@ class Game:
             self.clock.tick(60)
 
     def main_menu(self):
-                    
-        font = pygame.font.SysFont(None, 24)
-        img = font.render('Press space to start', True, (20, 20, 20))
-        img = pygame.transform.scale_by(img, 3)
-        image_size = img.get_size()
+
+        press_space_text = self.font.render("Press space to start...", True, (255, 255, 255))
+        enter_skin_menu_text = self.font.render("Press M to enter skin menu", True, (255, 255, 255))
+        skin_menu_text = self.font.render("Bienvenue dans le Menu Skin vous êtes bloqué ici, bonne chance", True, (255, 255, 255))
+
+
 
         while self.run and self.menu:
             self.screen.fill((100, 100, 255))
@@ -589,8 +592,25 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
-            pygame.transform.scale_by(img, 5)
-            self.screen.blit(img, (self.SCREEN_WIDTH//2 - image_size[0]//2, self.SCREEN_HEIGHT//2 - image_size[1]//2))
+                    if event.key == pygame.K_m:
+                        self.menu_skin == True
+                        while self.run and self.menu_skin:
+                            self.son_bombe.play()
+                            self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH//2 -600, self.SCREEN_HEIGHT//2))  
+                            if event.key == pygame.K_ESCAPE:
+                                self.menu_skin == False
+                                break
+                            pygame.display.update()
+                            self.clock.tick(15)
+
+
+
+
+
+
+            self.screen.blit(press_space_text, (self.SCREEN_WIDTH//2 -200, self.SCREEN_HEIGHT//2))
+            self.screen.blit(enter_skin_menu_text, (self.SCREEN_WIDTH//2 -250, self.SCREEN_HEIGHT//2+100))
+
 
             self.run_game()
 
