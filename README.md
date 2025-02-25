@@ -2,7 +2,7 @@
 ___
 ## Type de projet
 
-Un jeu codé en python avec pygame, codé par Vincent Rigault, Martin Huppé et Felix Menegazzo.
+Un jeu codé en python avec pygame, codé par Vincent, Martin  et Felix .
 
 Kanban : https://github.com/users/LishOwO/projects/3/views/1
 
@@ -24,13 +24,14 @@ Avancement :
 A faire pendant les vacances : 
 
 ### Urgent :
-- Flip du joueur (animations du joueur)
+- Flip du joueur (animations du joueur) *ok*
 - Finitions des classes orientées objets
-- Nettoyage et commentaire du code
+- Nettoyage et commentaire du code *ok*
 
 ### Si possible :
-- Ajout de variété de zombies et de map
+- Ajout de variété de zombies et de map 
 - Menu de départ avec paramètres et skins
+- Menu Pause *ok*
 
 
 Le style de jeu sera un suvivor à la Vampire Survivor, style arcade.
