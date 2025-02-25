@@ -118,7 +118,7 @@ class Game:
 
         self.player_image = self.current_player_image
 
-        self.skins = [self.lebron_image,self.white_james_image]
+        self.skins = [self.lebron_image,self.white_james_image,self.red_james_image]
 
 
         # Chargement du zombie
