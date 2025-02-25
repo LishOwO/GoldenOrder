@@ -111,10 +111,12 @@ class Game:
         # Chargement des skins du joueur
         self.current_player_image =self.load_and_resize_image('src/images/sprite/player/LebronJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.lebron_image = self.load_and_resize_image('src/images/sprite/player/LebronJames.png',10)
-        self.mec_alakippa = self.load_and_resize_image('src/images/sprite/player/MecAlakippa.png',0.75)
+        self.white_james_image = self.load_and_resize_image('src/images/sprite/player/WhiteJames.png',10)
+        #self.mec_alakippa_image = self.load_and_resize_image('src/images/sprite/player/MecAlakippa.png',0.75)
+
         self.player_image = self.current_player_image
 
-        self.skins = [self.lebron_image, self.mec_alakippa]
+        self.skins = [self.lebron_image,self.white_james_image]
 
 
         # Chargement du zombie
