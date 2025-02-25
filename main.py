@@ -585,6 +585,8 @@ class Game:
                         self.player_movement_x[0] = True
                     if event.key == pygame.K_RIGHT:
                         self.player_movement_x[1] = True
+                    if event.key == pygame.K_p: 
+                        self.pause_menu()
                          ##CHEATS CODES ET TESTS
                     # if event.key == pygame.K_SPACE:
                     #    self.shoot_bullet()             # Tir manuel
@@ -621,6 +623,7 @@ class Game:
 
             pygame.display.update()
             self.clock.tick(60)
+
 
     def main_menu(self):
         press_space_text = self.font.render("Press space to start...", True, (255, 255, 255))
@@ -693,6 +696,25 @@ class Game:
                     self.clock.tick(60)
 
     def pause_menu(self):
-        pass
+        # Capture the current screen
+        paused_screen = self.screen.copy()
+        # Apply blur effect
+        blurred_screen = self.blur_surface(paused_screen, 10)
+
+        # Render the pause menu text
+        pause_text = self.font.render("Press space to resume", True, (255, 255, 255))
+
+        paused = True
+        while paused:
+            self.screen.blit(blurred_screen, (0, 0))
+            self.screen.blit(pause_text, (self.SCREEN_WIDTH // 2 - pause_text.get_width() // 2, self.SCREEN_HEIGHT // 2 - pause_text.get_height() // 2))
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE or event.key == pygame.K_ESCAPE:
+                        paused = False
+
+            self.clock.tick(60)
 
 Game().main_menu()
