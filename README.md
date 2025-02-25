@@ -23,12 +23,12 @@ Avancement :
 
 A faire pendant les vacances : 
 
-##Urgent :
+### Urgent :
 - Flip du joueur (animations du joueur)
 - Finitions des classes orientées objets
 - Nettoyage et commentaire du code
 
-##Si possible :
+### Si possible :
 - Ajout de variété de zombies et de map
 - Menu de départ avec paramètres et skins
 
