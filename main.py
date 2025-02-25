@@ -86,6 +86,8 @@ class Game:
         self.run = True
         self.menu = True
         self.menu_skin = False
+        self.menu_weapon = False
+
 
 
         # Var scores etc
@@ -96,6 +98,8 @@ class Game:
         # Var Gun
         self.GUN_SIZE_MULTIPLIER = 4
         self.son_tir = pygame.mixer.Sound("src/son/PistolSound.mp3")
+
+        
 
         # Var BOX
         self.BOX_SPAWN_CHANCE = 0.005  # 1% de chance de spawn par frame
@@ -120,7 +124,7 @@ class Game:
 
         
         #listes des skins
-        self.skins = [self.lebron_image,self.white_james_image,self.red_james_image]
+        self.skins = [self.lebron_image,self.white_james_image,self.red_james_image,self.lebron_image,self.white_james_image,self.red_james_image]
 
 
         # Chargement du zombie
@@ -171,6 +175,9 @@ class Game:
 
         # Variables lucky blocks
         self.lucky_blocks = []  # Liste des lucky blocks
+
+        # Var Waepons
+        self.weapons = [self.gun_image,self.gun_image,self.gun_image]
 
 
     # load les images et les resize
@@ -470,6 +477,7 @@ class Game:
             # Gauche
             self.player_image = pygame.transform.flip(self.original_player_image, True, False)
 
+    
 
     # run le jeu
     def run_game(self):
@@ -628,6 +636,7 @@ class Game:
     def main_menu(self):
         press_space_text = self.font.render("Press space to start...", True, (255, 255, 255))
         enter_skin_menu_text = self.font.render("Press M to enter skin menu", True, (255, 255, 255))
+        enter_weapon_menu_text = self.font.render("Press W to enter weapon menu", True, (255, 255, 255))
         skin_menu_text = self.font.render("Bienvenue dans le Menu Skin - Work in progress", True, (255, 255, 255))
 
         while self.run and self.menu:
@@ -643,10 +652,14 @@ class Game:
                         sys.exit()
                     if event.key == pygame.K_m:
                         self.menu_skin = True
+                    if event.key == pygame.K_w:
+                        self.menu_weapon = True
+
 
             # Affichage des textes principaux (menu principal)
             self.screen.blit(press_space_text, (50, 50))
             self.screen.blit(enter_skin_menu_text, (50, 100))
+            self.screen.blit(enter_weapon_menu_text, (50, 150))
             pygame.display.flip()
 
             # Menu Skin
@@ -667,10 +680,7 @@ class Game:
                             # Selectionner le bon skin
                             elif event.key == pygame.K_SPACE:
                                 self.player_image = self.skins[selected_index]
-                                print(self.player_image.get_size())
                                 self.menu_skin = False
-                                self.menu = False
-                                self.run_game()
 
                     # Mise à jour du skin sélectionné
                     self.skin_selected = self.skins[selected_index]
@@ -679,6 +689,7 @@ class Game:
                     self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH // 2 - 200, 50))
                     current_skin_text = self.font.render("Skin actuel : " + str(selected_index), True, (255, 255, 255))
                     self.screen.blit(current_skin_text, (self.SCREEN_WIDTH // 2 - 200, 100))
+                    self.screen.blit(self.font.render("V", True, (255, 255, 255)),(840, 320))
 
                     # Calculer la position centrale
                     center_x = self.SCREEN_WIDTH // 2
@@ -690,10 +701,54 @@ class Game:
                         x = center_x + (i - selected_index) * gap - skin.get_width() // 2
                         scaled_skin = pygame.transform.scale(skin, (skin.get_width() * 3, skin.get_height() * 3))
                         self.screen.blit(scaled_skin, (x, skin_y))
+                
 
 
                     pygame.display.update()
                     self.clock.tick(60)
+
+            if self.menu_weapon == True:
+                weapon_menu_text = self.font.render("Bienvenue dans le Menu Weapon - Work in progress", True, (255, 255, 255))
+                selected_index = 0  # Index 
+                gap = 300  # Espace
+                scale_factor = 3  # Augmentation des images
+
+                while self.run and self.main_menu and self.menu_weapon:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_ESCAPE:
+                                self.menu_weapon = False
+                            # Navigation
+                            elif event.key == pygame.K_LEFT:
+                                selected_index = (selected_index - 1) % len(self.weapons)
+                            elif event.key == pygame.K_RIGHT:
+                                selected_index = (selected_index + 1) % len(self.weapons)
+                            # Selection des Armes
+                            elif event.key == pygame.K_SPACE:
+                                self.weapon_image = self.weapons[selected_index]
+                                self.menu_weapon = False
+
+                    # Update 
+                    #self.weapon_selected = self.weapons[selected_index]
+
+                    self.screen.fill((100, 100, 150))
+                    self.screen.blit(weapon_menu_text, (self.SCREEN_WIDTH // 2 - 200, 50))
+                    current_weapon_text = self.font.render("Weapon actuel : " + str(selected_index), True, (255, 255, 255))
+                    self.screen.blit(current_weapon_text, (self.SCREEN_WIDTH // 2 - 200, 100))
+                    self.screen.blit(self.font.render("V", True, (255, 255, 255)),(840, 320))
+
+                    # Position centrale
+                    center_x = self.SCREEN_WIDTH // 2
+                    weapon_y = self.SCREEN_HEIGHT // 2 - self.weapons[0].get_height() // 2
+
+                    for i, weapon in enumerate(self.weapons):
+                        x = center_x + (i - selected_index) * gap - weapon.get_width() // 2
+                        scaled_weapon = pygame.transform.scale(weapon, (weapon.get_width() * scale_factor, weapon.get_height() * scale_factor))
+                        self.screen.blit(scaled_weapon, (x, weapon_y))
+                        pygame.display.update()
+                        self.clock.tick(60)
+
+       
 
     def pause_menu(self):
         # Capture de l'écran
