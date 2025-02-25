@@ -8,28 +8,30 @@ Kanban : https://github.com/users/LishOwO/projects/3/views/1
 
 Agenda : https://github.com/users/LishOwO/projects/3/views/2
 
-Avancement : [
-    - Jeu jouable
-    - Ecran d'accueil et de fin (encore rudimentaire)
-    - spawn zombies aléatoirement sur l'écran
-    - gui avec toutes les infos (encore rudimentaire)
-    - système d'xp et de niveaux
-    - map quasi-infinie (répétition de la map)
-    - TRANSITION EN SYSTEMES DE CLASSES (HORRIBLE)
-    - Sons
-    - Powerups (seule bombe active)
-    - Système evolutif d'augmentation de niveau
-]
+Avancement :
+- Jeu jouable
+- Ecran d'accueil et de fin (encore rudimentaire)
+- spawn zombies aléatoirement sur l'écran
+- gui avec toutes les infos (encore rudimentaire)
+- système d'xp et de niveaux
+- map quasi-infinie (répétition de la map)
+- TRANSITION EN SYSTEMES DE CLASSES (HORRIBLE)
+- Sons
+- Powerups (seule bombe active)
+- Système evolutif d'augmentation de niveau
 
-A faire pendant les vacances : [
-    Urgent :
-    - Flip du joueur (animations du joueur)
-    - Finitions des classes orientées objets
-    - Nettoyage et commentaire du code
-    Si possible :
-    - Ajout de variété de zombies et de map
-    - Menu de départ avec paramètres et skins
-]
+
+A faire pendant les vacances : 
+
+### Urgent :
+- Flip du joueur (animations du joueur)
+- Finitions des classes orientées objets
+- Nettoyage et commentaire du code
+
+### Si possible :
+- Ajout de variété de zombies et de map
+- Menu de départ avec paramètres et skins
+
 
 Le style de jeu sera un suvivor à la Vampire Survivor, style arcade.
 
