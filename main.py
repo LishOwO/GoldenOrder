@@ -597,7 +597,6 @@ class Game:
             if self.PLAYER_HP == 0:
                 self.end_game()
 
-            print(self.player_image.get_size())
             pygame.display.update()
             self.clock.tick(60)
 
@@ -607,7 +606,7 @@ class Game:
         skin_menu_text = self.font.render("Bienvenue dans le Menu Skin - Work in progress", True, (255, 255, 255))
 
         while self.run and self.menu:
-            self.screen.fill((100, 100, 255))
+            self.screen.fill((100, 100, 150))
 
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -651,7 +650,7 @@ class Game:
                     # Mise à jour du skin sélectionné
                     self.skin_selected = self.skins[selected_index]
 
-                    self.screen.fill((100, 100, 255))
+                    self.screen.fill((100, 100, 150))
                     self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH // 2 - 200, 50))
                     current_skin_text = self.font.render("Skin actuel : " + str(selected_index), True, (255, 255, 255))
                     self.screen.blit(current_skin_text, (self.SCREEN_WIDTH // 2 - 200, 100))
@@ -664,7 +663,9 @@ class Game:
                     for i, skin in enumerate(self.skins):
                         # La position en x est décalée selon la distance par rapport au skin sélectionné
                         x = center_x + (i - selected_index) * gap - skin.get_width() // 2
-                        self.screen.blit(skin, (x, skin_y))
+                        scaled_skin = pygame.transform.scale(skin, (skin.get_width() * 3, skin.get_height() * 3))
+                        self.screen.blit(scaled_skin, (x, skin_y))
+
 
                     pygame.display.update()
                     self.clock.tick(60)
