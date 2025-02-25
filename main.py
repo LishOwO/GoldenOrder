@@ -5,11 +5,11 @@ import math
 
 sys.path.append('./bin')
 
-from objects import Objects
-from zombie import Zombie
-from player import Player
-from weapons import Weapons
-import tools
+from objects import Objects     # type: ignore
+from zombie import Zombie       # type: ignore
+from player import Player       # type: ignore
+from weapons import Weapons     # type: ignore
+import tools                    # type: ignore
 
 
 
@@ -20,7 +20,7 @@ class Game:
     def __init__(self):
         pygame.init()
 
-        pygame.mixer.set_num_channels(20)
+        #pygame.mixer.set_num_channels(20) #Utile ?
 
         # Var ECRAN
         self.SCREEN_WIDTH = pygame.display.Info().current_w
@@ -55,7 +55,6 @@ class Game:
 
         # Son Powerups
         self.son_bombe = pygame.mixer.Sound("src/son/BombSound.mp3")
-        
         self.son_soin = pygame.mixer.Sound("src/son/HealthBoost.mp3")
 
 
@@ -79,9 +78,11 @@ class Game:
         self.LEVEL_UP = False
         self.CHOOSE_SIZE_MULTIPLIER = self.SCREEN_WIDTH / 1980
 
+        # Var SCREEN
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.RESIZABLE)
         self.clock = pygame.time.Clock()
 
+        # Var MENU
         self.run = True
         self.menu = True
         self.menu_skin = False
@@ -108,20 +109,19 @@ class Game:
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
 
         # Chargement des skins du joueur
-        self.current_player_image =self.load_and_resize_image('src/images/sprite/player/LebronJames.png',
-                                                       self.PLAYER_SIZE_MULTIPLIER)
-        self.lebron_image = self.load_and_resize_image('src/images/sprite/player/LebronJames.png',
-                                                       10)
-        self.mec_alakippa = self.load_and_resize_image('src/images/sprite/player/MecAlakippa.png',
-                                                       0.75)
+        self.current_player_image =self.load_and_resize_image('src/images/sprite/player/LebronJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.lebron_image = self.load_and_resize_image('src/images/sprite/player/LebronJames.png',10)
+        self.mec_alakippa = self.load_and_resize_image('src/images/sprite/player/MecAlakippa.png',0.75)
         self.player_image = self.current_player_image
+
+        self.skins = [self.lebron_image, self.mec_alakippa]
+
 
         # Chargement du zombie
         self.zombie_images = [ ('src/images/sprite/zombie/zombie1/zombie1.png'),
                                ('src/images/sprite/zombie/zombie1/zombie2.png'),]
  
         self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
-
 
         # Chargement xp_screen
         self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
@@ -131,8 +131,7 @@ class Game:
 
         # Chargement des balles
         self.bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE)
-        self.rotated_bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png',
-                                                               self.BULLET_SIZE)
+        self.rotated_bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png',self.BULLET_SIZE)
 
         # Chargement du gun
         self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png', 0.8)
@@ -157,6 +156,7 @@ class Game:
         # Liste des balles
         self.bullets = []
 
+        # Variables de mouvement du joueur
         self.PLAYER_VELOCITY = 200
         self.smooth_time = 0.5
         self.player_velocity_x = 0
@@ -623,7 +623,6 @@ class Game:
 
             # Menu Skin
             if self.menu_skin:
-                skins = [self.lebron_image, self.mec_alakippa]
                 selected_index = 0  # Index du skin sélectionné (celui qui sera affiché au centre)
                 gap = 300         # Espace  entre chaque skin
 
@@ -634,18 +633,18 @@ class Game:
                                 self.menu_skin = False
                             # Navigation dans la liste des skins
                             elif event.key == pygame.K_LEFT:
-                                selected_index = (selected_index - 1) % len(skins)
+                                selected_index = (selected_index - 1) % len(self.skins)
                             elif event.key == pygame.K_RIGHT:
-                                selected_index = (selected_index + 1) % len(skins)
+                                selected_index = (selected_index + 1) % len(self.skins)
                             # Selectionner le bon skin
                             elif event.key == pygame.K_SPACE:
-                                self.player_image = skins[selected_index]
+                                self.player_image = self.skins[selected_index]
                                 self.menu_skin = False
                                 self.menu = False
                                 self.run_game()
 
                     # Mise à jour du skin sélectionné
-                    self.skin_selected = skins[selected_index]
+                    self.skin_selected = self.skins[selected_index]
 
                     self.screen.fill((100, 100, 255))
                     self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH // 2 - 200, 50))
@@ -654,10 +653,10 @@ class Game:
 
                     # Calculer la position centrale
                     center_x = self.SCREEN_WIDTH // 2
-                    skin_y = self.SCREEN_HEIGHT // 2 - skins[0].get_height() // 2
+                    skin_y = self.SCREEN_HEIGHT // 2 - self.skins[0].get_height() // 2
 
                     # Affichage de chaque skin en fonction de selected_index pour centrer le skin choisi
-                    for i, skin in enumerate(skins):
+                    for i, skin in enumerate(self.skins):
                         # La position en x est décalée selon la distance par rapport au skin sélectionné
                         x = center_x + (i - selected_index) * gap - skin.get_width() // 2
                         self.screen.blit(skin, (x, skin_y))
