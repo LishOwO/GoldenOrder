@@ -109,15 +109,17 @@ class Game:
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
 
         # Chargement des skins du joueur
-        self.player_image =self.load_and_resize_image('src/images/sprite/player/LebronJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.lebron_image = self.load_and_resize_image('src/images/sprite/player/LebronJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.white_james_image = self.load_and_resize_image('src/images/sprite/player/WhiteJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.player_image = self.lebron_image #Image de Base
+        self.original_player_image = self.player_image #Image pour le Flip
+
 
         #self.mec_alakippa_image = self.load_and_resize_image('src/images/sprite/player/MecAlakippa.png',0.75)
 
         
-
+        #listes des skins
         self.skins = [self.lebron_image,self.white_james_image,self.red_james_image]
 
 
@@ -449,6 +451,25 @@ class Game:
                     b = min(color.b + tint_color[2], 255)
                     tinted_surface.set_at((x, y), (r, g, b))
         return tinted_surface
+    
+    #Flouter une surface
+    def blur_surface(self, surface, amount):
+        scale = 1.0 / amount
+        surf_size = surface.get_size()
+        scale_size = (int(surf_size[0] * scale), int(surf_size[1] * scale))
+        surf = pygame.transform.smoothscale(surface, scale_size)
+        surf = pygame.transform.smoothscale(surf, surf_size)
+        return surf
+
+    def update_player_direction(self):
+        # Direction du joueur ?
+        if self.player_velocity_x > 0:
+            # Droite
+            self.player_image = self.original_player_image
+        elif self.player_velocity_x < 0:
+            # Gauche
+            self.player_image = pygame.transform.flip(self.original_player_image, True, False)
+
 
     # run le jeu
     def run_game(self):
@@ -463,20 +484,23 @@ class Game:
             # Mise à jour de la position du joueur
             target_x = (self.player_movement_x[1] - self.player_movement_x[0]) * self.PLAYER_VELOCITY
             target_y = (self.player_movement_y[1] - self.player_movement_y[0]) * self.PLAYER_VELOCITY
-
+                #Mise à jour verticale
             self.player_position[0], self.player_velocity_x = self.smooth_damp(
                 self.player_position[0],
                 self.player_position[0] + target_x,
                 self.player_velocity_x,
                 self.smooth_time,
                 self.delta_time)
-
+                #Mise à jour Horizontale
             self.player_position[1], self.player_velocity_y = self.smooth_damp(
                 self.player_position[1],
                 self.player_position[1] + target_y,
                 self.player_velocity_y,
                 self.smooth_time,
                 self.delta_time)
+            
+            self.update_player_direction() #Flip
+
 
             # On bouge le gun avec le joueur
             self.gun_position[0] = self.player_position[0]
@@ -496,8 +520,6 @@ class Game:
                     self.spawn_around_player(600, 100, self.luckyblock_image, self.lucky_blocks)
 
             # Déplace les zombies et les balles
-            
-
             for zombie in self.zombies:
                 Zombie.update_hitbox(zombie)
                            
@@ -508,7 +530,6 @@ class Game:
                     random.choice(self.PLAYER_DAMAGE_SOUNDS).play()
                 
                 self.screen.blit(self.zombie_image, (zombie.zombie_pos[0] - self.camera_position[0], zombie.zombie_pos[1] - self.camera_position[1]))
-
 
 
             self.move_bullets()
@@ -564,6 +585,7 @@ class Game:
                         self.player_movement_x[0] = True
                     if event.key == pygame.K_RIGHT:
                         self.player_movement_x[1] = True
+                         ##CHEATS CODES ET TESTS
                     # if event.key == pygame.K_SPACE:
                     #    self.shoot_bullet()             # Tir manuel
                     # if event.key == pygame.K_a:
