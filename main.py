@@ -696,12 +696,12 @@ class Game:
                     self.clock.tick(60)
 
     def pause_menu(self):
-        # Capture the current screen
+        # Capture de l'écran
         paused_screen = self.screen.copy()
-        # Apply blur effect
+        # Flouter l'écran
         blurred_screen = self.blur_surface(paused_screen, 10)
 
-        # Render the pause menu text
+        # Texte de l'écran
         pause_text = self.font.render("Press space to resume", True, (255, 255, 255))
 
         paused = True
@@ -714,6 +714,10 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE or event.key == pygame.K_ESCAPE:
                         paused = False
+                        self.player_movement_y[0] = False
+                        self.player_movement_y[1] = False
+                        self.player_movement_x[0] = False
+                        self.player_movement_x[1] = False
 
             self.clock.tick(60)
 
