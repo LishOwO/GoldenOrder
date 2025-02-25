@@ -597,77 +597,74 @@ class Game:
             self.clock.tick(60)
 
     def main_menu(self):
-
         press_space_text = self.font.render("Press space to start...", True, (255, 255, 255))
         enter_skin_menu_text = self.font.render("Press M to enter skin menu", True, (255, 255, 255))
-        skin_menu_text = self.font.render("Bienvenue dans le Menu Skin Work in progess", True, (255, 255, 255))
-
-
+        skin_menu_text = self.font.render("Bienvenue dans le Menu Skin - Work in progress", True, (255, 255, 255))
 
         while self.run and self.menu:
             self.screen.fill((100, 100, 255))
 
             for event in pygame.event.get():
-
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         self.player_image = self.current_player_image
                         self.menu = False
+                        self.run_game()  # Start the game after exiting the menu
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
                     if event.key == pygame.K_m:
                         self.menu_skin = True
-            skins = [self.lebron_image,self.mec_alakippa]
-            decal =  0
-            skin_menu_update = True
-            
-            while self.run and self.menu_skin:
-                self.son_bombe.play()
-                self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH//2 -200, self.SCREEN_HEIGHT//2))  
-                for event in pygame.event.get():
-                    if event.type == pygame.KEYDOWN:    
-                        if event.key == pygame.K_ESCAPE:
-                            self.menu_skin = False
-                        if event.key == pygame.K_LEFT:
-                            decal -= 100  
-                            skin_menu_update = True
-                            self.screen.fill((100, 100, 255))
-                            self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH//2 -200, self.SCREEN_HEIGHT//2))  
 
-                        if event.key == pygame.K_RIGHT:
-                            decal += 100
-                            skin_menu_update = True
-                            self.screen.fill((100, 100, 255))
-                            self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH//2 -200, self.SCREEN_HEIGHT//2))  
+            # Affichage des textes principaux (menu principal)
+            self.screen.blit(press_space_text, (50, 50))
+            self.screen.blit(enter_skin_menu_text, (50, 100))
+            pygame.display.flip()
 
-              
-                if skin_menu_update == True:
-                    for skin in skins :
-                        self.screen.blit(skin,(decal, 0))
-                        decal += 300
-                    skin_menu_update = False
-                    decal -= len(skins)*300
+            # Menu Skin
+            if self.menu_skin:
+                skins = [self.lebron_image, self.mec_alakippa]
+                selected_index = 0  # Index du skin sélectionné (celui qui sera affiché au centre)
+                gap = 300         # Espace  entre chaque skin
 
+                while self.run and self.menu_skin:
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_ESCAPE:
+                                self.menu_skin = False
+                            # Navigation dans la liste des skins
+                            elif event.key == pygame.K_LEFT:
+                                selected_index = (selected_index - 1) % len(skins)
+                            elif event.key == pygame.K_RIGHT:
+                                selected_index = (selected_index + 1) % len(skins)
+                            # Selectionner le bon skin
+                            elif event.key == pygame.K_SPACE:
+                                self.player_image = skins[selected_index]
+                                self.menu_skin = False
+                                self.menu = False
+                                self.run_game()
 
-                
-                pygame.display.update()
-                self.clock.tick(60)
+                    # Mise à jour du skin sélectionné
+                    self.skin_selected = skins[selected_index]
 
+                    self.screen.fill((100, 100, 255))
+                    self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH // 2 - 200, 50))
+                    current_skin_text = self.font.render("Skin actuel : " + str(selected_index), True, (255, 255, 255))
+                    self.screen.blit(current_skin_text, (self.SCREEN_WIDTH // 2 - 200, 100))
 
+                    # Calculer la position centrale
+                    center_x = self.SCREEN_WIDTH // 2
+                    skin_y = self.SCREEN_HEIGHT // 2 - skins[0].get_height() // 2
 
+                    # Affichage de chaque skin en fonction de selected_index pour centrer le skin choisi
+                    for i, skin in enumerate(skins):
+                        # La position en x est décalée selon la distance par rapport au skin sélectionné
+                        x = center_x + (i - selected_index) * gap - skin.get_width() // 2
+                        self.screen.blit(skin, (x, skin_y))
 
+                    pygame.display.update()
+                    self.clock.tick(60)
 
-
-            self.screen.blit(press_space_text, (self.SCREEN_WIDTH//2 -200, self.SCREEN_HEIGHT//2))
-            self.screen.blit(enter_skin_menu_text, (self.SCREEN_WIDTH//2 -250, self.SCREEN_HEIGHT//2+100))
-
-
-            self.run_game()
-
-            pygame.display.update()
-            self.clock.tick(60)
-            
     def pause_menu(self):
         pass
 
