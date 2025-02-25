@@ -107,9 +107,14 @@ class Game:
         self.background_image = pygame.image.load('src/images/sprite/texture_map.png').convert()
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
 
-        # Chargement du joueur
-        self.player_image = self.load_and_resize_image('src/images/sprite/player/LebronJames.png',
+        # Chargement des skins du joueur
+        self.current_player_image =self.load_and_resize_image('src/images/sprite/player/LebronJames.png',
                                                        self.PLAYER_SIZE_MULTIPLIER)
+        self.lebron_image = self.load_and_resize_image('src/images/sprite/player/LebronJames.png',
+                                                       10)
+        self.mec_alakippa = self.load_and_resize_image('src/images/sprite/player/MecAlakippa.png',
+                                                       0.75)
+        self.player_image = self.current_player_image
 
         # Chargement du zombie
         self.zombie_images = [ ('src/images/sprite/zombie/zombie1/zombie1.png'),
@@ -595,7 +600,7 @@ class Game:
 
         press_space_text = self.font.render("Press space to start...", True, (255, 255, 255))
         enter_skin_menu_text = self.font.render("Press M to enter skin menu", True, (255, 255, 255))
-        skin_menu_text = self.font.render("Bienvenue dans le Menu Skin vous êtes bloqué ici, bonne chance", True, (255, 255, 255))
+        skin_menu_text = self.font.render("Bienvenue dans le Menu Skin Work in progess", True, (255, 255, 255))
 
 
 
@@ -606,20 +611,46 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
+                        self.player_image = self.current_player_image
                         self.menu = False
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
                     if event.key == pygame.K_m:
                         self.menu_skin = True
-                        
+            skins = [self.lebron_image,self.mec_alakippa]
+            decal =  0
+            skin_menu_update = True
+            
             while self.run and self.menu_skin:
                 self.son_bombe.play()
-                self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH//2 -600, self.SCREEN_HEIGHT//2))  
+                self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH//2 -200, self.SCREEN_HEIGHT//2))  
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:    
                         if event.key == pygame.K_ESCAPE:
                             self.menu_skin = False
+                        if event.key == pygame.K_LEFT:
+                            decal -= 100  
+                            skin_menu_update = True
+                            self.screen.fill((100, 100, 255))
+                            self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH//2 -200, self.SCREEN_HEIGHT//2))  
+
+                        if event.key == pygame.K_RIGHT:
+                            decal += 100
+                            skin_menu_update = True
+                            self.screen.fill((100, 100, 255))
+                            self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH//2 -200, self.SCREEN_HEIGHT//2))  
+
+              
+                if skin_menu_update == True:
+                    for skin in skins :
+                        self.screen.blit(skin,(decal, 0))
+                        decal += 300
+                    skin_menu_update = False
+                    decal -= len(skins)*300
+
+
+                
                 pygame.display.update()
                 self.clock.tick(60)
 
