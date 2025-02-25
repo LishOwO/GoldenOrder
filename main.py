@@ -98,7 +98,7 @@ class Game:
 
         # Var BOX
         self.BOX_SPAWN_CHANCE = 0.005  # 1% de chance de spawn par frame
-        self.boxes = []
+        self.lucky_blocks = []  # Liste des lucky blocks
         self.LOCAL_BOX_DISTANCE = 50000
         self.MAX_LOCAL_BOX = 4
         self.local_boxes = 0
@@ -159,7 +159,7 @@ class Game:
         self.delta_time = 1 / 60
 
         # Variables lucky blocks
-        self.lucky_blocks = []  # Liste des lucky blocks
+        
 
 
     # load les images et les resize
@@ -206,9 +206,11 @@ class Game:
 
             if distance_squared >= min_distance ** 2:
                 break
+        target_rect = target_image.get_rect(center=(target_x, target_y))
         if type == "lucky_block":
-            target_rect = target_image.get_rect(center=(target_x, target_y))
-            target_list.append(target_rect)
+            
+            newLuckyBlock = Objects(target_pos, type, target_rect)
+            target_list.append(newLuckyBlock)
 
         
 
@@ -359,58 +361,6 @@ class Game:
                 self.player_xp += orb['value']
                 self.xp_orbs.remove(orb)
 
-    # collecter les luckys blocks
-    def collect_lucky_blocks(self):
-        for box in self.boxes:
-            box_dx = self.player_position[0] - box.x
-            box_dy = self.player_position[1] - box.y
-            distance = math.sqrt(box_dx ** 2 + box_dy ** 2)
-
-            if distance <= 100:
-                self.open_lucky_blocks()
-
-                self.boxes.remove(box)
-                break
-
-    # ouvres les luckys blocks
-    def open_lucky_blocks(self):
-        options = ["bombe"]
-      #  options = ["bombe", "soin", "invincibilite"]
-        choice = random.choice(options)
-
-        if choice == "bombe":
-            print("Effet: Bombe")
-            self.player_effect_bomb()
-
-       # elif choice == "soin":
-            print("Effet: Soin")
-            self.player_effect_heal()
-            self.son_soin = pygame.mixer.Sound("src/son/HealthBoost.mp3")
-        #elif choice == "invincibilite":
-            print("Effet: Invincibilité")
-            self.player_effect_invincibility()
-
-    # effet lucky : bombe
-    def player_effect_bomb(self):
-        self.son_bombe.play()
-        for zombie in self.zombies:
-            for zombie in self.zombies:
-                for zombie in self.zombies:
-                    self.zombies.remove(zombie)
-                    xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
-                    self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
-                    self.screen.fill((255, 255, 255))
-                    self.kill_count += 1
-                
-
-    # effet lucky : soin
-    def player_effect_heal(self):
-        if self.PLAYER_HP < 10:
-            self.PLAYER_HP += 1
-
-    # effet lucky : bouclier
-    def player_effect_invincibility(self):
-        print("a")
 
     # augmentation du level
     def level_up(self, lvl):
@@ -483,7 +433,7 @@ class Game:
 
             # Spawn des boxs
             if random.random() < self.BOX_SPAWN_CHANCE:
-                if self.check_number_of_close(self.boxes, rayon=2000, max_number=1):
+                if self.check_number_of_close(self.lucky_blocks, rayon=2000, max_number=1):
                     self.spawn_around_player(600, 100, self.luckyblock_image, self.lucky_blocks)
 
             # Déplace les zombies et les balles
@@ -520,7 +470,7 @@ class Game:
                                  (orb['rect'].x - self.camera_position[0], orb['rect'].y - self.camera_position[1]))
 
             # Dessines les boxs
-            for box in self.boxes:
+            for box in self.lucky_blocks:
                 self.screen.blit(self.luckyblock_image,
                                  (box.x - self.camera_position[0], box.y - self.camera_position[1]))
 
@@ -562,7 +512,7 @@ class Game:
                     if event.key == pygame.K_b:
                         self.player_effect_bomb()
                     if event.key == pygame.K_t:
-                        print(self.check_number_of_close(self.boxes, 500, 2))
+                        print(self.check_number_of_close(self.lucky_blocks, 500, 2))
                         print("bbb")
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
