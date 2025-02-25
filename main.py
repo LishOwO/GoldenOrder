@@ -109,14 +109,14 @@ class Game:
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
 
         # Chargement des skins du joueur
-        self.current_player_image =self.load_and_resize_image('src/images/sprite/player/LebronJames.png',self.PLAYER_SIZE_MULTIPLIER)
-        self.lebron_image = self.load_and_resize_image('src/images/sprite/player/LebronJames.png',10)
-        self.white_james_image = self.load_and_resize_image('src/images/sprite/player/WhiteJames.png',10)
-        self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',10)
+        self.player_image =self.load_and_resize_image('src/images/sprite/player/LebronJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.lebron_image = self.load_and_resize_image('src/images/sprite/player/LebronJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.white_james_image = self.load_and_resize_image('src/images/sprite/player/WhiteJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
 
         #self.mec_alakippa_image = self.load_and_resize_image('src/images/sprite/player/MecAlakippa.png',0.75)
 
-        self.player_image = self.current_player_image
+        
 
         self.skins = [self.lebron_image,self.white_james_image,self.red_james_image]
 
@@ -597,6 +597,7 @@ class Game:
             if self.PLAYER_HP == 0:
                 self.end_game()
 
+            print(self.player_image.get_size())
             pygame.display.update()
             self.clock.tick(60)
 
@@ -611,7 +612,6 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        self.player_image = self.current_player_image
                         self.menu = False
                         self.run_game()  # Start the game after exiting the menu
                     if event.key == pygame.K_ESCAPE:
@@ -643,6 +643,7 @@ class Game:
                             # Selectionner le bon skin
                             elif event.key == pygame.K_SPACE:
                                 self.player_image = self.skins[selected_index]
+                                print(self.player_image.get_size())
                                 self.menu_skin = False
                                 self.menu = False
                                 self.run_game()
