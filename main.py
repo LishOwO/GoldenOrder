@@ -649,6 +649,9 @@ class Game:
                 self.shoot_bullet()
                 self.last_shot_time = current_time
 
+            if int(self.player_position[0]) > self.BACKGROUND_MAP_SIZE or int(self.player_position[1]) > self.BACKGROUND_MAP_SIZE:
+                self.PLAYER_HP -= 1
+
                 # Mort
             if self.PLAYER_HP == 0:
                 self.end_game()
