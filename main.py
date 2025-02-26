@@ -92,13 +92,7 @@ class Game:
         self.kill_count = 0
         self.font = pygame.font.SysFont(None, 50)
 
-        #Var Weapon M4        
-        self.GUN_SIZE_MULTIPLIER = 4
-        self.son_tir = pygame.mixer.Sound("src/son/PistolSound.mp3")
-        self.shooting_cooldown = 700
-        self.last_shot_time = pygame.time.get_ticks()
-
-
+   
         
 
         # Var BOX
@@ -176,8 +170,38 @@ class Game:
         # Variables lucky blocks
         self.lucky_blocks = []  # Liste des lucky blocks
 
+        #Var Weapon M4        
+        self.GUN_SIZE_MULTIPLIER = 4
+        self.son_tir = pygame.mixer.Sound("src/son/PistolSound.mp3")
+        self.shooting_cooldown = 700
+        self.last_shot_time = pygame.time.get_ticks()
+
+        #Var Weapon Laser
+        self.laser_image = self.load_and_resize_image("src/images/sprite/weapons/NetherStar.jpeg", 0.2, (255,255,255))
+
+        #Var Weapon Pistolet
+        self.pistolet_image = self.load_and_resize_image("src/images/sprite/weapons/GunTest.png", 7)
+
         # Var Waepons
-        self.weapons = {}
+
+        self.weapons_data= {
+            "M4": {
+                "name": "M4",
+                "image": self.gun_image
+            },
+            "Laser": {
+                "name": "Laser",
+                "image": self.laser_image
+            },
+            "Pistolet" :{
+                "name": "Pistolet",
+                "image": self.pistolet_image
+            }
+        }
+        self.weapons_list = ["M4","Laser","Pistolet"]
+        self.weapons = [self.weapons_data[weapon]["image"] for weapon in self.weapons_list]
+
+
 
 
     # load les images et les resize
@@ -742,14 +766,14 @@ class Game:
 
                     # Position centrale
                     center_x = self.SCREEN_WIDTH // 2
-                    weapon_y = self.SCREEN_HEIGHT // 2 - self.weapons[0].get_height() // 2
+                    weapon_y = self.SCREEN_HEIGHT // 2 - self.weapons_data[self.weapons_list[0]]["image"].get_height() // 2
 
                     for i, weapon in enumerate(self.weapons):
                         x = center_x + (i - selected_index) * gap - weapon.get_width() // 2
                         scaled_weapon = pygame.transform.scale(weapon, (weapon.get_width() * scale_factor, weapon.get_height() * scale_factor))
                         self.screen.blit(scaled_weapon, (x, weapon_y))
-                        pygame.display.update()
-                        self.clock.tick(60)
+                    pygame.display.update()
+                    self.clock.tick(60)
 
        
 
