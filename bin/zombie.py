@@ -25,7 +25,7 @@ class Zombie:
     def update_hitbox(self):
         self.zombie_hitbox = pygame.Rect(self.zombie_pos[0]+16, self.zombie_pos[1]+16, 32, 32)
 
-    def draw(self, screen):
+    def draw_zombie(self, screen, ):
         screen.blit(self.zombie_type, self.zombie_pos)
 
 

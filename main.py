@@ -64,10 +64,7 @@ class Game:
         self.BULLET_MAX_DISTANCE = 300
         self.bullet_number = 1
 
-        # Var TIR
-        self.shooting_cooldown = 700
-        self.last_shot_time = pygame.time.get_ticks()
-
+      
         # Var XP
         self.XP_SIZE_MULTIPLIER = 4
         self.xp_orbs = []
@@ -95,9 +92,12 @@ class Game:
         self.kill_count = 0
         self.font = pygame.font.SysFont(None, 50)
 
-        # Var Gun
+        #Var Weapon M4        
         self.GUN_SIZE_MULTIPLIER = 4
         self.son_tir = pygame.mixer.Sound("src/son/PistolSound.mp3")
+        self.shooting_cooldown = 700
+        self.last_shot_time = pygame.time.get_ticks()
+
 
         
 
@@ -177,7 +177,7 @@ class Game:
         self.lucky_blocks = []  # Liste des lucky blocks
 
         # Var Waepons
-        self.weapons = [self.gun_image,self.gun_image,self.gun_image]
+        self.weapons = {}
 
 
     # load les images et les resize
@@ -229,7 +229,6 @@ class Game:
             target_list.append(target_rect)
 
         
-
     def spawn_around_player(self, spawn_radius, min_distance, target_image, targetlist):
         while True:
             target_x = random.randint(int(self.player_position[0] - spawn_radius),
@@ -477,7 +476,8 @@ class Game:
             # Gauche
             self.player_image = pygame.transform.flip(self.original_player_image, True, False)
 
-    
+
+
 
     # run le jeu
     def run_game(self):
@@ -638,6 +638,7 @@ class Game:
         enter_skin_menu_text = self.font.render("Press M to enter skin menu", True, (255, 255, 255))
         enter_weapon_menu_text = self.font.render("Press W to enter weapon menu", True, (255, 255, 255))
         skin_menu_text = self.font.render("Bienvenue dans le Menu Skin - Work in progress", True, (255, 255, 255))
+        control_menu_text = self.font.render("Use Arrows to Move, Press escape to exit, Press P to pause", True, (255, 255, 255))
 
         while self.run and self.menu:
             self.screen.fill((100, 100, 150))
@@ -660,6 +661,7 @@ class Game:
             self.screen.blit(press_space_text, (50, 50))
             self.screen.blit(enter_skin_menu_text, (50, 100))
             self.screen.blit(enter_weapon_menu_text, (50, 150))
+            self.screen.blit(control_menu_text, (50, 200))
             pygame.display.flip()
 
             # Menu Skin
@@ -707,6 +709,7 @@ class Game:
                     pygame.display.update()
                     self.clock.tick(60)
 
+            #Menu Weapon
             if self.menu_weapon == True:
                 weapon_menu_text = self.font.render("Bienvenue dans le Menu Weapon - Work in progress", True, (255, 255, 255))
                 selected_index = 0  # Index 
