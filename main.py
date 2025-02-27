@@ -566,6 +566,11 @@ class Game:
 
             self.move_bullets()
 
+            for zombie in self.zombies:
+                if zombie.zombie_type == 2:
+                    if random.randrange(0,1,0.001) < 0.02:
+                        zombie.speed_boost()
+
 
             # Rammase l'xp et les box
             self.collect_xp_orbs()

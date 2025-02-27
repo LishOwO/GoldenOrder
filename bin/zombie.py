@@ -23,7 +23,7 @@ class Zombie:
 
          #Zombie déviant
         if self.zombie_type == 2:
-            self.zombie_vel = 1.5
+            self.zombie_vel = 2
             self.zombie_atk_dist = 22
             self.zombie_image = pygame.image.load("src/images/sprite/zombie/zombie2/zombie2.png") # to fix
 
@@ -52,5 +52,16 @@ class Zombie:
         if distance <= self.zombie_atk_dist:
             return True
         return False
+
+    # Boost de vitesse 
+    def speed_boost(self):
+        old_speed = self.zombie_vel
+        for time in range (3*60):
+            self.zombie_vel = old_speed+1
+        self.zombie_vel = old_speed
+
+
+
+
             
 
