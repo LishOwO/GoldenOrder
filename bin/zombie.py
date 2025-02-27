@@ -56,12 +56,5 @@ class Zombie:
     # Boost de vitesse 
     def speed_boost(self):
         old_speed = self.zombie_vel
-        for time in range (3*60):
-            self.zombie_vel = old_speed+1
-        self.zombie_vel = old_speed
-
-
-
-
-            
+        self.zombie_vel = old_speed+5
 
