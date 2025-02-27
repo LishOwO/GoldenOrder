@@ -234,7 +234,7 @@ class Game:
 
         target_rect = target_image.get_rect(center=(target_x, target_y))
 
-        newZ = Zombie(target_pos, 1, target_rect)
+        newZ = Zombie(target_pos, random.randint(1,2), target_rect)
         target_list.append(newZ)
 
     def spawn_objects(self, spawn_radius, min_distance, target_image, target_list, type):

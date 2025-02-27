@@ -21,6 +21,11 @@ class Zombie:
             self.zombie_atk_dist = 32
             self.zombie_image = pygame.image.load("src/images/sprite/zombie/zombie1/zombie1.png") # to fix
 
+         #Zombie déviant
+        if self.zombie_type == 2:
+            self.zombie_vel = 1.5
+            self.zombie_atk_dist = 22
+            self.zombie_image = pygame.image.load("src/images/sprite/zombie/zombie2/zombie2.png") # to fix
 
     def update_hitbox(self):
         self.zombie_hitbox = pygame.Rect(self.zombie_pos[0]+16, self.zombie_pos[1]+16, 32, 32)
