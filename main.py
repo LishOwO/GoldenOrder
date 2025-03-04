@@ -178,10 +178,15 @@ class Game:
 
         #Var Weapon Laser
         self.laser_image = self.load_and_resize_image("src/images/sprite/weapons/NetherStar.jpeg", 0.2, (255,255,255))
+        self.laser_length = 200  
+        self.laser_color = (255, 0, 0)  
+        self.laser_speed = 1  
+        self.laser_angle = 0  
 
         #Var Weapon Pistolet
         self.pistolet_image = self.load_and_resize_image("src/images/sprite/weapons/GunTest.png", 7)
 
+        #Var Weapon 
         # Var Waepons
 
         self.weapons_data= {
@@ -501,6 +506,26 @@ class Game:
             self.player_image = pygame.transform.flip(self.original_player_image, True, False)
 
 
+    def laser_shoot(self):
+  
+        # Calculer le Laser
+        end_x = self.player_position[0] + self.laser_length * math.cos(math.radians(self.laser_angle))
+        end_y = self.player_position[1] + self.laser_length * math.sin(math.radians(self.laser_angle))
+
+        # Dessine le Laser
+        pygame.draw.line(self.screen, self.laser_color, (self.player_position[0],self.player_position[1]), (end_x, end_y), 2)
+        print(self.player_position[0])
+        # Rotation
+        self.laser_angle += self.laser_speed
+        if self.laser_angle >= 360:
+            self.laser_angle = 0
+        print(self.player_position[1])
+        print(self.player_position[0])
+
+
+            
+
+
 
 
     # run le jeu
@@ -533,7 +558,7 @@ class Game:
             
             self.update_player_direction() #Flip
 
-
+            
             # On bouge le gun avec le joueur
             self.gun_position[0] = self.player_position[0]
             self.gun_position[1] = self.player_position[1]
@@ -586,7 +611,7 @@ class Game:
                 self.screen.blit(self.luckyblock_image,
                                  (box.x - self.camera_position[0], box.y - self.camera_position[1]))
 
-            # Dessine sles balles
+            # Dessine les balles
             for bullet in self.bullets:
                 self.screen.blit(
                     bullet['image'],
@@ -648,6 +673,8 @@ class Game:
             if current_time - self.last_shot_time > self.shooting_cooldown:
                 self.shoot_bullet()
                 self.last_shot_time = current_time
+
+            self.laser_shoot()
 
             if int(self.player_position[0]) > self.BACKGROUND_MAP_SIZE or int(self.player_position[1]) > self.BACKGROUND_MAP_SIZE:
                 self.PLAYER_HP -= 1
