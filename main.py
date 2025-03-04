@@ -126,6 +126,7 @@ class Game:
                                ('src/images/sprite/zombie/zombie1/zombie2.png'),]
  
         self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
+        self.zombie2_image = self.load_and_resize_image('src/images/sprite/zombie/zombie2/zombie2.png', self.ZOMBIE_SIZE_MULTIPLIER)
 
         # Chargement xp_screen
         self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
@@ -225,7 +226,7 @@ class Game:
         return image
 
     # spawne quelque chose autour du joueur
-    def zombie_spawn(self, spawn_radius, min_distance, target_image, target_list):
+    def zombie_spawn(self, spawn_radius, min_distance, target_list):
         while True:
             target_x = random.randint(int(self.player_position[0] - spawn_radius),
                                       int(self.player_position[0] + spawn_radius))
@@ -236,10 +237,16 @@ class Game:
 
             if distance_squared >= min_distance ** 2:
                 break
+        type_ = random.randint(1,2)
+
+        if type_ == 1:
+            target_image = self.zombie_image
+        elif type_ == 2:
+            target_image = self.zombie2_image
 
         target_rect = target_image.get_rect(center=(target_x, target_y))
 
-        newZ = Zombie(target_pos, 1, target_rect)
+        newZ = Zombie(target_pos, type_, target_rect)
         target_list.append(newZ)
 
     def spawn_objects(self, spawn_radius, min_distance, target_image, target_list, type):
@@ -569,7 +576,7 @@ class Game:
 
             # Spawn de zombies à chaque itération
             if random.random() < self.ZOMBIE_SPAWNCHANCHE:
-                self.zombie_spawn(500, 400, self.zombie_image, self.zombies)
+                self.zombie_spawn(500, 400, self.zombies)
 
             # Spawn des boxs
             if random.random() < self.BOX_SPAWN_CHANCE:
@@ -590,6 +597,11 @@ class Game:
 
 
             self.move_bullets()
+
+            for zombie in self.zombies:
+                if getattr(zombie,'zombie_vel') == 2:
+                    if random.randint(0,1000) < 5:
+                        Zombie.speed_boost(zombie)
 
 
             # Rammase l'xp et les box
