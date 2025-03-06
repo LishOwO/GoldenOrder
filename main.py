@@ -35,8 +35,8 @@ class Game:
         # Var PLAYER
         self.PLAYER_VELOCITY = 7
         self.PLAYER_SIZE_MULTIPLIER = 4
-        self.PLAYER_HP = 10
-        self.PLAYER_LVL = 0
+        self.player_health = 10
+        self.player_lvl = 0
         self.PLAYER_DAMAGE_SOUNDS = [pygame.mixer.Sound("src/son/PlayerDamage1.mp3"),
                                     pygame.mixer.Sound("src/son/PlayerDamage2.mp3"),
                                     pygame.mixer.Sound("src/son/PlayerDamage3.mp3"),
@@ -59,9 +59,9 @@ class Game:
 
 
         # Var BULLET
-        self.BULLET_VELOCITY = 10
+        self.BULLET_VELOCITY = 20
         self.BULLET_SIZE = 2
-        self.BULLET_MAX_DISTANCE = 300
+        self.BULLET_MAX_DISTANCE = self.SCREEN_HEIGHT // 2
         self.bullet_number = 1
 
       
@@ -70,6 +70,11 @@ class Game:
         self.xp_orbs = []
         self.player_xp = 0
         self.last_ten_lvl = 10
+
+        self.POT_SIZE_MULTIPLIER = 4
+
+        self.health_potions = []
+
 
         # Var LEVEL_UP_SCREEN
         self.LEVEL_UP = False
@@ -133,6 +138,8 @@ class Game:
 
         # Chargement de XP
         self.xp_image = self.load_and_resize_image('src/images/sprite/miscellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
+
+        self.health_image = self.load_and_resize_image('src/images/sprite/miscellaneous/health_potion.png', self.POT_SIZE_MULTIPLIER)
 
         # Chargement des balles
         self.bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE)
@@ -237,16 +244,18 @@ class Game:
 
             if distance_squared >= min_distance ** 2:
                 break
-        type_ = random.randint(1,2)
+        type_ = random.randint(1,100)
 
-        if type_ == 1:
+        if type_ < 80:
             target_image = self.zombie_image
-        elif type_ == 2:
+            zombie_type = 1
+        elif type_ >= 80:
             target_image = self.zombie2_image
+            zombie_type = 2
 
         target_rect = target_image.get_rect(center=(target_x, target_y))
 
-        newZ = Zombie(target_pos, type_, target_rect)
+        newZ = Zombie(target_pos, zombie_type, target_rect)
         target_list.append(newZ)
 
     def spawn_objects(self, spawn_radius, min_distance, target_image, target_list, type):
@@ -376,9 +385,11 @@ class Game:
                         xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
                         self.zombies.remove(zombie)
                         self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
-                    # if random_ >= 95 and random_ < 100:
-                    #     health_orb_rect = self.
-                    # break
+                    if random_ >= 95 and random_ < 100:
+                        health_orb_rect = self.health_image.get_rect(center=zombie.zombie_hitbox.center)
+                        self.zombies.remove(zombie)
+                        self.health_potions.append({'rect': health_orb_rect, 'value': 1}) 
+                    break
 
     # affiche le hud
     def display_hud(self):
@@ -387,11 +398,11 @@ class Game:
         self.screen.blit(timer_text, (20, 20))
         kill_text = self.font.render(f"Kills: {self.kill_count}", True, (255, 255, 255))
         self.screen.blit(kill_text, (20, 70))
-        hp_text = self.font.render(f"HP: {self.PLAYER_HP}", True, (255, 255, 255))
+        hp_text = self.font.render(f"HP: {self.player_health}", True, (255, 255, 255))
         self.screen.blit(hp_text, (20, 120))
         xp_text = self.font.render(f"XP: {self.player_xp}", True, (255, 255, 255))
         self.screen.blit(xp_text, (20, 170))
-        level_text = self.font.render(f"LVL: {self.PLAYER_LVL}", True, (255, 255, 255))
+        level_text = self.font.render(f"LVL: {self.player_lvl}", True, (255, 255, 255))
         self.screen.blit(level_text, (20, 220))
 
     # fin du jeu
@@ -415,6 +426,18 @@ class Game:
             if distance_squared < 100 ** 2:
                 self.player_xp += orb['value']
                 self.xp_orbs.remove(orb)
+
+    def collect_health_potion(self):
+        for pot in self.health_potions[:]:
+
+            target_pos = [pot['rect'].centerx, pot['rect'].centery]
+
+            distance_squared = tools.distance_squared(target_pos, self.player_position)
+
+            if distance_squared < 100 ** 2:
+                if self.player_health < 10:
+                    self.player_health += pot['value']
+                self.health_potions.remove(pot)
 
     # collecter les luckys blocks
     def collect_lucky_blocks(self):
@@ -462,8 +485,8 @@ class Game:
 
     # effet lucky : soin
     def player_effect_heal(self):
-        if self.PLAYER_HP < 10:
-            self.PLAYER_HP += 1
+        if self.player_health < 10:
+            self.player_health += 1
 
     # effet lucky : bouclier
     def player_effect_invincibility(self):
@@ -471,10 +494,10 @@ class Game:
 
     # augmentation du level
     def level_up(self, lvl):
-        self.PLAYER_LVL += 1
+        self.player_lvl += 1
         self.shooting_cooldown = self.shooting_cooldown * 0.9 * lvl
         self.ZOMBIE_SPAWNCHANCHE = self.ZOMBIE_SPAWNCHANCHE * 1.2 * lvl
-        if self.PLAYER_LVL >= self.last_ten_lvl:
+        if self.player_lvl >= self.last_ten_lvl:
             self.bullet_number += 1
             self.last_ten_lvl += 10
         self.LEVEL_UP = True
@@ -594,7 +617,7 @@ class Game:
                 if Zombie.move_zombies(zombie, self.player_position):
                     self.zombies.remove(zombie)  
                     self.screen.fill((255, 0, 0))
-                    self.PLAYER_HP -= 1 
+                    self.player_health -= 1 
                     random.choice(self.PLAYER_DAMAGE_SOUNDS).play()
                 
                 self.screen.blit(self.zombie_image, (zombie.zombie_pos[0] - self.camera_position[0], zombie.zombie_pos[1] - self.camera_position[1]))
@@ -611,7 +634,7 @@ class Game:
             # Rammase l'xp et les box
             self.collect_xp_orbs()
             self.collect_lucky_blocks()
-
+            self.collect_health_potion()
             # Levelup
             if self.player_xp >= 100:
                 self.level_up(1)
@@ -621,6 +644,10 @@ class Game:
             for orb in self.xp_orbs:
                 self.screen.blit(self.xp_image,
                                  (orb['rect'].x - self.camera_position[0], orb['rect'].y - self.camera_position[1]))
+            
+            for pot in self.health_potions:
+                self.screen.blit(self.health_image,
+                                 (pot['rect'].x - self.camera_position[0], pot['rect'].y - self.camera_position[1]))
 
             # Dessines les boxs
             for box in self.boxes:
@@ -691,10 +718,10 @@ class Game:
             # self.laser_shoot()
 
             if int(self.player_position[0]) > self.BACKGROUND_MAP_SIZE or int(self.player_position[1]) > self.BACKGROUND_MAP_SIZE:
-                self.PLAYER_HP -= 1
+                self.player_health -= 1
 
                 # Mort
-            if self.PLAYER_HP == 0:
+            if self.player_health == 0:
                 self.end_game()
 
             pygame.display.update()
