@@ -132,18 +132,18 @@ class Game:
         self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
 
         # Chargement de XP
-        self.xp_image = self.load_and_resize_image('src/images/sprite/missellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
+        self.xp_image = self.load_and_resize_image('src/images/sprite/miscellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
 
         # Chargement des balles
         self.bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE)
         self.rotated_bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png',self.BULLET_SIZE)
 
         # Chargement du gun
-        self.gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png', 0.8)
-        self.rotated_gun_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png', 0.8)
+        self.weapon_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png', 0.8)
+        self.rotated_weapon_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png', 0.8)
 
         # Chargement des box
-        self.luckyblock_image = self.load_and_resize_image('src/images/sprite/missellaneous/LuckyBlock.png', 1)
+        self.luckyblock_image = self.load_and_resize_image('src/images/sprite/miscellaneous/LuckyBlock.png', 1)
 
         # Aplication du mouvement du joueur
         self.player = self.player_image.get_rect(center=(0, 0))  # Position initiale
@@ -193,7 +193,7 @@ class Game:
         self.weapons_data= {
             "M4": {
                 "name": "M4",
-                "image": self.gun_image
+                "image": self.weapon_image
             },
             "Laser": {
                 "name": "Laser",
@@ -204,7 +204,7 @@ class Game:
                 "image": self.pistolet_image
             }
         }
-        self.weapons_list = ["M4","Laser","Pistolet"]
+        self.weapons_list = [weapons for weapons in self.weapons_data.keys()]
         self.weapons = [self.weapons_data[weapon]["image"] for weapon in self.weapons_list]
 
 
@@ -326,7 +326,7 @@ class Game:
         angle = math.degrees(math.atan2(-dy, dx))  # Angle en degrés
 
         # On tourne le gun
-        self.rotated_gun_image = pygame.transform.rotate(self.gun_image, angle)
+        self.rotated_weapon_image = pygame.transform.rotate(self.weapon_image, angle)
 
         for i in range(self.bullet_number):
             offset_x = 30 + (10 * i)
@@ -369,12 +369,16 @@ class Game:
 
                     self.kill_count += 1
                     random.choice(self.ZOMBIE_DAMAGE_SOUNDS).play()
+                    random_ = random.randint(0,100)
 
-                    # Spawn un orbe d'xp à la position du zombie
-                    xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
-                    self.zombies.remove(zombie)
-                    self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
-                    break
+                    if random_ < 95:
+                        # Spawn un orbe d'xp à la position du zombie
+                        xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
+                        self.zombies.remove(zombie)
+                        self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
+                    # if random_ >= 95 and random_ < 100:
+                    #     health_orb_rect = self.
+                    # break
 
     # affiche le hud
     def display_hud(self):
@@ -634,7 +638,7 @@ class Game:
             self.screen.blit(self.player_image, (
             self.player_position[0] - self.camera_position[0] - 50, self.player_position[1] - self.camera_position[1]))
 
-            self.screen.blit(self.rotated_gun_image, (
+            self.screen.blit(self.rotated_weapon_image, (
             self.gun_position[0] - self.camera_position[0] - 50, self.gun_position[1] - self.camera_position[1]))
 
             # Le hud
@@ -664,11 +668,9 @@ class Game:
                     if event.key == pygame.K_b:
                         self.player_effect_bomb()
                     if event.key == pygame.K_t:
-                        print(self.check_number_of_close(self.boxes, 500, 2))
-                        print("bbb")
+                        print(self.check_number_of_close(self.boxes, 500, 2)) 
                     if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
+                        self.menu = True
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
@@ -686,7 +688,7 @@ class Game:
                 self.shoot_bullet()
                 self.last_shot_time = current_time
 
-            self.laser_shoot()
+            # self.laser_shoot()
 
             if int(self.player_position[0]) > self.BACKGROUND_MAP_SIZE or int(self.player_position[1]) > self.BACKGROUND_MAP_SIZE:
                 self.PLAYER_HP -= 1
@@ -748,6 +750,7 @@ class Game:
                             # Selectionner le bon skin
                             elif event.key == pygame.K_SPACE:
                                 self.player_image = self.skins[selected_index]
+                                self.original_player_image = self.player_image
                                 self.menu_skin = False
 
                     # Mise à jour du skin sélectionné
@@ -757,7 +760,7 @@ class Game:
                     self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH // 2 - 200, 50))
                     current_skin_text = self.font.render("Skin actuel : " + str(selected_index), True, (255, 255, 255))
                     self.screen.blit(current_skin_text, (self.SCREEN_WIDTH // 2 - 200, 100))
-                    self.screen.blit(self.font.render("V", True, (255, 255, 255)),(840, 320))
+                    self.screen.blit(self.font.render("V", True, (255, 255, 255)),(self.SCREEN_WIDTH//2, self.SCREEN_HEIGHT//2 - self.SCREEN_HEIGHT//8))
 
                     # Calculer la position centrale
                     center_x = self.SCREEN_WIDTH // 2
@@ -779,7 +782,7 @@ class Game:
             if self.menu_weapon == True:
                 weapon_menu_text = self.font.render("Bienvenue dans le Menu Weapon - Work in progress", True, (255, 255, 255))
                 selected_index = 0  # Index 
-                gap = 300  # Espace
+                gap = self.SCREEN_WIDTH//4  # Espace
                 scale_factor = 3  # Augmentation des images
 
                 while self.run and self.main_menu and self.menu_weapon:
@@ -804,7 +807,7 @@ class Game:
                     self.screen.blit(weapon_menu_text, (self.SCREEN_WIDTH // 2 - 200, 50))
                     current_weapon_text = self.font.render("Weapon actuel : " + str(selected_index), True, (255, 255, 255))
                     self.screen.blit(current_weapon_text, (self.SCREEN_WIDTH // 2 - 200, 100))
-                    self.screen.blit(self.font.render("V", True, (255, 255, 255)),(840, 320))
+                    self.screen.blit(self.font.render("V", True, (255, 255, 255)),(self.SCREEN_WIDTH//2, self.SCREEN_HEIGHT//2 - self.SCREEN_HEIGHT//8))
 
                     # Position centrale
                     center_x = self.SCREEN_WIDTH // 2
