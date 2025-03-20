@@ -214,17 +214,7 @@ class Game:
         self.weapons_list = [weapons for weapons in self.weapons_data.keys()]
         self.weapons = [self.weapons_data[weapon]["image"] for weapon in self.weapons_list]
 
-        # Charger la musique
-        pygame.mixer.music.load("src/son/pixelmusique2.mp3")
-        pygame.mixer.music.play(-1)
 
-        # Créer un dégradé radial
-        self.generate_radial_gradient()
-
-
-
-    def draw_radial_gradient(self):
-        self.screen.blit(self.background_gradient, (0, 0))
 
 
     # load les images et les resize
@@ -241,32 +231,6 @@ class Game:
         image = pygame.transform.scale(image, new_size)
         image.set_colorkey(colorkey)
         return image
-
-    def generate_radial_gradient(self):
-       # Créer une surface pour le dégradé radial
-        gradient_surface = pygame.Surface((self.screen.get_width(), self.screen.get_height()), pygame.SRCALPHA)
-        
-        # Obtenir le centre de l'écran
-        center_x, center_y = self.screen.get_width() // 2, self.screen.get_height() // 2
-        
-        # Rayon maximum (distance du centre aux coins)
-        max_radius = math.sqrt(center_x**2 + center_y**2)
-
-        radius = max_radius
-        compteur = max_radius
-        
-        # Dessiner le dégradé radial
-        while compteur > 0:
-            alpha = int(255 - (1 + radius / max_radius))
-            color = (0, 0, 0, alpha)
-            pygame.draw.circle(gradient_surface, color, (center_x, center_y), radius)
-            compteur -= 10
-            radius -= 10
-        
-        self.background_gradient = gradient_surface
-
-
-
 
     # spawne quelque chose autour du joueur
     def zombie_spawn(self, spawn_radius, min_distance, target_list):
@@ -291,7 +255,7 @@ class Game:
 
         target_rect = target_image.get_rect(center=(target_x, target_y))
 
-        newZ = Zombie(target_pos, zombie_type, target_rect)
+        newZ = Zombie(target_pos, zombie_type, target_rect, self)
         target_list.append(newZ)
 
     def spawn_objects(self, spawn_radius, min_distance, target_image, target_list, type):
@@ -658,6 +622,8 @@ class Game:
                 
                 self.screen.blit(self.zombie_image, (zombie.zombie_pos[0] - self.camera_position[0], zombie.zombie_pos[1] - self.camera_position[1]))
 
+            for zombie in self.zombies:
+                zombie.draw_zombie(self.zombie_image, self.screen, self.player_position)
 
             self.move_bullets()
 
@@ -728,12 +694,10 @@ class Game:
                     #    self.shoot_bullet()             # Tir manuel
                     # if event.key == pygame.K_a:
                     #     self.player_image = self.tint_texture(self.player_image, (0, 0, 200 ))
-                   ## if event.key == pygame.K_b:
-                     #   self.player_effect_bomb()
-                   # if event.key == pygame.K_t:
-                    #    print(self.check_number_of_close(self.boxes, 500, 2)) 
-                    if event.key == pygame.K_s:
-                        self.PLAYER_VELOCITY += 200
+                    if event.key == pygame.K_b:
+                        self.player_effect_bomb()
+                    if event.key == pygame.K_t:
+                        print(self.check_number_of_close(self.boxes, 500, 2)) 
                     if event.key == pygame.K_ESCAPE:
                         self.menu = True
 
@@ -755,11 +719,11 @@ class Game:
 
             # self.laser_shoot()
 
-            if int(self.player_position[0]) > self.BACKGROUND_MAP_SIZE or int(self.player_position[1]) > self.BACKGROUND_MAP_SIZE or int(self.player_position[0]) < -self.BACKGROUND_MAP_SIZE or int(self.player_position[1]) < -self.BACKGROUND_MAP_SIZE:
+            if int(self.player_position[0]) > self.BACKGROUND_MAP_SIZE or int(self.player_position[1]) > self.BACKGROUND_MAP_SIZE:
                 self.player_health -= 1
 
                 # Mort
-            if self.player_health <= 0:
+            if self.player_health == 0:
                 self.end_game()
 
             pygame.display.update()
@@ -780,7 +744,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         self.menu = False
-                        self.run_game()  # Lance  le jeu à la fermeture du menu
+                        self.run_game()  # Start the game after exiting the menu
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
