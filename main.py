@@ -215,7 +215,7 @@ class Game:
         self.weapons = [self.weapons_data[weapon]["image"] for weapon in self.weapons_list]
 
         # Charger la musique
-        pygame.mixer.music.load("src/son/Bad-Bit.mp3")
+        pygame.mixer.music.load("src/son/pixelmusique.mp3")
         pygame.mixer.music.play(-1)
 
         # Créer un dégradé radial
