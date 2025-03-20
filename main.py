@@ -728,10 +728,10 @@ class Game:
                     #    self.shoot_bullet()             # Tir manuel
                     # if event.key == pygame.K_a:
                     #     self.player_image = self.tint_texture(self.player_image, (0, 0, 200 ))
-                    if event.key == pygame.K_b:
-                        self.player_effect_bomb()
-                    if event.key == pygame.K_t:
-                        print(self.check_number_of_close(self.boxes, 500, 2)) 
+                   ## if event.key == pygame.K_b:
+                     #   self.player_effect_bomb()
+                   # if event.key == pygame.K_t:
+                    #    print(self.check_number_of_close(self.boxes, 500, 2)) 
                     if event.key == pygame.K_ESCAPE:
                         self.menu = True
 
@@ -760,8 +760,6 @@ class Game:
             if self.player_health == 0:
                 self.end_game()
 
-            self.draw_radial_gradient()
-
             pygame.display.update()
             self.clock.tick(60)
 
@@ -780,7 +778,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         self.menu = False
-                        self.run_game()  # Start the game after exiting the menu
+                        self.run_game()  # Lance  le jeu à la fermeture du menu
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
