@@ -732,6 +732,8 @@ class Game:
                      #   self.player_effect_bomb()
                    # if event.key == pygame.K_t:
                     #    print(self.check_number_of_close(self.boxes, 500, 2)) 
+                    if event.key == pygame.K_s:
+                        self.PLAYER_VELOCITY += 50
                     if event.key == pygame.K_ESCAPE:
                         self.menu = True
 
@@ -753,11 +755,11 @@ class Game:
 
             # self.laser_shoot()
 
-            if int(self.player_position[0]) > self.BACKGROUND_MAP_SIZE or int(self.player_position[1]) > self.BACKGROUND_MAP_SIZE:
+            if int(self.player_position[0]) > self.BACKGROUND_MAP_SIZE or int(self.player_position[1]) > self.BACKGROUND_MAP_SIZE or int(self.player_position[0]) < -self.BACKGROUND_MAP_SIZE or int(self.player_position[1]) < -self.BACKGROUND_MAP_SIZE:
                 self.player_health -= 1
 
                 # Mort
-            if self.player_health == 0:
+            if self.player_health < 0:
                 self.end_game()
 
             pygame.display.update()
