@@ -71,9 +71,13 @@ class Game:
         self.player_xp = 0
         self.last_ten_lvl = 10
 
+        # Var Potion Heal
         self.POT_SIZE_MULTIPLIER = 4
-
         self.health_potions = []
+
+        # Var Bombe
+        self.bombs = []
+        self.BOMB_SIZE_MULTIPLIER = 4
 
 
         # Var LEVEL_UP_SCREEN
@@ -90,15 +94,10 @@ class Game:
         self.menu_skin = False
         self.menu_weapon = False
 
-
-
         # Var scores etc
         self.start_time = pygame.time.get_ticks()
         self.kill_count = 0
         self.font = pygame.font.SysFont(None, 50)
-
-   
-        
 
         # Var BOX
         self.BOX_SPAWN_CHANCE = 0.005  # 1% de chance de spawn par frame
@@ -132,6 +131,9 @@ class Game:
         self.xp_image = self.load_and_resize_image('src/images/sprite/miscellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
 
         self.health_image = self.load_and_resize_image('src/images/sprite/miscellaneous/health_potion.png', self.POT_SIZE_MULTIPLIER)
+
+        self.bombe_image = self.load_and_resize_image('src/images/sprite/miscellaneous/bombe.png',self.BOMB_SIZE_MULTIPLIER)
+
 
         # Chargement des balles
         self.bullet_image = self.load_and_resize_image('src/images/sprite/weapons/Bullet2.png', self.BULLET_SIZE)
@@ -301,8 +303,7 @@ class Game:
         if type == "lucky_block":
             target_rect = target_image.get_rect(center=(target_x, target_y))
             target_list.append(target_rect)
-
-        
+    
     def spawn_around_player(self, spawn_radius, min_distance, target_image, targetlist):
         while True:
             target_x = random.randint(int(self.player_position[0] - spawn_radius),
@@ -409,7 +410,7 @@ class Game:
                     random.choice(self.ZOMBIE_DAMAGE_SOUNDS).play()
                     random_ = random.randint(0,100)
 
-                    if random_ < 95:
+                    if random_ < 90:
                         # Spawn un orbe d'xp à la position du zombie
                         xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
                         self.zombies.remove(zombie)
@@ -418,6 +419,10 @@ class Game:
                         health_orb_rect = self.health_image.get_rect(center=zombie.zombie_hitbox.center)
                         self.zombies.remove(zombie)
                         self.health_potions.append({'rect': health_orb_rect, 'value': 1}) 
+                    if random_ >= 90 and random_ < 95:
+                        bombe_rect = self.bombe_image.get_rect(center=zombie.zombie_hitbox.center)
+                        self.zombies.remove(zombie)
+                        self.bombs.append({'rect': bombe_rect, 'value': 1}) 
                     break
 
     # affiche le hud
