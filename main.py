@@ -473,6 +473,19 @@ class Game:
                     self.player_health += pot['value']
                 self.health_potions.remove(pot)
 
+    def collect_bombe(self):
+        for bombe in self.bombs[:]:
+
+            target_pos = [bombe['rect'].centerx, bombe['rect'].centery]
+
+            distance_squared = tools.distance_squared(target_pos, self.player_position)
+
+            if distance_squared < 100 ** 2:
+                self.player_effect_bomb()
+                self.bombs.remove(bombe)
+
+              
+
     # collecter les luckys blocks
     def collect_lucky_blocks(self):
         for box in self.boxes:
