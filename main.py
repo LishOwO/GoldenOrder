@@ -277,7 +277,7 @@ class Game:
         type_ = random.randint(1,100)
 
         if self.boss_state:
-            zombie_type = 'boss_1' 
+            zombie_type = 'boss1' 
         else:    
             if type_ < 80:
                 zombie_type = 'normal'
