@@ -125,14 +125,6 @@ class Game:
         #listes des skins
         self.skins = [self.lebron_image,self.white_james_image,self.red_james_image,self.lebron_image,self.white_james_image,self.red_james_image]
 
-
-        # Chargement du zombie
-        self.zombie_images = [ ('src/images/sprite/zombie/zombie1/zombie1.png'),
-                               ('src/images/sprite/zombie/zombie1/zombie2.png'),]
- 
-        self.zombie_image = self.load_and_resize_image('src/images/sprite/zombie/zombie1/zombie1.png', self.ZOMBIE_SIZE_MULTIPLIER)
-        self.zombie2_image = self.load_and_resize_image('src/images/sprite/zombie/zombie2/zombie2.png', self.ZOMBIE_SIZE_MULTIPLIER)
-
         # Chargement xp_screen
         self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
 
@@ -164,7 +156,9 @@ class Game:
 
         # Liste des zombies
         self.zombies = []
-
+        # Check si boss est spawn
+        self.boss_state = False
+        self.bosses_spawned = 0
         # Liste des balles
         self.bullets = []
 
@@ -282,16 +276,15 @@ class Game:
                 break
         type_ = random.randint(1,100)
 
-        if type_ < 80:
-            target_image = self.zombie_image
-            zombie_type = 1
-        elif type_ >= 80:
-            target_image = self.zombie2_image
-            zombie_type = 2
+        if self.boss_state:
+            zombie_type = 'boss_1' 
+        else:    
+            if type_ < 80:
+                zombie_type = 'normal'
+            elif type_ >= 80:
+                zombie_type = 'deviant'
 
-        target_rect = target_image.get_rect(center=(target_x, target_y))
-
-        newZ = Zombie(target_pos, zombie_type, target_rect)
+        newZ = Zombie(target_pos, zombie_type)
         target_list.append(newZ)
 
     def spawn_objects(self, spawn_radius, min_distance, target_image, target_list, type):
@@ -638,8 +631,15 @@ class Game:
             self.camera_position[1] = self.player_position[1] - self.SCREEN_HEIGHT // 2
 
             # Spawn de zombies à chaque itération
-            if random.random() < self.ZOMBIE_SPAWNCHANCHE:
+            if random.random() < self.ZOMBIE_SPAWNCHANCHE and self.boss_state == False:
                 self.zombie_spawn(500, 400, self.zombies)
+
+            elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000
+            if elapsed_time > 60 + 120*self.bosses_spawned and self.boss_state == False:
+                self.boss_state = True
+                self.zombie_spawn(500, 400, self.zombies)
+                self.bosses_spawned += 1
+
 
             # Spawn des boxs
             if random.random() < self.BOX_SPAWN_CHANCE:
@@ -655,8 +655,7 @@ class Game:
                     self.screen.fill((255, 0, 0))
                     self.player_health -= 1 
                     random.choice(self.PLAYER_DAMAGE_SOUNDS).play()
-                
-                self.screen.blit(self.zombie_image, (zombie.zombie_pos[0] - self.camera_position[0], zombie.zombie_pos[1] - self.camera_position[1]))
+                self.screen.blit(zombie.zombie_image, (zombie.zombie_pos[0] - self.camera_position[0], zombie.zombie_pos[1] - self.camera_position[1]))
 
 
             self.move_bullets()
