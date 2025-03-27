@@ -32,11 +32,11 @@ class Zombie:
             self.zombie_image = self.load_and_resize_image(os.path.join(base_path, "zombie2.png"), 0.5)
             self.zombie_size = (32,32)
             self.zombie_hp = 150
-            
+
         elif self.zombie_type == 'boss1':
             self.zombie_vel = 3
             self.zombie_atk_dist = 128
-            self.zombie_image = self.load_and_resize_image(os.path.join(base_path, "boss1.png"), 2)
+            self.zombie_image = self.load_and_resize_image(os.path.join(base_path, "boss1.png"), 2, (0, 0, 0))
             self.zombie_size = (128,128)
             self.zombie_hp = 6400
 
@@ -56,8 +56,7 @@ class Zombie:
         return image
         
     def update_hitbox(self):
-        self.zombie_hitbox = pygame.Rect(self.zombie_pos[0]+16, self.zombie_pos[1]+16, *self.zombie_size)
-
+        self.zombie_hitbox = pygame.Rect(int(self.zombie_pos[0]) + 16, int(self.zombie_pos[1]) + 16, *self.zombie_size)
     def draw_zombie(self, screen):
         # Use the loaded image to draw the zombie
         screen.blit(self.zombie_image, self.zombie_pos)
@@ -76,6 +75,8 @@ class Zombie:
         self.zombie_pos[0] += zombie_dx * self.zombie_vel
         self.zombie_pos[1] += zombie_dy * self.zombie_vel
 
+        # Met à jour la hitbox
+        self.update_hitbox()
         # Collision avec le joueur -> Dégats
         if distance <= self.zombie_atk_dist:
             return True
