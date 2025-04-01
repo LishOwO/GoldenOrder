@@ -68,6 +68,7 @@ class Game:
         # Var XP
         self.XP_SIZE_MULTIPLIER = 4
         self.xp_orbs = []
+        self.big_xp_orbs =[]
         self.player_xp = 0
         self.last_ten_lvl = 10
 
@@ -141,7 +142,7 @@ class Game:
 
         # Chargement de XP
         self.xp_image = self.load_and_resize_image('src/images/sprite/miscellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
-
+        self.big_xp_image = self.load_and_resize_image('src/images/sprite/miscellaneous/xp.png', self.XP_SIZE_MULTIPLIER*2)
         self.health_image = self.load_and_resize_image('src/images/sprite/miscellaneous/health_potion.png', self.POT_SIZE_MULTIPLIER)
 
         self.bombe_image = self.load_and_resize_image('src/images/sprite/miscellaneous/bombe.png',self.BOMB_SIZE_MULTIPLIER)
@@ -426,7 +427,7 @@ class Game:
                         self.kill_count += 1
                         random_ = random.randint(0,100)
 
-                        if random_ <90:
+                        if random_ <85:
                             # Spawn un orbe d'xp à la position du zombie
                             xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
                             self.zombies.remove(zombie)
@@ -439,6 +440,12 @@ class Game:
                             bombe_rect = self.bombe_image.get_rect(center=zombie.zombie_hitbox.center)
                             self.zombies.remove(zombie)
                             self.bombs.append({'rect': bombe_rect, 'value': 1}) 
+                        if random_ >= 85 and random_< 90:
+                            big_xp_orb_rect  = self.big_xp_image.get_rect(center=zombie.zombie_hitbox.center)
+                            self.zombies.remove(zombie)
+                            self.big_xp_orbs.append({'rect': big_xp_orb_rect, 'value': 50})  # Chaque orbe vaut 50 XP
+
+
                     break
 
     # affiche le hud
@@ -476,6 +483,16 @@ class Game:
             if distance_squared < 100 ** 2:
                 self.player_xp += orb['value']
                 self.xp_orbs.remove(orb)
+
+        for big_orb in self.big_xp_orbs[:]:
+
+            target_pos = [big_orb['rect'].centerx, big_orb['rect'].centery]
+
+            distance_squared = tools.distance_squared(target_pos, self.player_position)
+
+            if distance_squared < 100 ** 2:
+                self.player_xp += big_orb['value']
+                self.big_xp_orbs.remove(big_orb)
 
     def collect_health_potion(self):
         for pot in self.health_potions[:]:
@@ -717,6 +734,10 @@ class Game:
             for orb in self.xp_orbs:
                 self.screen.blit(self.xp_image,
                                  (orb['rect'].x - self.camera_position[0], orb['rect'].y - self.camera_position[1]))
+            for big_orb in self.big_xp_orbs:
+                self.screen.blit(self.big_xp_image,
+                                 (big_orb['rect'].x - self.camera_position[0], big_orb['rect'].y - self.camera_position[1]))
+           
             
             for pot in self.health_potions:
                 self.screen.blit(self.health_image,
