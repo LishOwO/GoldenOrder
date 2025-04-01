@@ -129,15 +129,13 @@ class Game:
         self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.special_james_image = self.load_and_resize_image('src/images/sprite/player/SpecialJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.white_james_image = self.load_and_resize_image('src/images/sprite/player/WhiteJames.png',self.PLAYER_SIZE_MULTIPLIER)
-        self.blue_jamette_image = self.load_and_resize_image('src/images/sprite/player/BlueJamette.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.blue_jamette_image = self.load_and_resize_image('src/images/sprite/player/PinkJamette.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.pink_jamette_image = self.load_and_resize_image('src/images/sprite/player/BlueJamette.png',self.PLAYER_SIZE_MULTIPLIER)        
         self.mars_james_image = self.load_and_resize_image('src/images/sprite/player/MarsJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.futur_james_image = self.load_and_resize_image('src/images/sprite/player/FuturJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.yellowyellow_james_image = self.load_and_resize_image('src/images/sprite/player/YellowJames.png',self.PLAYER_SIZE_MULTIPLIER, (0,0,0))
         self.player_image = self.lebron_image #Image de Base
         self.original_player_image = self.player_image #Image pour le Flip
-
-
-        #self.mec_alakippa_image = self.load_and_resize_image('src/images/sprite/player/MecAlakippa.png',0.75)
-
         
         #listes des skins
         self.skins = [
@@ -147,7 +145,9 @@ class Game:
         self.special_james_image,
         self.blue_jamette_image,
         self.mars_james_image,
-        self.futur_james_image]
+        self.futur_james_image,
+        self.pink_jamette_image,
+        self.yellowyellow_james_image]
       
         # Chargement xp_screen
         self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
