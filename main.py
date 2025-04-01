@@ -127,10 +127,11 @@ class Game:
         self.lebron_image = self.load_and_resize_image('src/images/sprite/player/LebronJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.white_james_image = self.load_and_resize_image('src/images/sprite/player/WhiteJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
-        self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
-        self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
-        self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
-        self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.special_james_image = self.load_and_resize_image('src/images/sprite/player/SpecialJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.white_james_image = self.load_and_resize_image('src/images/sprite/player/WhiteJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.blue_jamette_image = self.load_and_resize_image('src/images/sprite/player/BlueJamette.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.mars_james_image = self.load_and_resize_image('src/images/sprite/player/MarsJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.futur_james_image = self.load_and_resize_image('src/images/sprite/player/FuturJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.player_image = self.lebron_image #Image de Base
         self.original_player_image = self.player_image #Image pour le Flip
 
@@ -139,8 +140,15 @@ class Game:
 
         
         #listes des skins
-        self.skins = [self.lebron_image,self.white_james_image,self.red_james_image,self.lebron_image,self.white_james_image,self.red_james_image]
-
+        self.skins = [
+        self.lebron_image, 
+        self.white_james_image, 
+        self.red_james_image,
+        self.special_james_image,
+        self.blue_jamette_image,
+        self.mars_james_image,
+        self.futur_james_image]
+      
         # Chargement xp_screen
         self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
 
