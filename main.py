@@ -413,23 +413,27 @@ class Game:
 
                     self.bullets.remove(bullet)
 
-                    self.kill_count += 1
+                    zombie.zombie_hp -= 100
                     random.choice(self.ZOMBIE_DAMAGE_SOUNDS).play()
-                    random_ = random.randint(0,100)
 
-                    if random_ <20:
-                        # Spawn un orbe d'xp à la position du zombie
-                        xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
-                        self.zombies.remove(zombie)
-                        self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
-                    if random_ >= 95 and random_ < 100:
-                        health_orb_rect = self.health_image.get_rect(center=zombie.zombie_hitbox.center)
-                        self.zombies.remove(zombie)
-                        self.health_potions.append({'rect': health_orb_rect, 'value': 1}) 
-                    if random_ >= 20 and random_ < 95:
-                        bombe_rect = self.bombe_image.get_rect(center=zombie.zombie_hitbox.center)
-                        self.zombies.remove(zombie)
-                        self.bombs.append({'rect': bombe_rect, 'value': 1}) 
+
+                    if zombie.zombie_hp <= 0:
+                        self.kill_count += 1
+                        random_ = random.randint(0,100)
+
+                        if random_ <20:
+                            # Spawn un orbe d'xp à la position du zombie
+                            xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
+                            self.zombies.remove(zombie)
+                            self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})  # Chaque orbe vaut 10 XP
+                        if random_ >= 95 and random_ < 100:
+                            health_orb_rect = self.health_image.get_rect(center=zombie.zombie_hitbox.center)
+                            self.zombies.remove(zombie)
+                            self.health_potions.append({'rect': health_orb_rect, 'value': 1}) 
+                        if random_ >= 20 and random_ < 95:
+                            bombe_rect = self.bombe_image.get_rect(center=zombie.zombie_hitbox.center)
+                            self.zombies.remove(zombie)
+                            self.bombs.append({'rect': bombe_rect, 'value': 1}) 
                     break
 
     # affiche le hud
@@ -528,13 +532,13 @@ class Game:
     def player_effect_bomb(self):
         self.son_bombe.play()
         for zombie in self.zombies:
-            for zombie in self.zombies:
-                for zombie in self.zombies:
-                    self.zombies.remove(zombie)
-                    xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
-                    self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
-                    self.screen.fill((255, 255, 255))
-                    self.kill_count += 1
+            if zombie.zombie_type == 'boss1':
+                continue
+            self.zombies.remove(zombie)
+            xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
+            self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
+            self.screen.fill((255, 255, 255))
+            self.kill_count += 1
                 
 
     # effet lucky : soin
@@ -695,6 +699,7 @@ class Game:
             self.collect_xp_orbs()
             self.collect_lucky_blocks()
             self.collect_health_potion()
+            self.collect_bombe()
             # Levelup
             if self.player_xp >= 100:
                 self.level_up(1)
@@ -708,6 +713,11 @@ class Game:
             for pot in self.health_potions:
                 self.screen.blit(self.health_image,
                                  (pot['rect'].x - self.camera_position[0], pot['rect'].y - self.camera_position[1]))
+
+            for bomb in self.bombs:
+                self.screen.blit(self.bombe_image,
+                                 (bomb['rect'].x - self.camera_position[0], bomb['rect'].y - self.camera_position[1]))
+
 
             # Dessines les boxs
             for box in self.boxes:
