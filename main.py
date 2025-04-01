@@ -421,7 +421,7 @@ class Game:
                         self.kill_count += 1
                         random_ = random.randint(0,100)
 
-                        if random_ <20:
+                        if random_ <90:
                             # Spawn un orbe d'xp à la position du zombie
                             xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
                             self.zombies.remove(zombie)
@@ -430,7 +430,7 @@ class Game:
                             health_orb_rect = self.health_image.get_rect(center=zombie.zombie_hitbox.center)
                             self.zombies.remove(zombie)
                             self.health_potions.append({'rect': health_orb_rect, 'value': 1}) 
-                        if random_ >= 20 and random_ < 95:
+                        if random_ >= 90 and random_ < 95:
                             bombe_rect = self.bombe_image.get_rect(center=zombie.zombie_hitbox.center)
                             self.zombies.remove(zombie)
                             self.bombs.append({'rect': bombe_rect, 'value': 1}) 
