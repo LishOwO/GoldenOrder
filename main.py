@@ -817,7 +817,8 @@ class Game:
                     if event.key == pygame.K_s:
                         self.PLAYER_VELOCITY += 200
                     if event.key == pygame.K_ESCAPE:
-                        self.menu = True
+                        pygame.quit()
+                        sys.exit()
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
