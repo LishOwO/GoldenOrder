@@ -127,6 +127,10 @@ class Game:
         self.lebron_image = self.load_and_resize_image('src/images/sprite/player/LebronJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.white_james_image = self.load_and_resize_image('src/images/sprite/player/WhiteJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.red_james_image = self.load_and_resize_image('src/images/sprite/player/RedJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.player_image = self.lebron_image #Image de Base
         self.original_player_image = self.player_image #Image pour le Flip
 
