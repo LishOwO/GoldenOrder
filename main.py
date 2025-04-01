@@ -134,6 +134,9 @@ class Game:
         self.mars_james_image = self.load_and_resize_image('src/images/sprite/player/MarsJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.futur_james_image = self.load_and_resize_image('src/images/sprite/player/FuturJames.png',self.PLAYER_SIZE_MULTIPLIER)
         self.yellowyellow_james_image = self.load_and_resize_image('src/images/sprite/player/YellowJames.png',self.PLAYER_SIZE_MULTIPLIER, (0,0,0))
+        self.ginger_james_image = self.load_and_resize_image('src/images/sprite/player/GingerJames.png',self.PLAYER_SIZE_MULTIPLIER)
+        self.clochard_james_image = self.load_and_resize_image('src/images/sprite/player/ClochardJames.png',self.PLAYER_SIZE_MULTIPLIER)
+
         self.player_image = self.lebron_image #Image de Base
         self.original_player_image = self.player_image #Image pour le Flip
         
@@ -147,7 +150,9 @@ class Game:
         self.mars_james_image,
         self.futur_james_image,
         self.pink_jamette_image,
-        self.yellowyellow_james_image]
+        self.yellowyellow_james_image,
+        self.ginger_james_image,
+        self.clochard_james_image]
       
         # Chargement xp_screen
         self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
