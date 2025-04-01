@@ -84,6 +84,7 @@ class Game:
         self.LEVEL_UP = False
         self.CHOOSE_SIZE_MULTIPLIER = self.SCREEN_WIDTH / 1980
 
+       
         # Var SCREEN
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.RESIZABLE)
         self.clock = pygame.time.Clock()
@@ -93,6 +94,12 @@ class Game:
         self.menu = True
         self.menu_skin = False
         self.menu_weapon = False
+        # Var MAIN MENU
+        self.MAIN_MENU_IMAGE = self.load_and_resize_image(
+            'src/images/sprite/GoldenOrder.png',
+            min(self.SCREEN_WIDTH / 1920, self.SCREEN_HEIGHT / 1080),  # Calcul du multiplicateur basé sur la résolution
+            (255, 255, 255)
+        )
 
         # Var scores etc
         self.start_time = pygame.time.get_ticks()
@@ -784,35 +791,60 @@ class Game:
 
 
     def main_menu(self):
-        press_space_text = self.font.render("Press space to start...", True, (255, 255, 255))
-        enter_skin_menu_text = self.font.render("Press M to enter skin menu", True, (255, 255, 255))
-        enter_weapon_menu_text = self.font.render("Press W to enter weapon menu", True, (255, 255, 255))
-        skin_menu_text = self.font.render("Bienvenue dans le Menu Skin - Work in progress", True, (255, 255, 255))
-        control_menu_text = self.font.render("Use Arrows to Move, Press escape to exit, Press P to pause", True, (255, 255, 255))
+        # Textes des options
+        options = [
+            {"text": "Start Game", "action": "start_game"},
+            {"text": "Skin Menu", "action": "skin_menu"},
+            {"text": "Quit Game", "action": "quit_game"},
+        ]
+
+        selected_index = 0  # Index de l'option sélectionnée
+        rect_width = int(self.SCREEN_WIDTH * 0.4)  # 40% de la largeur de l'écran
+        rect_height = int(self.SCREEN_HEIGHT * 0.1)  # 10% de la hauteur de l'écran
+        rect_gap = int(self.SCREEN_HEIGHT * 0.03)  # 5% de la hauteur de l'écran
 
         while self.run and self.menu:
             self.screen.fill((100, 100, 150))
+            self.screen.blit(self.MAIN_MENU_IMAGE, (0, 0))
 
+            # Gestion des événements
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        self.menu = False
-                        self.run_game()  # Lance  le jeu à la fermeture du menu
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
-                    if event.key == pygame.K_m:
-                        self.menu_skin = True
-                    if event.key == pygame.K_w:
-                        self.menu_weapon = True
+                    if event.key == pygame.K_DOWN:
+                        selected_index = (selected_index + 1) % len(options)
+                    elif event.key == pygame.K_UP:
+                        selected_index = (selected_index - 1) % len(options)
+                    elif event.key == pygame.K_RETURN:  # Appuyer sur Entrée pour valider
+                        if options[selected_index]["action"] == "start_game":
+                            self.menu = False
+                            self.run_game()
+                        elif options[selected_index]["action"] == "skin_menu":
+                            self.menu_skin = True
+                        elif options[selected_index]["action"] == "quit_game":
+                            pygame.quit()
+                            sys.exit()
 
+            # Calculer la position de départ pour centrer les rectangles
+            total_height = len(options) * rect_height + (len(options) - 1) * rect_gap
+            start_y = ((self.SCREEN_HEIGHT - total_height) // 2)+100
 
-            # Affichage des textes principaux (menu principal)
-            self.screen.blit(press_space_text, (50, 50))
-            self.screen.blit(enter_skin_menu_text, (50, 100))
-            self.screen.blit(enter_weapon_menu_text, (50, 150))
-            self.screen.blit(control_menu_text, (50, 200))
+            # Dessiner les options
+            for i, option in enumerate(options):
+                rect_x = (self.SCREEN_WIDTH - rect_width) // 2
+                rect_y = start_y + i * (rect_height + rect_gap)
+
+                # Dessiner le rectangle de surlignage si l'option est sélectionnée
+                if i == selected_index:
+                    pygame.draw.rect(self.screen, (255, 255, 255), (rect_x, rect_y, rect_width, rect_height), 3)
+
+                # Dessiner le texte de l'option
+                text_surface = self.font.render(option["text"], True, (255, 255, 255))
+                text_x = rect_x + (rect_width - text_surface.get_width()) // 2
+                text_y = rect_y + (rect_height - text_surface.get_height()) // 2
+                self.screen.blit(text_surface, (text_x, text_y))
+
             pygame.display.flip()
+            self.clock.tick(60)
 
             # Menu Skin
             if self.menu_skin:
@@ -839,7 +871,7 @@ class Game:
                     self.skin_selected = self.skins[selected_index]
 
                     self.screen.fill((100, 100, 150))
-                    self.screen.blit(skin_menu_text, (self.SCREEN_WIDTH // 2 - 200, 50))
+                    self.screen.blit(self.player_image, (self.SCREEN_WIDTH // 2 - 200, 50))
                     current_skin_text = self.font.render("Skin actuel : " + str(selected_index), True, (255, 255, 255))
                     self.screen.blit(current_skin_text, (self.SCREEN_WIDTH // 2 - 200, 100))
                     self.screen.blit(self.font.render("V", True, (255, 255, 255)),(self.SCREEN_WIDTH//2, self.SCREEN_HEIGHT//2 - self.SCREEN_HEIGHT//8))
