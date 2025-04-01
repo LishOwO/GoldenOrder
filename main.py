@@ -33,7 +33,6 @@ class Game:
         self.BACKGROUND_MAP_SIZE = self.BACKGROUND_SIZE * 10  # Taille de la map
 
         # Var PLAYER
-        self.PLAYER_VELOCITY = 7
         self.PLAYER_SIZE_MULTIPLIER = 4
         self.player_health = 10
         self.player_lvl = 0
@@ -52,7 +51,7 @@ class Game:
 
 
         # Var ZOMBIE
-        self.ZOMBIE_VELOCITY = 2
+        self.ZOMBIE_VELOCITY = 20
         self.ZOMBIE_SIZE_MULTIPLIER = 0.5
         self.ZOMBIE_ATTACK_DISTANCE = 75
         self.ZOMBIE_SPAWNCHANCHE = 0.03
@@ -203,7 +202,7 @@ class Game:
         self.bullets = []
 
         # Variables de mouvement du joueur
-        self.PLAYER_VELOCITY = 200
+        self.PLAYER_VELOCITY = 250
         self.smooth_time = 0.5
         self.player_velocity_x = 0
         self.player_velocity_y = 0
