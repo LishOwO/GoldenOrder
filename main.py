@@ -42,6 +42,14 @@ class Game:
                                     pygame.mixer.Sound("src/son/PlayerDamage3.mp3"),
                                     pygame.mixer.Sound("src/son/PlayerDamage4.mp3"), ]
 
+        #Var player dash
+        self.dash_speed = 2000 
+        self.dash_duration = 100  #ms
+        self.dash_cooldown = 1000  #ms
+        self.last_dash_time = 0 
+        self.is_dashing = False  
+        self.dash_start_time = 0  
+
 
         # Var ZOMBIE
         self.ZOMBIE_VELOCITY = 2
@@ -711,6 +719,22 @@ class Game:
                 self.zombie_spawn(500, 400, self.zombies)
                 self.bosses_spawned += 1
 
+            if self.is_dashing:
+                current_time = pygame.time.get_ticks()
+                if current_time - self.dash_start_time <= self.dash_duration:
+                    # Appliquer un boost de vitesse dans la direction actuelle
+                    if self.player_movement_x[0]:  # Gauche
+                        self.player_position[0] -= self.dash_speed * self.delta_time
+                    if self.player_movement_x[1]:  # Droite
+                        self.player_position[0] += self.dash_speed * self.delta_time
+                    if self.player_movement_y[0]:  # Haut
+                        self.player_position[1] -= self.dash_speed * self.delta_time
+                    if self.player_movement_y[1]:  # Bas
+                        self.player_position[1] += self.dash_speed * self.delta_time
+                else:
+                    # Fin du dash
+                    self.is_dashing = False
+
 
             # Spawn des boxs
             if random.random() < self.BOX_SPAWN_CHANCE:
@@ -819,6 +843,12 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
+                    if event.key == pygame.K_SPACE:
+                        current_time = pygame.time.get_ticks()
+                        if current_time - self.last_dash_time >= self.dash_cooldown and not self.is_dashing:
+                            self.is_dashing = True
+                            self.dash_start_time = current_time
+                            self.last_dash_time = current_time
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
