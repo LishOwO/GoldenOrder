@@ -100,6 +100,11 @@ class Game:
             min(self.SCREEN_WIDTH / 1920, self.SCREEN_HEIGHT / 1080),  # Calcul du multiplicateur basé sur la résolution
             (255, 255, 255)
         )
+        self.SKIN_MENU_Image = self.load_and_resize_image(
+            'src/images/sprite/GoldenOrderSkinMenu.png',
+            min(self.SCREEN_WIDTH / 1920, self.SCREEN_HEIGHT / 1080),  # Calcul du multiplicateur basé sur la résolution
+            (255, 255, 255)
+        )
 
         # Var scores etc
         self.start_time = pygame.time.get_ticks()
@@ -531,15 +536,18 @@ class Game:
     # effet lucky : bombe
     def player_effect_bomb(self):
         self.son_bombe.play()
+        #Multi boucles volontaire
         for zombie in self.zombies:
-            if zombie.zombie_type == 'boss1':
-                continue
-            self.zombies.remove(zombie)
-            xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
-            self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
-            self.screen.fill((255, 255, 255))
-            self.kill_count += 1
-                
+            for zombie in self.zombies:
+                for zombie in self.zombies:
+                    if zombie.zombie_type == 'boss1':
+                        continue
+                    self.zombies.remove(zombie)
+                    xp_orb_rect = self.xp_image.get_rect(center=zombie.zombie_hitbox.center)
+                    self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
+                    self.screen.fill((255, 255, 255))
+                    self.kill_count += 1
+                    
 
     # effet lucky : soin
     def player_effect_heal(self):
@@ -860,6 +868,8 @@ class Game:
             if self.menu_skin:
                 selected_index = 0  # Index du skin sélectionné (celui qui sera affiché au centre)
                 gap = 300         # Espace  entre chaque skin
+                
+
 
                 while self.run and self.menu_skin:
                     for event in pygame.event.get():
@@ -872,10 +882,11 @@ class Game:
                             elif event.key == pygame.K_RIGHT:
                                 selected_index = (selected_index + 1) % len(self.skins)
                             # Selectionner le bon skin
-                            elif event.key == pygame.K_SPACE:
+                            elif event.key == pygame.K_RETURN:
                                 self.player_image = self.skins[selected_index]
                                 self.original_player_image = self.player_image
                                 self.menu_skin = False
+                            
 
                     # Mise à jour du skin sélectionné
                     self.skin_selected = self.skins[selected_index]
@@ -887,8 +898,10 @@ class Game:
                     self.screen.blit(self.font.render("V", True, (255, 255, 255)),(self.SCREEN_WIDTH//2, self.SCREEN_HEIGHT//2 - self.SCREEN_HEIGHT//8))
 
                     # Calculer la position centrale
-                    center_x = self.SCREEN_WIDTH // 2
-                    skin_y = self.SCREEN_HEIGHT // 2 - self.skins[0].get_height() // 2
+                    center_x = (self.SCREEN_WIDTH // 2) -130
+                    skin_y = (self.SCREEN_HEIGHT // 2 - self.skins[0].get_height() // 2)+70
+
+                    self.screen.blit(self.SKIN_MENU_Image, (0, 0))
 
                     # Affichage de chaque skin en fonction de selected_index pour centrer le skin choisi
                     for i, skin in enumerate(self.skins):
@@ -896,7 +909,6 @@ class Game:
                         x = center_x + (i - selected_index) * gap - skin.get_width() // 2
                         scaled_skin = pygame.transform.scale(skin, (skin.get_width() * 3, skin.get_height() * 3))
                         self.screen.blit(scaled_skin, (x, skin_y))
-                
 
 
                     pygame.display.update()
