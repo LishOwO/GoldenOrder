@@ -705,7 +705,9 @@ class Game:
                 Zombie.update_hitbox(zombie)
                            
                 if Zombie.move_zombies(zombie, self.player_position):
-                    self.zombies.remove(zombie)  
+                    zombie.zombie_hp -= 100
+                    if zombie.zombie_hp <= 0: 
+                        self.zombies.remove(zombie)
                     self.screen.fill((255, 0, 0))
                     self.player_health -= 1 
                     random.choice(self.PLAYER_DAMAGE_SOUNDS).play()
