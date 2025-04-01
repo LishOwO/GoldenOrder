@@ -96,7 +96,7 @@ class Game:
         self.menu_weapon = False
         # Var MAIN MENU
         self.MAIN_MENU_IMAGE = self.load_and_resize_image(
-            'src/images/sprite/GoldenOrder.png',
+            'src/images/sprite/Golden Order (1).png',
             min(self.SCREEN_WIDTH / 1920, self.SCREEN_HEIGHT / 1080),  # Calcul du multiplicateur basé sur la résolution
             (255, 255, 255)
         )
@@ -809,9 +809,9 @@ class Game:
         ]
 
         selected_index = 0  # Index de l'option sélectionnée
-        rect_width = int(self.SCREEN_WIDTH * 0.4)  # 40% de la largeur de l'écran
+        rect_width = int(self.SCREEN_WIDTH * 0.35)  # 40% de la largeur de l'écran
         rect_height = int(self.SCREEN_HEIGHT * 0.1)  # 10% de la hauteur de l'écran
-        rect_gap = int(self.SCREEN_HEIGHT * 0.03)  # 5% de la hauteur de l'écran
+        rect_gap = int(self.SCREEN_HEIGHT * 0.05)  # 5% de la hauteur de l'écran
 
         while self.run and self.menu:
             self.screen.fill((100, 100, 150))
@@ -845,7 +845,7 @@ class Game:
 
                 # Dessiner le rectangle de surlignage si l'option est sélectionnée
                 if i == selected_index:
-                    pygame.draw.rect(self.screen, (255, 255, 255), (rect_x, rect_y, rect_width, rect_height), 3)
+                    pygame.draw.rect(self.screen, (255, 255, 255), (rect_x, rect_y, rect_width, rect_height), 5)
 
                 # Dessiner le texte de l'option
                 text_surface = self.font.render(option["text"], True, (255, 255, 255))
