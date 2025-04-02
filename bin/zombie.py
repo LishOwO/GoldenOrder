@@ -36,7 +36,7 @@ class Zombie:
         elif self.zombie_type == 'boss1':
             self.zombie_vel = 3
             self.zombie_atk_dist = 128
-            self.zombie_image = self.load_and_resize_image(os.path.join(base_path, "boss1.png"), 2, (0, 0, 0))
+            self.zombie_image = self.load_and_resize_image("src/images/sprite/zombie/boss1.png", 2)
             self.zombie_size = (128,128)
             self.zombie_hp = 6400
 

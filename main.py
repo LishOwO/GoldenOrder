@@ -713,7 +713,7 @@ class Game:
                 self.zombie_spawn(500, 400, self.zombies)
 
             elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000
-            if elapsed_time > 120 + 120*self.bosses_spawned and self.boss_state == False:
+            if elapsed_time > 5 + 120*self.bosses_spawned and self.boss_state == False:
                 self.boss_state = True
                 self.zombie_spawn(500, 400, self.zombies)
                 self.bosses_spawned += 1
