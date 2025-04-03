@@ -20,7 +20,7 @@ class Zombie:
 
             self.zombie_vel = 1
             self.zombie_atk_dist = 32
-            self.zombie_image = self.load_and_resize_image(os.path.join(base_path, "zombie1.png"), 0.5)
+            self.zombie_image = self.load_and_resize_image(os.path.join(base_path, "zombie1.png","zombie3.png"), 0.5)
             self.zombie_size = (32,32)
             self.zombie_hp = 100
             # pygame.image.load(os.path.join(base_path, "zombie1", "zombie1.png")).convert_alpha()
