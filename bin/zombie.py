@@ -1,6 +1,7 @@
 import sys
 import math
 import tools as tools
+from tools import *
 import random
 import pygame
 import os
@@ -9,6 +10,8 @@ import os
 class Zombie:
     def __init__ (self, pos, type):
         
+        self.load_and_resize_image = load_and_resize_image
+
         self.zombie_pos = pos
         self.zombie_type = type
 
@@ -41,19 +44,7 @@ class Zombie:
             self.zombie_hp = 6400
 
         self.zombie_hitbox = self.zombie_image.get_rect(center=(pos[0], pos[1]))
-    def load_and_resize_image(self, filepath, size_multiplier, colorkey=(0, 0, 0)):
-        """
-        Charge une image, redimensionne et applique un colorkey.
-        :param filepath: Chemin vers l'image.
-        :param size_multiplier: Multiplicateur pour redimensionner l'image.
-        :param colorkey: Couleur à rendre transparente.
-        :return:Image redim
-        """
-        image = pygame.image.load(filepath).convert()
-        new_size = (int(image.get_width() * size_multiplier), int(image.get_height() * size_multiplier))
-        image = pygame.transform.scale(image, new_size)
-        image.set_colorkey(colorkey)
-        return image
+
         
     def update_hitbox(self):
         self.zombie_hitbox = pygame.Rect(int(self.zombie_pos[0]) + 16, int(self.zombie_pos[1]) + 16, *self.zombie_size)
