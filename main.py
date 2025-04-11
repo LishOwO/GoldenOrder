@@ -104,12 +104,12 @@ class Game:
         self.menu_weapon = False
         # Var MAIN MENU
         self.MAIN_MENU_IMAGE = self.load_and_resize_image(
-            'src/images/sprite/Golden Order (1).png',
+            'src/images/ui/Golden Order (1).png',
             min(self.SCREEN_WIDTH / 1920, self.SCREEN_HEIGHT / 1080),  # Calcul du multiplicateur basé sur la résolution
             (255, 255, 255)
         )
         self.SKIN_MENU_Image = self.load_and_resize_image(
-            'src/images/sprite/GoldenOrderSkinMenu.png',
+            'src/images/ui/GoldenOrderSkinMenu.png',
             min(self.SCREEN_WIDTH / 1920, self.SCREEN_HEIGHT / 1080),  # Calcul du multiplicateur basé sur la résolution
             (255, 255, 255)
         )
