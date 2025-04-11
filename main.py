@@ -42,9 +42,9 @@ class Game:
                                     pygame.mixer.Sound("src/son/PlayerDamage4.mp3"), ]
 
         #Var player dash
-        self.dash_speed = 2000 
-        self.dash_duration = 100  #ms
-        self.dash_cooldown = 1000  #ms
+        self.dash_speed = 1200 
+        self.dash_duration = 120  #ms
+        self.dash_cooldown = 850  #ms
         self.last_dash_time = 0 
         self.is_dashing = False  
         self.dash_start_time = 0  
@@ -102,6 +102,7 @@ class Game:
         self.menu = True
         self.menu_skin = False
         self.menu_weapon = False
+
         # Var MAIN MENU
         self.MAIN_MENU_IMAGE = self.load_and_resize_image(
             'src/images/Ui/Main_Menu/Golden Order (1).png',
@@ -120,12 +121,13 @@ class Game:
         self.font = pygame.font.SysFont(None, 50)
 
         # Var BOX
+        '''
         self.BOX_SPAWN_CHANCE = 0.005  # 1% de chance de spawn par frame
-        self.boxes = []
-        self.LOCAL_BOX_DISTANCE = 50000
-        self.MAX_LOCAL_BOX = 4
-        self.local_boxes = 0
-
+        #self.boxes = []
+        #self.LOCAL_BOX_DISTANCE = 50000
+        #self.MAX_LOCAL_BOX = 4
+        #self.local_boxes = 0
+        '''
         # Chargement du fond
         self.background_image = pygame.image.load('src/images/sprite/texture_map.png').convert()
         self.background_image = pygame.transform.scale(self.background_image, self.BACKGROUND_TILESET_SIZE)
@@ -180,9 +182,10 @@ class Game:
         self.weapon_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png', 0.8)
         self.rotated_weapon_image = self.load_and_resize_image('src/images/sprite/weapons/AK47.png', 0.8)
 
+        ''' 
         # Chargement des box
         self.luckyblock_image = self.load_and_resize_image('src/images/sprite/miscellaneous/LuckyBlock.png', 1)
-
+        '''
         # Aplication du mouvement du joueur
         self.player = self.player_image.get_rect(center=(0, 0))  # Position initiale
         self.player_movement_x = [False, False]  # [Gauche, Droite]
@@ -542,7 +545,7 @@ class Game:
                 self.bombs.remove(bombe)
 
               
-
+    ''' 
     # collecter les luckys blocks
     def collect_lucky_blocks(self):
         for box in self.boxes:
@@ -573,7 +576,7 @@ class Game:
         #elif choice == "invincibilite":
             print("Effet: Invincibilité")
             self.player_effect_invincibility()
-
+    '''
     # effet lucky : bombe
     def player_effect_bomb(self):
         self.son_bombe.play()
@@ -588,7 +591,7 @@ class Game:
                     self.xp_orbs.append({'rect': xp_orb_rect, 'value': 10})
                     self.screen.fill((255, 255, 255))
                     self.kill_count += 1
-                    
+        '''       
 
     # effet lucky : soin
     def player_effect_heal(self):
@@ -598,7 +601,7 @@ class Game:
     # effet lucky : bouclier
     def player_effect_invincibility(self):
         print("a")
-
+    '''
     # augmentation du level
     def level_up(self, lvl):
         self.player_lvl += 1
@@ -732,13 +735,7 @@ class Game:
                         self.player_position[1] += self.dash_speed * self.delta_time
                 else:
                     # Fin du dash
-                    self.is_dashing = False
-
-
-            # Spawn des boxs
-            if random.random() < self.BOX_SPAWN_CHANCE:
-                if self.check_number_of_close(self.boxes, rayon=2000, max_number=1):
-                    self.spawn_around_player(600, 100, self.luckyblock_image, self.lucky_blocks)
+                    self.is_dashing = False 
 
             # Déplace les zombies et les balles
             for zombie in self.zombies:
@@ -764,7 +761,7 @@ class Game:
 
             # Rammase l'xp et les box
             self.collect_xp_orbs()
-            self.collect_lucky_blocks()
+            #self.collect_lucky_blocks()
             self.collect_health_potion()
             self.collect_bombe()
             # Levelup
@@ -789,12 +786,12 @@ class Game:
                 self.screen.blit(self.bombe_image,
                                  (bomb['rect'].x - self.camera_position[0], bomb['rect'].y - self.camera_position[1]))
 
-
+            ''' 
             # Dessines les boxs
             for box in self.boxes:
                 self.screen.blit(self.luckyblock_image,
                                  (box.x - self.camera_position[0], box.y - self.camera_position[1]))
-
+            '''
             # Dessine les balles
             for bullet in self.bullets:
                 self.screen.blit(
@@ -837,8 +834,8 @@ class Game:
                      #   self.player_effect_bomb()
                    # if event.key == pygame.K_t:
                     #    print(self.check_number_of_close(self.boxes, 500, 2)) 
-                    if event.key == pygame.K_s:
-                        self.PLAYER_VELOCITY += 200
+                    #if event.key == pygame.K_s:
+                    #    self.PLAYER_VELOCITY += 200
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
