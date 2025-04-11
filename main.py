@@ -104,12 +104,12 @@ class Game:
         self.menu_weapon = False
         # Var MAIN MENU
         self.MAIN_MENU_IMAGE = self.load_and_resize_image(
-            'src/images/ui/Golden Order (1).png',
+            'src/images/Ui/Main_Menu/Golden Order (1).png',
             min(self.SCREEN_WIDTH / 1920, self.SCREEN_HEIGHT / 1080),  # Calcul du multiplicateur basé sur la résolution
             (255, 255, 255)
         )
         self.SKIN_MENU_Image = self.load_and_resize_image(
-            'src/images/ui/GoldenOrderSkinMenu.png',
+            'src/images/Ui/Main_Menu/GoldenOrderSkinMenu.png',
             min(self.SCREEN_WIDTH / 1920, self.SCREEN_HEIGHT / 1080),  # Calcul du multiplicateur basé sur la résolution
             (255, 255, 255)
         )
@@ -162,7 +162,7 @@ class Game:
         self.clochard_james_image]
       
         # Chargement xp_screen
-        self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
+        #self.lvl_up_image = self.load_and_resize_image('src/images/ui/lvl_up/lvl_up.png', self.CHOOSE_SIZE_MULTIPLIER)
 
         # Chargement de XP
         self.xp_image = self.load_and_resize_image('src/images/sprite/miscellaneous/xp.png', self.XP_SIZE_MULTIPLIER)
