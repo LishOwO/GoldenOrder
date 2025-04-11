@@ -1,17 +1,18 @@
-import pygame  # type: ignore
+import pygame  
 import sys
 import random
 import math
 
 sys.path.append('./bin')
 
-from objects import Objects     # type: ignore
-from zombie import Zombie       # type: ignore
-from player import Player       # type: ignore
-from weapons import Weapons     # type: ignore
-import tools                    # type: ignore
+from objects import Objects    
+from zombie import Zombie      
+from player import Player       
+from weapons import Weapons 
+from tools import *
+import tools
 
-
+#        
 
 class Game:
 
@@ -19,8 +20,8 @@ class Game:
     # initialisation
     def __init__(self):
         pygame.init()
-
-        #pygame.mixer.set_num_channels(20) #Utile ?
+        
+        self.load_and_resize_image = load_and_resize_image
 
         # Var ECRAN
         self.SCREEN_WIDTH = pygame.display.Info().current_w
@@ -263,20 +264,7 @@ class Game:
         self.screen.blit(self.background_gradient, (0, 0))
 
 
-    # load les images et les resize
-    def load_and_resize_image(self, filepath, size_multiplier, colorkey=(0, 0, 0)):
-        """
-        Charge une image, redimensionne et applique un colorkey.
-        :param filepath: Chemin vers l'image.
-        :param size_multiplier: Multiplicateur pour redimensionner l'image.
-        :param colorkey: Couleur à rendre transparente.
-        :return:Image redim
-        """
-        image = pygame.image.load(filepath).convert()
-        new_size = (int(image.get_width() * size_multiplier), int(image.get_height() * size_multiplier))
-        image = pygame.transform.scale(image, new_size)
-        image.set_colorkey(colorkey)
-        return image
+ 
 
     def generate_radial_gradient(self):
        # Créer une surface pour le dégradé radial
